@@ -1,4 +1,4 @@
-from sagemaker_extension import __version__
+from exasol_sagemaker_extension import __version__
 
 
 def test_version():
