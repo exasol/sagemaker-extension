@@ -10,7 +10,7 @@ authors = [
 	"Torsten Kilias <torsten.kilias@exasol.com>"
 ]
 
-readme = 'README.rst'
+readme = 'README.md'
 
 repository = "https://github.com/exasol/sagemaker-extension"
 homepage = "https://github.com/exasol/sagemaker-extension"
