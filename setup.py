@@ -7,16 +7,13 @@ packages = \
 package_data = \
 {'': ['*']}
 
-install_requires = [
-    'requests==2.26.0',
-    'pandas>=1.1.0,<2.0.0',
-    'scikit-learn>=0.24.1,<0.25.0'
-]
+install_requires = \
+['boto>=2.49.0,<3.0.0', 'pandas==1.1.0', 'sagemaker>=2.59.1,<3.0.0']
 
 setup_kwargs = {
-    'name': 'exasol_sagemaker_extension',
+    'name': 'exasol-sagemaker-extension',
     'version': '0.1.0',
-    'description': 'SageMaker Integration',
+    'description': 'Exasol SageMaker Integration',
     'long_description': '',
     'author': 'Umit Buyuksahin',
     'author_email': 'umit.buyuksahin@exasol.com',
@@ -28,5 +25,6 @@ setup_kwargs = {
     'install_requires': install_requires,
     'python_requires': '>=3.6.1,<4.0',
 }
+
 
 setup(**setup_kwargs)
