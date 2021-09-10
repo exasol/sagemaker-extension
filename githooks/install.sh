@@ -10,13 +10,8 @@ GIT_DIR="$REPO_DIR/.git"
 GIT_DIR="$(readlink -f "${GIT_DIR}")"
 
 if [[ ! -d "$GIT_DIR" ]]; then
-  if [[ -d "$REPO_DIR/../.git" ]]; then
-    GIT_DIR="$REPO_DIR/../.git"
-    GITHOOKS_PATH="$GIT_DIR/modules/sagemaker-extension/hooks"
-  else
     echo "$GIT_DIR is not a git directory." >&2
     exit 1
-  fi
 else
     GITHOOKS_PATH="$GIT_DIR/hooks"
 fi
