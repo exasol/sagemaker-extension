@@ -14,7 +14,7 @@ setup_kwargs = {
     'name': 'exasol-sagemaker-extension',
     'version': '0.1.0',
     'description': 'Exasol SageMaker Integration',
-    'long_description': '# SageMaker Extension\n\nThis project provides a Python library that trains data stored in Exasol using AWS SageMaker.',
+    'long_description': '===================\nSageMaker Extension\n===================\n\n\nThis project provides a Python library that trains data stored in Exasol using AWS SageMaker.\n\n',
     'author': 'Umit Buyuksahin',
     'author_email': 'umit.buyuksahin@exasol.com',
     'maintainer': None,
