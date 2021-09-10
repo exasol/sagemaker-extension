@@ -7,6 +7,7 @@ Initial implementation
 ### Features
 
   - #4: Added initial project setup
+  - #6: Add documentation folder 
 
 
     
