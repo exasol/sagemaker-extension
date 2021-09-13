@@ -3,8 +3,5 @@
 
 In this developer guide we explain how you can build this project.
 
-```
-.. toctree::
-   :maxdepth: 1
-   building_documentation
-```
+* [building_documentation](building_documentation.md)
+
