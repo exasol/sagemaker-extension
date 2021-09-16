@@ -38,7 +38,8 @@ function main(json_str)
 
 	local aws_s3_handler = require("aws_s3_handler").init(pquery)
 	aws_s3_handler.export_to_s3(
-			parameters_map['input_schema_name']..'.'..parameters_map['input_table_or_view_name'],
+			parameters_map['input_schema_name'],
+			parameters_map['input_table_or_view_name'],
 			parameters_map['aws_credentials_connection_name'],
 			parameters_map['s3_output_path']
 	)
