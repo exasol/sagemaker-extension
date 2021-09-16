@@ -1,4 +1,18 @@
-local M = {}
+---
+-- @module aws_s3_handler
+--
+-- This module handles AWS S3 service operations.
+--
+
+local M = {pquery_func = nil}
+
+function M.init(pquery_func)
+	M.pquery_func = pquery_func
+	return M
+end
+
+
+
 
 ---
 -- Export the specified Exasol table to AWS S3
@@ -12,7 +26,7 @@ local M = {}
 
 function M.export_to_s3(table_name, aws_credentials_connection_name, s3_output_path)
 	local query_export = [[EXPORT ::t INTO CSV AT ::c FILE :f]]
-	local success, res = pquery(query_export, {
+	local success, res = M.pquery_func(query_export, {
 							t=table_name,
 							c=aws_credentials_connection_name,
 							f=s3_output_path

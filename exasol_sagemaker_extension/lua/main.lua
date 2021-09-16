@@ -1,7 +1,21 @@
 do
 local _ENV = _ENV
 package.preload[ "aws_s3_handler" ] = function( ... ) local arg = _G.arg;
-local M = {}
+---
+-- @module aws_s3_handler
+--
+-- This module handles AWS S3 service operations.
+--
+
+local M = {pquery_func = nil}
+
+function M.init(pquery_func)
+	M.pquery_func = pquery_func
+	return M
+end
+
+
+
 
 ---
 -- Export the specified Exasol table to AWS S3
@@ -15,7 +29,7 @@ local M = {}
 
 function M.export_to_s3(table_name, aws_credentials_connection_name, s3_output_path)
 	local query_export = [[EXPORT ::t INTO CSV AT ::c FILE :f]]
-	local success, res = pquery(query_export, {
+	local success, res = M.pquery_func(query_export, {
 							t=table_name,
 							c=aws_credentials_connection_name,
 							f=s3_output_path
@@ -69,7 +83,7 @@ function main(json_str)
 	parameters_map['compression_type'] = 'gzip' -- default : 'gzip'
 
 
-	local aws_s3_handler = require("aws_s3_handler")
+	local aws_s3_handler = require("aws_s3_handler").init(pquery)
 	-- import('AWS_S3_HANDLER', 's3_handler')
 	aws_s3_handler.export_to_s3(
 			parameters_map['input_schema_name']..'.'..parameters_map['input_table_or_view_name'],
