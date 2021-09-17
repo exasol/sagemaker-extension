@@ -1,8 +1,19 @@
 
 
+local M = {}
 
+function M.init()
+	return M
+end
 
-function parse_arguments(json_str)
+---
+-- Parse a given arguments in json string format
+--
+-- @param json_str	input parameters as json string
+--
+-- @return lua table including parameters
+--
+function M.parse_arguments(json_str)
 	local json = require('cjson')
 	local args = json.decode(json_str)
 
@@ -31,16 +42,16 @@ function parse_arguments(json_str)
 	return args
 end
 
+
 ---
 -- This is the main function of exporting to S3.
 --
 -- @param json_str	input parameters as json string
 --
 --
-
-function main(json_str)
+function M.main(json_str)
 	-- parse arguments
-	local args = parse_arguments(json_str)
+	local args = M.parse_arguments(json_str)
 
 	-- export to s3
 	local aws_s3_handler = require("aws_s3_handler").init(pquery)
@@ -53,4 +64,5 @@ function main(json_str)
 
 end
 
-main(json_str)
+
+M.main(json_str)
