@@ -4,7 +4,10 @@
 -- This module handles AWS S3 service operations.
 --
 
-local M = {pquery_func = nil}
+local M = {
+	pquery_func = nil,
+	parallelism_factor = 4
+}
 
 function M.init(pquery_func)
 	M.pquery_func = pquery_func
@@ -12,29 +15,35 @@ function M.init(pquery_func)
 end
 
 
+---
+-- Get the number of Exasol nodes
+--
+-- @return integer number shows the number of nodes
+--
+function M.get_node_count()
+	local success, res = M.pquery_func([[SELECT NPROC()]])
+	if not success or #res < 1  then
+		exit()
+	end
+
+	return res[1][1]
+end
 
 
 ---
--- Export the specified Exasol table to AWS S3
+-- Prepare parallel export query
 --
+-- @param n_nodes							the number of nodes using for parallelism
+-- @param schema_name						the name of the Exasol schema containing the table to export
 -- @param table_name						the name of the Exasol table to be exported
 -- @param aws_credentials_connection_name	the name of the connection object with the AWS credentials
 -- @param s3_output_path					the s3 bucket path to be placed
 --
 -- @return	boolean indicating whether it is exported successfully
 --
-
-function M.export_to_s3(schema_name, table_name, aws_credentials_connection_name, s3_output_path)
-	-- get number of nodes for parallelism
-	local success, res = M.pquery_func([[SELECT NPROC()]])
-	if not success or #res < 1  then
-		exit()
-	end
-
+function M.prepare_export_query(n_nodes, schema_name, table_name, aws_credentials_connection_name, s3_output_path)
 	-- init
-	local n_nodes = res[1][1]
-	local parallelism_factor = 2
-	local n_exporter = n_nodes * parallelism_factor
+	local n_exporter = n_nodes * M.parallelism_factor
 	local query_export = [[EXPORT ::t INTO CSV AT ::c]]
 	local params = {
 			t=schema_name..'.'..table_name,
@@ -48,8 +57,31 @@ function M.export_to_s3(schema_name, table_name, aws_credentials_connection_name
 		params[key_] = val_
 	end
 
+	return query_export, params
+end
+
+
+
+---
+-- Export the specified Exasol table to AWS S3
+--
+-- @param schema_name						the name of the Exasol schema containing the table to export
+-- @param table_name						the name of the Exasol table to be exported
+-- @param aws_credentials_connection_name	the name of the connection object with the AWS credentials
+-- @param s3_output_path					the s3 bucket path to be placed
+--
+-- @return	a string having export query and a lua table including query parameters
+--
+function M.export_to_s3(schema_name, table_name, aws_credentials_connection_name, s3_output_path)
+	-- get number of nodes for parallelism
+	local n_nodes = get_node_count()
+
+	-- prepare query
+	local query_export, params = prepare_export_query(
+			n_nodes, schema_name, table_name, aws_credentials_connection_name, s3_output_path)
+
 	-- execute
-	success, res = M.pquery_func(query_export, params)
+	local success, res = M.pquery_func(query_export, params)
 
 	if not success then
 		exit()

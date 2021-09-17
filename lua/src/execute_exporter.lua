@@ -1,5 +1,36 @@
 
 
+
+
+function parse_arguments(json_str)
+	local json = require('cjson')
+	local args = json.decode(json_str)
+
+	if not args['problem_type'] then
+		args['problem_type'] = nil
+	end
+
+	if not args['max_runtime_for_automl_job_in_seconds'] then
+		args['max_runtime_for_automl_job_in_seconds'] = nil
+	end
+
+	if not args['max_runtime_per_training_job_in_seconds'] then
+		args['max_runtime_per_training_job_in_seconds'] = nil
+	end
+
+	if not args['max_candidates'] then
+		args['max_candidates'] = nil
+	end
+
+	if not args['objective'] then
+		args['objective'] = nil
+	end
+
+	args['compression_type'] = 'gzip' -- default : 'gzip'
+
+	return args
+end
+
 ---
 -- This is the main function of exporting to S3.
 --
@@ -8,40 +39,16 @@
 --
 
 function main(json_str)
+	-- parse arguments
+	local args = parse_arguments(json_str)
 
-	-- manage parameters
-	local json = require('cjson')
-	local parameters_map = json.decode(json_str)
-
-	if not parameters_map['problem_type'] then
-		parameters_map['problem_type'] = nil
-	end
-
-	if not parameters_map['max_runtime_for_automl_job_in_seconds'] then
-		parameters_map['max_runtime_for_automl_job_in_seconds'] = nil
-	end
-
-	if not parameters_map['max_runtime_per_training_job_in_seconds'] then
-		parameters_map['max_runtime_per_training_job_in_seconds'] = nil
-	end
-
-	if not parameters_map['max_candidates'] then
-		parameters_map['max_candidates'] = nil
-	end
-
-	if not parameters_map['objective'] then
-		parameters_map['objective'] = nil
-	end
-
-	parameters_map['compression_type'] = 'gzip' -- default : 'gzip'
-
-
+	-- export to s3
 	local aws_s3_handler = require("aws_s3_handler").init(pquery)
 	aws_s3_handler.export_to_s3(
-			parameters_map['input_schema_name'],
-			parameters_map['input_table_or_view_name'],
-			parameters_map['aws_credentials_connection_name'],
-			parameters_map['s3_output_path']
+			args['input_schema_name'],
+			args['input_table_or_view_name'],
+			args['aws_credentials_connection_name'],
+			args['s3_output_path']
 	)
 
 end
