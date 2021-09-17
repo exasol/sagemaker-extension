@@ -20,8 +20,8 @@ jobs:
 
       - name: Run bundle script file
         run: |
-            chmod +x ./lua/bundle.sh
-            cd ./lua
+            cd ./lua/src
+            chmod +x ./bundle.sh
             ./bundle.sh
         shell: bash
 

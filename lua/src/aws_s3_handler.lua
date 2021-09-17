@@ -26,7 +26,7 @@ end
 
 function M.export_to_s3(schema_name, table_name, aws_credentials_connection_name, s3_output_path)
 	-- get number of nodes for parallelism
-	local success, res = pquery([[SELECT NPROC()]])
+	local success, res = M.pquery_func([[SELECT NPROC()]])
 	if not success or #res < 1  then
 		exit()
 	end
@@ -49,7 +49,7 @@ function M.export_to_s3(schema_name, table_name, aws_credentials_connection_name
 	end
 
 	-- execute
-	success, res = pquery(query_export, params)
+	success, res = M.pquery_func(query_export, params)
 
 	if not success then
 		exit()
