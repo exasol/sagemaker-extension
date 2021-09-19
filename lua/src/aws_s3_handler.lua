@@ -5,12 +5,14 @@
 --
 
 local M = {
-	pquery_func = nil,
+	pquery_func = pquery,
+	exit_func = exit,
 	parallelism_factor = 4
 }
 
-function M.init(pquery_func)
+function M.init(pquery_func, exit_func)
 	M.pquery_func = pquery_func
+	M.exit_func = exit_func
 	return M
 end
 
@@ -23,10 +25,10 @@ end
 function M.get_node_count()
 	local success, res = M.pquery_func([[SELECT NPROC()]])
 	if not success or #res < 1  then
-		exit()
+		M.exit_func()
+	else
+		return res[1][1]
 	end
-
-	return res[1][1]
 end
 
 
@@ -74,17 +76,17 @@ end
 --
 function M.export_to_s3(schema_name, table_name, aws_credentials_connection_name, s3_output_path)
 	-- get number of nodes for parallelism
-	local n_nodes = get_node_count()
+	local n_nodes = M.get_node_count()
 
 	-- prepare query
-	local query_export, params = prepare_export_query(
+	local query_export, params = M.prepare_export_query(
 			n_nodes, schema_name, table_name, aws_credentials_connection_name, s3_output_path)
 
 	-- execute
 	local success, res = M.pquery_func(query_export, params)
 
 	if not success then
-		exit()
+		M.exit_func()
 	end
 
 	return success

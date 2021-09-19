@@ -1,10 +1,6 @@
 
 
-local M = {}
 
-function M.init()
-	return M
-end
 
 ---
 -- Parse a given arguments in json string format
@@ -13,7 +9,7 @@ end
 --
 -- @return lua table including parameters
 --
-function M.parse_arguments(json_str)
+function parse_arguments(json_str)
 	local json = require('cjson')
 	local args = json.decode(json_str)
 
@@ -49,12 +45,12 @@ end
 -- @param json_str	input parameters as json string
 --
 --
-function M.main(json_str)
+function main(json_str)
 	-- parse arguments
-	local args = M.parse_arguments(json_str)
+	local args = parse_arguments(json_str)
 
 	-- export to s3
-	local aws_s3_handler = require("aws_s3_handler").init(pquery)
+	local aws_s3_handler = require("aws_s3_handler")
 	aws_s3_handler.export_to_s3(
 			args['input_schema_name'],
 			args['input_table_or_view_name'],
@@ -64,5 +60,3 @@ function M.main(json_str)
 
 end
 
-
-M.main(json_str)
