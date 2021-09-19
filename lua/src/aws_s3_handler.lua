@@ -63,7 +63,6 @@ function M.prepare_export_query(n_nodes, schema_name, table_name, aws_credential
 end
 
 
-
 ---
 -- Export the specified Exasol table to AWS S3
 --
@@ -83,7 +82,7 @@ function M.export_to_s3(schema_name, table_name, aws_credentials_connection_name
 			n_nodes, schema_name, table_name, aws_credentials_connection_name, s3_output_path)
 
 	-- execute
-	local success, res = M.pquery_func(query_export, params)
+	local success, _ = M.pquery_func(query_export, params)
 
 	if not success then
 		M.exit_func()
