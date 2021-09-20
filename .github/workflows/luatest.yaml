@@ -1,4 +1,4 @@
-name: Bundle Lua Scripts
+name: Run Lua tests
 
 on: [ push, pull_request ]
 
@@ -14,6 +14,7 @@ jobs:
       - name: Install Lua dependencies
         run: |
           sudo apt-get install luarocks
+          sudo luarocks install lua-cjson
           sudo luarocks install luaunit
 
       - name: Run unit tests
