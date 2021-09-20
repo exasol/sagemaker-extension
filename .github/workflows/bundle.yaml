@@ -3,7 +3,7 @@ name: Bundle Lua Scripts
 on: [ push, pull_request ]
 
 jobs:
-  unit_tests:
+  bundle:
     runs-on: ubuntu-latest
 
     steps:
