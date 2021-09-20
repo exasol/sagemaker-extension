@@ -5,12 +5,12 @@
 
 readonly script_dir=$(dirname "$(readlink -f "$0")")
 readonly base_dir=$(readlink -f "$script_dir/..")
-readonly lua_path="$base_dir/lua"
+readonly lua_dir="$base_dir/lua"
 
 
-if ! cd "$lua_path"
+if ! cd "$lua_dir"
 then
-  echo  "Lua scripts path is not correct: " $lua_path
+  echo  "Lua scripts path is not correct: " $lua_dir
   exit  2
 fi
 
@@ -27,8 +27,8 @@ do
     else
         ((n_fail+=1))
     fi
-    echo
+    echo ""
 done
 
 echo -n "Ran $n_test tests, $n_success successes, $n_fail failures"
-echo ""
+exit 0
