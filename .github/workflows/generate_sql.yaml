@@ -1,9 +1,9 @@
-name: Bundle Lua Scripts
+name: Generate Sql Script
 
 on: [ push, pull_request ]
 
 jobs:
-  bundle:
+  generate_sql:
     runs-on: ubuntu-latest
 
     steps:
@@ -17,7 +17,7 @@ jobs:
       - name: Install amalg
         run: sudo luarocks install amalg
 
-      - name: Run bundle script file
-        run: ./scripts/bundle_lua_scripts.sh
+      - name: Generate sql script
+        run: ./scripts/generate_sql_script.sh
         shell: bash
 
