@@ -35,11 +35,11 @@ end
 ---
 -- Prepare parallel export query.
 --
--- @param n_nodes							the number of nodes using for parallelism
--- @param schema_name						the name of the Exasol schema containing the table to export
--- @param table_name						the name of the Exasol table to be exported
+-- @param n_nodes				the number of nodes using for parallelism
+-- @param schema_name				the name of the Exasol schema containing the table to export
+-- @param table_name				the name of the Exasol table to be exported
 -- @param aws_credentials_connection_name	the name of the connection object with the AWS credentials
--- @param s3_output_path					the s3 bucket path to be placed
+-- @param s3_output_path			the s3 bucket path to be placed
 --
 -- @return	boolean indicating whether it is exported successfully
 --
@@ -66,10 +66,10 @@ end
 ---
 -- Export the specified Exasol table to AWS S3.
 --
--- @param schema_name						the name of the Exasol schema containing the table to export
--- @param table_name						the name of the Exasol table to be exported
+-- @param schema_name				the name of the Exasol schema containing the table to export
+-- @param table_name				the name of the Exasol table to be exported
 -- @param aws_credentials_connection_name	the name of the connection object with the AWS credentials
--- @param s3_output_path					the s3 bucket path to be placed
+-- @param s3_output_path			the s3 bucket path to be placed
 --
 -- @return	a string having export query and a lua table including query parameters
 --
