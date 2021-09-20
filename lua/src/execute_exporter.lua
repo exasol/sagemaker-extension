@@ -1,9 +1,5 @@
-
-
-
-
 ---
--- Parse a given arguments in json string format
+-- Parse a given arguments in json string format.
 --
 -- @param json_str	input parameters as json string
 --
@@ -46,10 +42,8 @@ end
 --
 --
 function main(json_str)
-	-- parse arguments
 	local args = parse_arguments(json_str)
 
-	-- export to s3
 	local aws_s3_handler = require("aws_s3_handler")
 	aws_s3_handler.export_to_s3(
 			args['input_schema_name'],

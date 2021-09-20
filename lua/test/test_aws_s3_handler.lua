@@ -45,12 +45,12 @@ function test_aws_s3_handler.test_get_node_count()
     local res = aws_s3_handler.get_node_count()
     luaunit.assertNil(res)
 
-    -- pquery return wrong number of nocdes
+    -- pquery return wrong number of nodes
     aws_s3_handler.pquery_func = mock_pquery_incorrect_node_count
     local res = aws_s3_handler.get_node_count()
     luaunit.assertNil(res)
 
-    -- pquery return wrong number of nocdes
+    -- pquery return correct number of nodes
     aws_s3_handler.pquery_func = mock_pquery_correct
     local res = aws_s3_handler.get_node_count()
     luaunit.assertNotNil(res)

@@ -18,9 +18,9 @@ end
 
 
 ---
--- Get the number of Exasol nodes
+-- Get the number of Exasol nodes.
 --
--- @return integer number shows the number of nodes
+-- @return an integer that shows the number of nodes
 --
 function M.get_node_count()
 	local success, res = M.pquery_func([[SELECT NPROC()]])
@@ -33,7 +33,7 @@ end
 
 
 ---
--- Prepare parallel export query
+-- Prepare parallel export query.
 --
 -- @param n_nodes							the number of nodes using for parallelism
 -- @param schema_name						the name of the Exasol schema containing the table to export
@@ -64,7 +64,7 @@ end
 
 
 ---
--- Export the specified Exasol table to AWS S3
+-- Export the specified Exasol table to AWS S3.
 --
 -- @param schema_name						the name of the Exasol schema containing the table to export
 -- @param table_name						the name of the Exasol table to be exported
@@ -74,10 +74,8 @@ end
 -- @return	a string having export query and a lua table including query parameters
 --
 function M.export_to_s3(schema_name, table_name, aws_credentials_connection_name, s3_output_path)
-	-- get number of nodes for parallelism
 	local n_nodes = M.get_node_count()
 
-	-- prepare query
 	local query_export, params = M.prepare_export_query(
 			n_nodes, schema_name, table_name, aws_credentials_connection_name, s3_output_path)
 
