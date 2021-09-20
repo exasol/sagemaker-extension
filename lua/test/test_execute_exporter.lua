@@ -15,7 +15,7 @@ function test_execute_exporter.test_parse_optional_arguments()
     luaunit.assertNil(args_empty["objective"])
     luaunit.assertNotNil(args_empty["compression_type"])
 
-    -- check wheter optinal added args are not nil
+    -- check whether optional added args are not nil
     args_missing = parse_arguments(args_missing_json_str)
     luaunit.assertNil(args_missing["max_runtime_for_automl_job_in_seconds"])
     luaunit.assertNil(args_missing["max_runtime_per_training_job_in_seconds"])

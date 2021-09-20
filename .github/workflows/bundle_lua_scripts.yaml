@@ -3,7 +3,7 @@ name: Bundle Lua Scripts
 on: [ push, pull_request ]
 
 jobs:
-  bundle:
+  unit_tests:
     runs-on: ubuntu-latest
 
     steps:
@@ -18,8 +18,6 @@ jobs:
         run: sudo luarocks install amalg
 
       - name: Run bundle script file
-        run: |
-            chmod +x ./scripts/bundle_lua_scripts.sh
-            ./scripts/bundle_lua_scripts.sh
+        run: ./scripts/bundle_lua_scripts.sh
         shell: bash
 

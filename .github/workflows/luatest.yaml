@@ -18,8 +18,6 @@ jobs:
           sudo luarocks install luaunit
 
       - name: Run unit tests
-        run: |
-            chmod +x ./scripts/run_lua_unittests.sh
-            ./scripts/run_lua_unittests.sh
+        run: ./scripts/run_lua_unittests.sh
         shell: bash
 
