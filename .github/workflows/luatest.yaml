@@ -1,0 +1,24 @@
+name: Bundle Lua Scripts
+
+on: [ push, pull_request ]
+
+jobs:
+  bundle:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Install Lua dependencies
+        run: |
+          sudo apt-get install luarocks
+          sudo luarocks install luaunit
+
+      - name: Run unit tests
+        run: |
+            chmod +x ./scripts/run_lua_unittests.sh
+            ./scripts/run_lua_unittests.sh
+        shell: bash
+
