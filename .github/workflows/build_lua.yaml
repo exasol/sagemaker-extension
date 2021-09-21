@@ -1,23 +1,26 @@
-name: Run Lua tests
+name: Build and test Lua scripts
 
-on: [ push, pull_request ]
+on: [ push ]
 
 jobs:
-  unit_tests:
+  build_lua:
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
-
       - name: Install Lua dependencies
         run: |
           sudo apt-get install luarocks
+          sudo luarocks install amalg
           sudo luarocks install lua-cjson
           sudo luarocks install luaunit
-
+      - name: Generate sql script
+        run: |
+          ./scripts/generate_sql_script.sh
       - name: Run unit tests
-        run: ./scripts/run_lua_unittests.sh
-        shell: bash
+        run: |
+          ./scripts/run_lua_unittests.sh
+
 
