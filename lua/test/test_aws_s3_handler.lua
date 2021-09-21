@@ -32,7 +32,7 @@ end
 
 local function get_table_size(t)
     local count = 0
-    for k, v in pairs(t) do
+    for _ , _ in pairs(t) do
         count = count + 1
     end
     return count
@@ -67,10 +67,9 @@ end
 
 
 function test_aws_s3_handler.test_prepare_export_query()
-    for i=1,5 do
+    for i = 1, 5 do
         local n_nodes = math.random(1, 20)
         local n_exporter = n_nodes * aws_s3_handler.parallelism_factor
-
 
         local export_query, params = aws_s3_handler.prepare_export_query(
                 n_nodes,
@@ -88,7 +87,7 @@ function test_aws_s3_handler.test_prepare_export_query()
 
         -- check query parameters
         luaunit.assertEquals(params["c"], test_aws_s3_handler.connection_name)
-        luaunit.assertEquals(params["t"], test_aws_s3_handler.schema_name..'.'..test_aws_s3_handler.table_name)
+        luaunit.assertEquals(params["t"], test_aws_s3_handler.schema_name .. '.' .. test_aws_s3_handler.table_name)
         luaunit.assertEquals(get_table_size(params), n_exporter + 2)
     end
 end

@@ -41,15 +41,15 @@ end
 -- @param aws_credentials_connection_name	the name of the connection object with the AWS credentials
 -- @param s3_output_path			the s3 bucket path to be placed
 --
--- @return	boolean indicating whether it is exported successfully
+-- @return	a string having export query and a lua table including query parameters
 --
 function M.prepare_export_query(n_nodes, schema_name, table_name, aws_credentials_connection_name, s3_output_path)
 	-- init
 	local n_exporter = n_nodes * M.parallelism_factor
 	local query_export = [[EXPORT ::t INTO CSV AT ::c]]
 	local params = {
-			t=schema_name..'.'..table_name,
-			c=aws_credentials_connection_name}
+			t = schema_name .. '.' .. table_name,
+			c = aws_credentials_connection_name}
 
 	-- prepare the query
 	for i=1, n_exporter do
@@ -71,7 +71,7 @@ end
 -- @param aws_credentials_connection_name	the name of the connection object with the AWS credentials
 -- @param s3_output_path			the s3 bucket path to be placed
 --
--- @return	a string having export query and a lua table including query parameters
+-- @return	boolean indicating whether it is exported successfully
 --
 function M.export_to_s3(schema_name, table_name, aws_credentials_connection_name, s3_output_path)
 	local n_nodes = M.get_node_count()
