@@ -5,17 +5,14 @@
 --
 
 local M = {
-	pquery_func = pquery,
-	exit_func = exit,
 	parallelism_factor = 4
 }
 
-function M.init(pquery_func, exit_func)
-	M.pquery_func = pquery_func
-	M.exit_func = exit_func
-	return M
-end
 
+_G.global_env = {
+	pquery = pquery,
+	exit = exit
+}
 
 ---
 -- Get the number of Exasol nodes.
@@ -23,9 +20,9 @@ end
 -- @return an integer that shows the number of nodes
 --
 function M.get_node_count()
-	local success, res = M.pquery_func([[SELECT NPROC()]])
+	local success, res = _G.global_env.pquery([[SELECT NPROC()]])
 	if not success or #res < 1  then
-		M.exit_func()
+		_G.global_env.exit()
 	else
 		return res[1][1]
 	end
@@ -80,12 +77,7 @@ function M.export_to_s3(schema_name, table_name, aws_credentials_connection_name
 			n_nodes, schema_name, table_name, aws_credentials_connection_name, s3_output_path)
 
 	-- execute
-	local success, _ = M.pquery_func(query_export, params)
-
-	if not success then
-		M.exit_func()
-	end
-
+	local success, _ = _G.global_env.pquery(query_export, params)
 	return success
 end
 

@@ -1,4 +1,5 @@
 local luaunit = require("luaunit")
+local mockagne = require("mockagne")
 local aws_s3_handler = require("./src/aws_s3_handler")
 
 
@@ -9,26 +10,6 @@ test_aws_s3_handler = {
     s3_output_path = '/test_path/'
 }
 
-local function mock_pquery_incorrect(...)
-    return false, {}
-end
-
-local function mock_pquery_correct(...)
-    return true, {{1}}
-end
-
-local function mock_pquery_incorrect_node_count(...)
-    return true, {}
-end
-
-local function mock_pquery_incorrect_export(...)
-    local args = {...}
-    if args[1]:find('EXPORT') then
-        return false, {{1}}
-    else
-        return true, {{1}}
-    end
-end
 
 local function get_table_size(t)
     local count = 0
@@ -38,33 +19,51 @@ local function get_table_size(t)
     return count
 end
 
-local function mock_exit_func()
-    return nil
+
+
+local function mock_pquery_nproc(exa_mock, success, ret)
+    mockagne.when(exa_mock.pquery([[SELECT NPROC()]])).thenAnswer(success, ret)
+end
+
+local function mock_pquery_export(exa_mock, query_str, query_params, success, ret)
+    mockagne.when(exa_mock.pquery(query_str, query_params)).thenAnswer(success, ret)
+end
+
+local function mock_exit_return_nil(exa_mock)
+    mockagne.when(exa_mock.exit()).thenAnswer(nil)
 end
 
 
-aws_s3_handler.exit_func = mock_exit_func
+
+
+function  test_aws_s3_handler.setUp()
+    exa_mock = mockagne.getMock()
+    _G.global_env = exa_mock
+    mock_exit_return_nil(exa_mock)
+end
+
 
 function test_aws_s3_handler.test_get_node_count_returns_true()
-    aws_s3_handler.pquery_func = mock_pquery_correct
+    local n_nodes = 10
+    mock_pquery_nproc(exa_mock, true, {{n_nodes}})
     local res = aws_s3_handler.get_node_count()
     luaunit.assertNotNil(res)
-    luaunit.assertEquals(res, 1)
+    luaunit.assertEquals(res, n_nodes)
 end
 
 function test_aws_s3_handler.test_get_node_count_returns_false()
-    aws_s3_handler.pquery_func = mock_pquery_incorrect
+    local n_nodes = 20
+    mock_pquery_nproc(exa_mock, false, {{n_nodes}})
     local res = aws_s3_handler.get_node_count()
     luaunit.assertNil(res)
 end
+
 
 function test_aws_s3_handler.test_get_node_count_returns_wrong()
-    aws_s3_handler.pquery_func = mock_pquery_incorrect_node_count
+    mock_pquery_nproc(exa_mock, false, {{}})
     local res = aws_s3_handler.get_node_count()
     luaunit.assertNil(res)
 end
-
-
 
 function test_aws_s3_handler.test_prepare_export_query()
     for i = 1, 5 do
@@ -93,25 +92,28 @@ function test_aws_s3_handler.test_prepare_export_query()
 end
 
 
-function test_aws_s3_handler.test_export_to_s3_returns_true()
-    aws_s3_handler.pquery_func = mock_pquery_correct
-    local res = aws_s3_handler.export_to_s3(
-            test_aws_s3_handler.schema_name,
-            test_aws_s3_handler.table_name,
-            test_aws_s3_handler.connection_name,
-            test_aws_s3_handler.s3_output_path)
-    luaunit.assertEquals(res, true)
+function test_aws_s3_handler.test_export_to_s3_with_correct_node_count()
+    local n_nodes = 30
+    mock_exit_return_nil(exa_mock)
+    local export_query, params = aws_s3_handler.prepare_export_query(
+        n_nodes,
+        test_aws_s3_handler.schema_name,
+        test_aws_s3_handler.table_name,
+        test_aws_s3_handler.connection_name,
+        test_aws_s3_handler.s3_output_path)
+
+    mock_pquery_nproc(exa_mock, true, {{n_nodes}})
+    for _, success in ipairs({true, false}) do
+        mock_pquery_export(exa_mock, export_query, params, success)
+        local res = aws_s3_handler.export_to_s3(
+                test_aws_s3_handler.schema_name,
+                test_aws_s3_handler.table_name,
+                test_aws_s3_handler.connection_name,
+                test_aws_s3_handler.s3_output_path)
+        luaunit.assertEquals(res, true)
+    end
 end
 
-function test_aws_s3_handler.test_export_to_s3_returns_false()
-    aws_s3_handler.pquery_func = mock_pquery_incorrect_export
-    local res = aws_s3_handler.export_to_s3(
-            test_aws_s3_handler.schema_name,
-            test_aws_s3_handler.table_name,
-            test_aws_s3_handler.connection_name,
-            test_aws_s3_handler.s3_output_path)
-    luaunit.assertEquals(res, false)
 
-end
 
 os.exit(luaunit.LuaUnit.run())
