@@ -23,6 +23,7 @@ python = ">=3.6.1,<4.0"
 pandas = "1.1.0"
 boto = "^2.49.0"
 sagemaker = "^2.59.1"
+pyexasol = "^0.20.0"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"

@@ -1,9 +1,9 @@
-name: Run pytest tests
+name: Build and test project
 
 on: [ push, pull_request ]
 
 jobs:
-  integration_tests:
+  build:
     strategy:
       fail-fast: false
       matrix:
@@ -18,10 +18,24 @@ jobs:
       - uses: abatilo/actions-poetry@v2.0.0
         with:
           poetry-version: 1.1.4
-      - name: Poetry install
+      - name: Install Poetry
         run: poetry install
-      - name: Poetry build
+      - name: Build Poetry
         run: poetry build
+
+      - name:  Install Lua dependencies
+        run: |
+          sudo apt-get install luarocks
+          sudo luarocks install amalg
+          sudo luarocks install lua-cjson
+          sudo luarocks install luaunit
+          sudo luarocks install mockagne
+      - name: Generate sql script
+        run: |
+          ./scripts/generate_sql_script.sh
+      - name: Run Lua unit tests
+        run: |
+          ./scripts/run_lua_unittests.sh
 
       - name: Checkout test environment
         run: git clone https://github.com/exasol/integration-test-docker-environment.git
