@@ -5,7 +5,7 @@
 --
 
 local M = {
-	parallelism_factor = 4
+	parallelism_factor = 1
 }
 
 
