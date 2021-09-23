@@ -39,6 +39,8 @@ def create_scripts(conn):
     with open(SQL_CREATE_STATEMENT_FILE_PATH) as f:
         statement_str = f.read()
     conn.execute(statement_str)
+    print(statement_str)
+    print("create statement script is executed!")
 
 
 def create_table(conn, table_name):
