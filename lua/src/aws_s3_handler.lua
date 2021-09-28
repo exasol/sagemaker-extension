@@ -51,7 +51,7 @@ function M.prepare_export_query(n_nodes, schema_name, table_name, aws_credential
 	-- prepare the query
 	for i=1, n_exporter do
 		key_ = 'f' .. tostring(i)
-		val_ =  s3_output_path .. table_name .. tostring(i) .. '.csv'
+		val_ =  s3_output_path .. '/' .. table_name .. tostring(i) .. '.csv'
 		query_export = query_export .. ' FILE :' .. key_
 		params[key_] = val_
 	end

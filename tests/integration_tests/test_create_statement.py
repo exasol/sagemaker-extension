@@ -1,12 +1,18 @@
 import pytest
 import pyexasol
 import json
+import socket
 import os.path
+import localstack_client.session as aws_client
+
 
 SQL_CREATE_STATEMENT_FILE_PATH = "./target/create_statement.sql"
 DB_CONNECTION_ADDR = "127.0.0.1:9563"
 DB_CONNECTION_USER = "sys"
 DB_CONNECTION_PASS = "exasol"
+AWS_KEY_ID = ""
+AWS_ACCESS_KEY = ""
+AWS_S3_URI = "https://{aws_s3_uri}:4566"
 
 INPUT_DICT = {
     "model_name": "todo_model",
@@ -14,7 +20,7 @@ INPUT_DICT = {
     "input_table_or_view_name": "TEST_TABLE",
     "aws_credentials_connection_name": "S3_CONNECTION",
     "s3_bucket_uri": "https://exasol-sagemaker-extension.s3.amazonaws.com",
-    "s3_output_path": "integration_test/",
+    "s3_output_path": "integrationtestbucket",
     "iam_sagemaker_role": "todo_ExecuteSageMakerRole",
     "target_attribute_name": "todo_target",
     "problem_type": "todo_regression",
@@ -35,11 +41,30 @@ def open_schema(conn):
         conn.execute(query.format(schema_name=INPUT_DICT["input_schema_name"]))
 
 
+def get_host_ip_addr():
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    s.connect(("8.8.8.8", 80))
+    ip_addr = s.getsockname()[0]
+    s.close()
+    return ip_addr
+
+
+def create_aws_connection(conn):
+    ip_addr = get_host_ip_addr()
+    aws_s3_uri = AWS_S3_URI.format(aws_s3_uri=ip_addr)
+    query = "CREATE OR REPLACE  CONNECTION {aws_conn_name} TO '{aws_s3_uri}' " \
+            "USER '{aws_key_id}' IDENTIFIED BY '{aws_access_key}'"\
+        .format(aws_conn_name=INPUT_DICT["aws_credentials_connection_name"],
+                aws_s3_uri=aws_s3_uri,
+                aws_key_id=AWS_KEY_ID,
+                aws_access_key=AWS_ACCESS_KEY)
+    conn.execute(query)
+
+
 def create_scripts(conn):
     with open(SQL_CREATE_STATEMENT_FILE_PATH) as f:
         statement_str = f.read()
     conn.execute(statement_str)
-    print(statement_str)
     print("create statement script is executed!")
 
 
@@ -57,6 +82,11 @@ def insert_into_table(conn, table_name):
     conn.execute(query)
 
 
+def create_s3_bucket():
+    s3_client = aws_client.client('s3')
+    s3_client.create_bucket(Bucket=INPUT_DICT["s3_output_path"])
+
+
 @pytest.fixture(scope="session")
 def setup_database():
     conn = pyexasol.connect(
@@ -65,9 +95,11 @@ def setup_database():
         password=DB_CONNECTION_PASS)
 
     open_schema(conn)
+    create_aws_connection(conn)
     create_scripts(conn)
     create_table(conn, table_name=INPUT_DICT["input_table_or_view_name"])
     insert_into_table(conn, table_name=INPUT_DICT["input_table_or_view_name"])
+    create_s3_bucket()
     return conn
 
 
