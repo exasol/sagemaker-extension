@@ -24,14 +24,13 @@ pandas = "1.1.0"
 boto = "^2.49.0"
 sagemaker = "^2.59.1"
 pyexasol = "^0.20.0"
-localstack = "^0.12.18"
-localstack-client = "^1.25"
 
 [tool.poetry.dev-dependencies]
-pytest = "^5.2"
+pytest = "^5.2" 
 pytest-cov = "^2.12.1"
 Sphinx = "^4.1.2"
 coverage = "^5.5"
+localstack-client = "^1.25"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

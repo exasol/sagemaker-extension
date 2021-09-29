@@ -1,18 +1,19 @@
 import pytest
 import pyexasol
 import json
-import socket
 import os.path
-import localstack_client.session as aws_client
+import localstack_client.session
 
 
 SQL_CREATE_STATEMENT_FILE_PATH = "./target/create_statement.sql"
 DB_CONNECTION_ADDR = "127.0.0.1:9563"
 DB_CONNECTION_USER = "sys"
 DB_CONNECTION_PASS = "exasol"
+AWS_IP_ADDR = "192.168.0.2"
 AWS_KEY_ID = ""
 AWS_ACCESS_KEY = ""
-AWS_S3_URI = "https://{aws_s3_uri}:4566"
+AWS_S3_URI = f"https://{AWS_IP_ADDR}:4566"
+
 
 INPUT_DICT = {
     "model_name": "todo_model",
@@ -41,23 +42,14 @@ def open_schema(conn):
         conn.execute(query.format(schema_name=INPUT_DICT["input_schema_name"]))
 
 
-def get_host_ip_addr():
-    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    s.connect(("8.8.8.8", 80))
-    ip_addr = s.getsockname()[0]
-    s.close()
-    return ip_addr
-
-
 def create_aws_connection(conn):
-    ip_addr = get_host_ip_addr()
-    aws_s3_uri = AWS_S3_URI.format(aws_s3_uri=ip_addr)
     query = "CREATE OR REPLACE  CONNECTION {aws_conn_name} TO '{aws_s3_uri}' " \
             "USER '{aws_key_id}' IDENTIFIED BY '{aws_access_key}'"\
         .format(aws_conn_name=INPUT_DICT["aws_credentials_connection_name"],
-                aws_s3_uri=aws_s3_uri,
+                aws_s3_uri=AWS_S3_URI,
                 aws_key_id=AWS_KEY_ID,
                 aws_access_key=AWS_ACCESS_KEY)
+    print(query)
     conn.execute(query)
 
 
@@ -79,11 +71,14 @@ def insert_into_table(conn, table_name):
     values = ",".join([f"({i}, {i * 10})" for i in range(1, 11)])
     query = "INSERT INTO {table_name} VALUES {values}".\
         format(table_name=table_name, values=values)
+    print(query)
     conn.execute(query)
 
 
 def create_s3_bucket():
-    s3_client = aws_client.client('s3')
+    session = localstack_client.session.Session(
+        localstack_host='{ip_addr}'.format(ip_addr=AWS_IP_ADDR))
+    s3_client = session.client('s3')
     s3_client.create_bucket(Bucket=INPUT_DICT["s3_output_path"])
 
 
