@@ -18,8 +18,6 @@ jobs:
       - uses: abatilo/actions-poetry@v2.0.0
         with:
           poetry-version: 1.1.6
-      - name: Install Localstack
-        run: pip install localstack=='0.12.18'
       - name: Install Poetry
         run: poetry install
       - name: Build Poetry
@@ -39,19 +37,8 @@ jobs:
         run: |
           ./scripts/run_lua_unittests.sh
 
-      - name: Checkout test environment
-        run: git clone https://github.com/exasol/integration-test-docker-environment.git
-        working-directory: ..
-      - name: Spawn EXASOL environemnt
-        run: ./start-test-env spawn-test-environment --environment-name test --database-port-forward 9563 --bucketfs-port-forward 6666 --db-mem-size 4GB
-        working-directory: ../integration-test-docker-environment
-
-      - name: Create docker network
-        run: docker network create -d bridge --subnet 192.168.0.0/24 --gateway 192.168.0.1 it-network
-      - name: Run Localstack container
-        run: docker run -d  -e SERVICES=s3  -p 4566:4566 -p 4571:4571 --net it-network --ip 192.168.0.2 localstack/localstack
-      - name: Add container to the network
-        run: docker network connect it-network db_container_test
+      - name: Setup integration test environment
+        run: ./scripts/run_integration_test.sh
 
       - name: Poetry run pytest integration tests
         run: poetry run pytest tests

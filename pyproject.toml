@@ -30,7 +30,7 @@ pytest = "^5.2"
 pytest-cov = "^2.12.1"
 Sphinx = "^4.1.2"
 coverage = "^5.5"
-localstack-client = "^1.25"
+
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
