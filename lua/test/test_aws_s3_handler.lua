@@ -66,12 +66,14 @@ function test_aws_s3_handler.test_get_node_count_returns_wrong()
 end
 
 function test_aws_s3_handler.test_prepare_export_query()
+    local parallelism_factor = 1
     for i = 1, 5 do
         local n_nodes = math.random(1, 20)
-        local n_exporter = n_nodes * aws_s3_handler.parallelism_factor
+        local n_exporter = n_nodes * parallelism_factor
 
         local export_query, params = aws_s3_handler.prepare_export_query(
                 n_nodes,
+                parallelism_factor,
                 test_aws_s3_handler.schema_name,
                 test_aws_s3_handler.table_name,
                 test_aws_s3_handler.connection_name,
@@ -93,10 +95,12 @@ end
 
 
 function test_aws_s3_handler.test_export_to_s3_with_correct_node_count()
+    local parallelism_factor = 1
     local n_nodes = 30
     mock_exit_return_nil(exa_mock)
     local export_query, params = aws_s3_handler.prepare_export_query(
         n_nodes,
+        parallelism_factor,
         test_aws_s3_handler.schema_name,
         test_aws_s3_handler.table_name,
         test_aws_s3_handler.connection_name,

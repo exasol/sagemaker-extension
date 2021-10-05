@@ -5,7 +5,6 @@ require("./src/execute_exporter")
 test_execute_exporter = {}
 
 
-
 function test_execute_exporter.test_parse_unused_optional_arguments()
     local args_empty_json_str = '{}'
 
@@ -14,8 +13,6 @@ function test_execute_exporter.test_parse_unused_optional_arguments()
     luaunit.assertNil(args_empty["problem_type"])
     luaunit.assertNil(args_empty["objective"])
     luaunit.assertNotNil(args_empty["compression_type"])
-
-
 end
 
 function test_execute_exporter.test_parse_used_optional_arguments()

@@ -5,7 +5,7 @@
 --
 
 local M = {
-	parallelism_factor = 1
+	default_parallelism_factor = 4
 }
 
 
@@ -40,9 +40,10 @@ end
 --
 -- @return	a string having export query and a lua table including query parameters
 --
-function M.prepare_export_query(n_nodes, schema_name, table_name, aws_credentials_connection_name, s3_output_path)
+function M.prepare_export_query(n_nodes, parallelism_factor, schema_name, table_name,
+								aws_credentials_connection_name, s3_output_path)
 	-- init
-	local n_exporter = n_nodes * M.parallelism_factor
+	local n_exporter = n_nodes * parallelism_factor
 	local query_export = [[EXPORT ::t INTO CSV AT ::c]]
 	local params = {
 			t = schema_name .. '.' .. table_name,
@@ -74,7 +75,8 @@ function M.export_to_s3(schema_name, table_name, aws_credentials_connection_name
 	local n_nodes = M.get_node_count()
 
 	local query_export, params = M.prepare_export_query(
-			n_nodes, schema_name, table_name, aws_credentials_connection_name, s3_output_path)
+			n_nodes, M.default_parallelism_factor, schema_name, table_name,
+			aws_credentials_connection_name, s3_output_path)
 
 	-- execute
 	local success, _ = _G.global_env.pquery(query_export, params)
