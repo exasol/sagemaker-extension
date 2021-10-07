@@ -1,8 +1,21 @@
 local luaunit = require("luaunit")
+local mockagne = require("mockagne")
 require("./src/execute_exporter")
 
 
 test_execute_exporter = {}
+
+
+local function mock_exit_return_nil(exa_mock)
+    mockagne.when(exa_mock.exit()).thenAnswer(nil)
+end
+
+
+function  test_execute_exporter.setUp()
+    exa_mock = mockagne.getMock()
+    _G.global_env = exa_mock
+    mock_exit_return_nil(exa_mock)
+end
 
 
 function test_execute_exporter.test_parse_unused_optional_arguments()
@@ -27,12 +40,11 @@ function test_execute_exporter.test_parse_used_optional_arguments()
     luaunit.assertNotNil(args_missing["compression_type"])
 end
 
-
 function test_execute_exporter.test_parse_invalid_input_string()
     local args_invalid_json_str = '"max_candidates" : 100}'
 
     args_invalid = parse_arguments(args_invalid_json_str)
-    luaunit.assertNil(args_invalid)
+    luaunit.assertNil(args_invalid["max_candidates"])
 
 end
 

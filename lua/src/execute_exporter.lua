@@ -1,5 +1,7 @@
 
 
+
+
 ---
 -- Parse a given arguments in json string format.
 --
@@ -11,7 +13,8 @@ function parse_arguments(json_str)
 	local json = require('cjson')
 	local success, args =  pcall(json.decode, json_str)
 	if not success then
-		return nil
+		args = {}
+		_G.global_env.exit()
 	end
 
 	if not args['problem_type'] then
@@ -48,9 +51,6 @@ end
 --
 function main(json_str)
 	local args = parse_arguments(json_str)
-	if not args then
-		_G.global_env.exit()
-	end
 
 	local aws_s3_handler = require("aws_s3_handler")
 	local success = aws_s3_handler.export_to_s3(
