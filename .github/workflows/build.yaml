@@ -30,6 +30,7 @@ jobs:
           sudo luarocks install lua-cjson
           sudo luarocks install luaunit
           sudo luarocks install mockagne
+          sudo luarocks install exaerror
       - name: Generate sql script
         run: |
           ./scripts/generate_sql_script.sh

@@ -8,6 +8,7 @@ local M = {
 	default_parallelism_factor = 4
 }
 
+local exaerror = require("exaerror")
 
 _G.global_env = {
 	pquery = pquery,
@@ -22,7 +23,12 @@ _G.global_env = {
 function M.get_node_count()
 	local success, res = _G.global_env.pquery([[SELECT NPROC()]])
 	if not success or #res < 1  then
-		_G.global_env.error('Error while querying the number of nodes')
+		local error_obj = exaerror.create("",
+				"Error while retrieving the number of nodes from Exasol DB"
+		) :add_mitigations(
+				"Check whether Exasol DB is running",
+				"Check whether Exasol DB is connected")
+		_G.global_env.error(tostring(error_obj))
 	else
 		return res[1][1]
 	end

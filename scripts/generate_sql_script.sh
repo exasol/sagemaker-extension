@@ -10,7 +10,9 @@ readonly base_dir=$(readlink -f "$script_dir/..")
 
 readonly lua_src_dir="$base_dir/lua/src"
 readonly target_dir="$base_dir/target"
-readonly bundled_script_path="$target_dir/main.lua"
+readonly bundled_sources_path="$target_dir/bundle_sources.lua"
+readonly bundled_exaerror_path="$target_dir/bundle_exaerror.lua"
+readonly bundled_final_path="$target_dir/bundle_final.lua"
 readonly create_script_template_path="$base_dir/scripts/create_statement_template.sql"
 readonly create_script_path="$target_dir/create_statement.sql"
 
@@ -23,7 +25,9 @@ then
 fi
 
 function bundle_scripts {
-  if amalg.lua -o "$bundled_script_path" -s execute_exporter.lua aws_s3_handler
+  if amalg.lua -o "$bundled_sources_path" -s execute_exporter.lua aws_s3_handler  \
+    && amalg.lua -o "$bundled_exaerror_path" -s "$bundled_sources_path" exaerror \
+    && amalg.lua -o "$bundled_final_path" -s "$bundled_exaerror_path" message_expander
   then
     echo "Saved the packaged Lua module to " "$target_dir/main.lua"
     return 0
@@ -35,7 +39,7 @@ function bundle_scripts {
 
 function insert_bundle_into_sql_script {
   template_script=$(cat $create_script_template_path)
-  bundled_script=$(cat $bundled_script_path)
+  bundled_script=$(cat $bundled_final_path)
   echo "${template_script/"BUNDLED_SCRIPT"/$bundled_script}" > $create_script_path
 
   echo "Generated create script sql to " $create_script_path
