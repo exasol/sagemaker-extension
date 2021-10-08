@@ -11,7 +11,7 @@ local M = {
 
 _G.global_env = {
 	pquery = pquery,
-	exit = exit
+	error = error
 }
 
 ---
@@ -22,7 +22,7 @@ _G.global_env = {
 function M.get_node_count()
 	local success, res = _G.global_env.pquery([[SELECT NPROC()]])
 	if not success or #res < 1  then
-		_G.global_env.exit()
+		_G.global_env.error('Error while querying the number of nodes')
 	else
 		return res[1][1]
 	end

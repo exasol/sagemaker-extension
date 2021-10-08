@@ -6,15 +6,15 @@ require("./src/execute_exporter")
 test_execute_exporter = {}
 
 
-local function mock_exit_return_nil(exa_mock)
-    mockagne.when(exa_mock.exit()).thenAnswer(nil)
+local function mock_error_return_nil(exa_mock)
+    mockagne.when(exa_mock.error()).thenAnswer(nil)
 end
 
 
 function  test_execute_exporter.setUp()
     exa_mock = mockagne.getMock()
     _G.global_env = exa_mock
-    mock_exit_return_nil(exa_mock)
+    mock_error_return_nil(exa_mock)
 end
 
 

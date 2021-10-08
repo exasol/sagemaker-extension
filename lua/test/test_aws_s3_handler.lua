@@ -29,8 +29,8 @@ local function mock_pquery_export(exa_mock, query_str, query_params, success)
     mockagne.when(exa_mock.pquery(query_str, query_params)).thenAnswer(success, _)
 end
 
-local function mock_exit_return_nil(exa_mock)
-    mockagne.when(exa_mock.exit()).thenAnswer(nil)
+local function mock_error_return_nil(exa_mock)
+    mockagne.when(exa_mock.error()).thenAnswer(nil)
 end
 
 
@@ -39,7 +39,7 @@ end
 function  test_aws_s3_handler.setUp()
     exa_mock = mockagne.getMock()
     _G.global_env = exa_mock
-    mock_exit_return_nil(exa_mock)
+    mock_error_return_nil(exa_mock)
 end
 
 
@@ -97,7 +97,7 @@ end
 function test_aws_s3_handler.test_export_to_s3_with_correct_node_count()
     local parallelism_factor = aws_s3_handler.default_parallelism_factor
     local n_nodes = 30
-    mock_exit_return_nil(exa_mock)
+    mock_error_return_nil(exa_mock)
     local export_query, params = aws_s3_handler.prepare_export_query(
         n_nodes,
         parallelism_factor,

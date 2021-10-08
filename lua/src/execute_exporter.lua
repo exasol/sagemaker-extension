@@ -14,7 +14,7 @@ function parse_arguments(json_str)
 	local success, args =  pcall(json.decode, json_str)
 	if not success then
 		args = {}
-		_G.global_env.exit()
+		_G.global_env.error('Error while parsing input json string')
 	end
 
 	if not args['problem_type'] then
@@ -61,7 +61,7 @@ function main(json_str)
 	)
 
 	if not success then
-		_G.global_env.exit()
+		_G.global_env.error('Error occured in exporting Exasol table to AWS S3')
 	end
 
 end
