@@ -26,8 +26,7 @@ function M.get_node_count()
 		local error_obj = exaerror.create("",
 				"Error while retrieving the number of nodes from Exasol DB"
 		) :add_mitigations(
-				"Check whether Exasol DB is running",
-				"Check whether Exasol DB is connected")
+				"Please create an error report")
 		_G.global_env.error(tostring(error_obj))
 	else
 		return res[1][1]
