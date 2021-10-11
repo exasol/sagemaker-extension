@@ -13,7 +13,6 @@ def train_model(
 ):
     job_name = '-'.join(('train', datetime.now().strftime("%Y-%m-%d-%H-%M-%S")))
     s3_train_path = 's3://{}/train'.format(bucket)
-    print(job_name)
 
     automl_job = AutoML(
         role=role,
