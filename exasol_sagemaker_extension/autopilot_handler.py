@@ -29,7 +29,7 @@ def train_model(
         target_attribute_name=target_attribute_name
     )
 
-    automl_job.fit(inputs=s3_input_train, job_name=job_name)
+    automl_job.fit(inputs=s3_input_train, job_name=job_name, wait=False)
     return job_name
 
 
