@@ -17,12 +17,12 @@ AWS_BUCKET_NAME = "integrationtestbucket"
 
 def udf_wrapper():
     from exasol_udf_mock_python.udf_context import UDFContext
-    from exasol_sagemaker_extension.train_autopilot_udf import TrainAutopilotUDF
+    from exasol_sagemaker_extension.autopilot_training_udf import AutopilotTrainingUDF
 
     def mocked_training_method(**kwargs):
         return "test_job_name"
 
-    udf = TrainAutopilotUDF(exa, training_method=mocked_training_method)
+    udf = AutopilotTrainingUDF(exa, training_method=mocked_training_method)
 
     def run(ctx: UDFContext):
         udf.run(ctx)
@@ -34,7 +34,6 @@ def create_mock_metadata():
         input_type="SET",
         input_columns=[
             Column("aws_s3_connection", str, "VARCHAR(2000000)"),
-            Column("aws_session_token", str, "VARCHAR(2000000)"),
             Column("aws_region", str, "VARCHAR(2000000)"),
             Column("role", str, "VARCHAR(2000000)"),
             Column("bucket", str, "VARCHAR(2000000)"),
@@ -52,7 +51,7 @@ def create_mock_metadata():
     return meta
 
 
-def test_train_autopilot_udf():
+def test_autopilot_training_udf():
     executor = UDFMockExecutor()
     meta = create_mock_metadata()
     aws_s3_connection = Connection(
@@ -62,7 +61,6 @@ def test_train_autopilot_udf():
 
     input_data = (
         AWS_CONNECTION_NAME,
-        "aws_session_token",
         AWS_REGION,
         "role_sagemaker_executor",
         AWS_BUCKET_NAME,

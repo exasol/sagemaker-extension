@@ -2,7 +2,7 @@ import os
 from exasol_sagemaker_extension import autopilot_handler
 
 
-class TrainAutopilotUDF:
+class AutopilotTrainingUDF:
     def __init__(self, exa, training_method=autopilot_handler.train_model):
         self.exa = exa
         self.counter = 0
@@ -10,7 +10,6 @@ class TrainAutopilotUDF:
 
     def run(self, ctx):
         aws_s3_connection = ctx.aws_s3_connection
-        aws_session_token = ctx.aws_session_token  # TODO
         aws_region = ctx.aws_region  # TODO
         role = ctx.role
         bucket = ctx.bucket
@@ -27,7 +26,6 @@ class TrainAutopilotUDF:
         os.environ["AWS_DEFAULT_REGION"] = aws_region
         os.environ["AWS_ACCESS_KEY_ID"] = aws_s3_conn_obj.user
         os.environ["AWS_SECRET_ACCESS_KEY"] = aws_s3_conn_obj.password
-        os.environ["AWS_SESSION_TOKEN"] = aws_session_token
 
         job_name = self.training_method(
             role=role,
