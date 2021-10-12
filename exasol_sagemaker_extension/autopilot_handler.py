@@ -7,6 +7,7 @@ def train_model(
         bucket: str,
         target_attribute_name: str,
         problem_type: str = None,
+        objective: str = None,
         max_runtime_for_automl_job_in_seconds: int = None,
         max_candidates: int = None,
         max_runtime_per_training_job_in_seconds: int = None
@@ -18,6 +19,7 @@ def train_model(
         role=role,
         target_attribute_name=target_attribute_name,
         problem_type=problem_type,
+        job_objective=objective,
         total_job_runtime_in_seconds=max_runtime_for_automl_job_in_seconds,
         max_candidates=max_candidates,
         max_runtime_per_training_job_in_seconds= \

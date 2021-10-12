@@ -1,6 +1,6 @@
 import os
+import json
 from typing import Callable
-
 from exasol_sagemaker_extension import autopilot_handler
 
 
@@ -18,11 +18,15 @@ class AutopilotTrainingUDF:
         bucket = ctx.bucket
         target_attribute_name = ctx.target_attribute_name
         problem_type = ctx.problem_type
+        objective = ctx.objective
         total_job_runtime_in_seconds = \
             ctx.max_runtime_for_automl_job_in_seconds
         max_candidates = ctx.max_candidates
         max_runtime_per_training_job_in_seconds = \
             ctx.max_runtime_per_training_job_in_seconds
+
+        if objective:  # <dict> required, eg. '{"MetricName": "Accuracy"}'
+            objective = json.loads(objective)
 
         aws_s3_conn_obj = self.exa.get_connection(aws_s3_connection)
 
@@ -35,6 +39,7 @@ class AutopilotTrainingUDF:
             bucket=bucket,
             target_attribute_name=target_attribute_name,
             problem_type=problem_type,
+            objective=objective,
             max_runtime_for_automl_job_in_seconds=total_job_runtime_in_seconds,
             max_candidates=max_candidates,
             max_runtime_per_training_job_in_seconds= \
