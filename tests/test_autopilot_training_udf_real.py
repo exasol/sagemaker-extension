@@ -1,5 +1,8 @@
 import os
 from typing import Dict
+
+import pytest
+
 from exasol_sagemaker_extension.autopilot_training_udf import \
     AutopilotTrainingUDF
 
@@ -29,6 +32,9 @@ class ExaEnvironment:
         return self._connections[name]
 
 
+@pytest.mark.skipif(
+    "AWS_SESSION_TOKEN" not in os.environ or not os.environ["AWS_SESSION_TOKEN"],
+    reason="AWS_SESSION_TOKEN is not set")
 def test_autopilot_training_udf_real():
     class Context:
         def __init__(self,
