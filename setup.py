@@ -2,7 +2,7 @@
 from setuptools import setup
 
 packages = \
-['exasol_sagemaker_extension', 'exasol_sagemaker_extension.utils']
+['exasol_sagemaker_extension']
 
 package_data = \
 {'': ['*']}

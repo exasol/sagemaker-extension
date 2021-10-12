@@ -1,18 +1,16 @@
 import os
-from typing import Callable
 from exasol_sagemaker_extension import autopilot_handler
-from exasol_sagemaker_extension.utils import parse_connection_object
 
 
-class AutopilotTrainingUDF:
-    def __init__(self, exa,
-                 training_method: Callable = autopilot_handler.train_model):
+class TrainAutopilotUDF:
+    def __init__(self, exa, training_method=autopilot_handler.train_model):
         self.exa = exa
         self.counter = 0
         self.training_method = training_method
 
     def run(self, ctx):
         aws_s3_connection = ctx.aws_s3_connection
+        aws_session_token = ctx.aws_session_token  # TODO
         aws_region = ctx.aws_region  # TODO
         role = ctx.role
         bucket = ctx.bucket
@@ -25,14 +23,11 @@ class AutopilotTrainingUDF:
             ctx.max_runtime_per_training_job_in_seconds
 
         aws_s3_conn_obj = self.exa.get_connection(aws_s3_connection)
-        aws_secret_key, aws_session_token = \
-            parse_connection_object.extract_credentials(aws_s3_conn_obj)
 
         os.environ["AWS_DEFAULT_REGION"] = aws_region
         os.environ["AWS_ACCESS_KEY_ID"] = aws_s3_conn_obj.user
-        os.environ["AWS_SECRET_ACCESS_KEY"] = aws_secret_key
-        if aws_session_token:
-            os.environ["AWS_SESSION_TOKEN"] = aws_session_token
+        os.environ["AWS_SECRET_ACCESS_KEY"] = aws_s3_conn_obj.password
+        os.environ["AWS_SESSION_TOKEN"] = aws_session_token
 
         job_name = self.training_method(
             role=role,
