@@ -52,7 +52,7 @@ def create_mock_metadata():
     return meta
 
 
-def test_autopilot_training_udf():
+def test_autopilot_training_udf_mock():
     executor = UDFMockExecutor()
     meta = create_mock_metadata()
     aws_s3_connection = Connection(
