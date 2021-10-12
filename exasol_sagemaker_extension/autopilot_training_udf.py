@@ -1,9 +1,12 @@
 import os
+from typing import Callable
+
 from exasol_sagemaker_extension import autopilot_handler
 
 
 class AutopilotTrainingUDF:
-    def __init__(self, exa, training_method=autopilot_handler.train_model):
+    def __init__(self, exa,
+                 training_method: Callable =autopilot_handler.train_model):
         self.exa = exa
         self.counter = 0
         self.training_method = training_method
