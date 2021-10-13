@@ -3,6 +3,7 @@ from datetime import datetime
 
 
 def train_model(
+        model_name: str,
         role: str,
         bucket: str,
         target_attribute_name: str,
@@ -10,11 +11,9 @@ def train_model(
         objective: str = None,
         max_runtime_for_automl_job_in_seconds: int = None,
         max_candidates: int = None,
-        max_runtime_per_training_job_in_seconds: int = None
-):
-    job_name = '-'.join(('train', datetime.now().strftime("%Y-%m-%d-%H-%M-%S")))
-    s3_train_path = 's3://{}/train'.format(bucket)
+        max_runtime_per_training_job_in_seconds: int = None):
 
+    s3_train_path = 's3://{}/train'.format(bucket)
     automl_job = AutoML(
         role=role,
         target_attribute_name=target_attribute_name,
@@ -31,8 +30,8 @@ def train_model(
         target_attribute_name=target_attribute_name
     )
 
-    automl_job.fit(inputs=s3_input_train, job_name=job_name, wait=False)
-    return job_name
+    automl_job.fit(inputs=s3_input_train, job_name=model_name, wait=False)
+    return model_name
 
 
 
