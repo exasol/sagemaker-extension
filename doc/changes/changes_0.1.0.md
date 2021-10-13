@@ -9,6 +9,9 @@ Initial implementation
   - #4: Added initial project setup
   - #6: Added documentation folder 
   - #1: Added Lua export scripts
-  - #14 Added CREATE SCRIPT statements for deployment of the training UDF 
+  - #2: Added UDF which trains Autopilot model
+  - #14 Added CREATE SCRIPT statements for deployment of the training UDF
+
+
 
     

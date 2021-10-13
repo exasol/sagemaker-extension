@@ -6,10 +6,12 @@ from exasol_udf_mock_python.mock_exa_environment import MockExaEnvironment
 from exasol_udf_mock_python.mock_meta_data import MockMetaData
 from exasol_udf_mock_python.udf_mock_executor import UDFMockExecutor
 
-AWS_AUTOML_JOB_NAME = "test_job_name"
+AWS_AUTOML_JOB_NAME = "test-model-name"
+AWS_SAGEMAKER_ROLE = "aws_test_role"
 AWS_KEY_ID = "test_aws_key_id"
 AWS_ACCESS_KEY = "test_aws_access_key"
 AWS_REGION = "eu-central-1"
+AWS_SAGEMAKER_ROL = "role_sagemaker_executor"
 AWS_S3_URI = f"https://127.0.0.1:4566"
 AWS_CONNECTION_NAME = "S3_CONNECTION"
 AWS_BUCKET_NAME = "exasol-sagemaker-extension"
@@ -20,7 +22,7 @@ def udf_wrapper():
     from exasol_sagemaker_extension.autopilot_training_udf import AutopilotTrainingUDF
 
     def mocked_training_method(**kwargs):
-        return "test_job_name"
+        return "test-model-name"
 
     udf = AutopilotTrainingUDF(exa, training_method=mocked_training_method)
 
@@ -33,6 +35,7 @@ def create_mock_metadata():
         script_code_wrapper_function=udf_wrapper,
         input_type="SET",
         input_columns=[
+            Column("model_name", str, "VARCHAR(2000000)"),
             Column("aws_s3_connection", str, "VARCHAR(2000000)"),
             Column("aws_region", str, "VARCHAR(2000000)"),
             Column("role", str, "VARCHAR(2000000)"),
@@ -61,9 +64,10 @@ def test_autopilot_training_udf_mock():
         meta, connections={AWS_CONNECTION_NAME: aws_s3_connection})
 
     input_data = (
+        "test_model_name",
         AWS_CONNECTION_NAME,
         AWS_REGION,
-        "role_sagemaker_executor",
+        AWS_SAGEMAKER_ROLE,
         AWS_BUCKET_NAME,
         "CLASS_POS",
         "BinaryClassification",
