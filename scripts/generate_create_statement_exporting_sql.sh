@@ -13,8 +13,8 @@ readonly target_dir="$base_dir/target"
 readonly bundled_sources_path="$target_dir/bundle_sources.lua"
 readonly bundled_exaerror_path="$target_dir/bundle_exaerror.lua"
 readonly bundled_final_path="$target_dir/bundle_final.lua"
-readonly create_script_template_path="$base_dir/scripts/create_statement_template.sql"
-readonly create_script_path="$target_dir/create_statement.sql"
+readonly create_script_template_path="$base_dir/scripts/create_statement_exporting_template.sql"
+readonly create_script_path="$target_dir/create_statement_exporting.sql"
 
 mkdir -p "$target_dir"
 

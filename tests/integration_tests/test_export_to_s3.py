@@ -5,7 +5,7 @@ import os.path
 import localstack_client.session
 
 
-SQL_CREATE_STATEMENT_FILE_PATH = "./target/create_statement.sql"
+SQL_CREATE_STATEMENT_FILE_PATH = "./target/create_statement_exporting.sql"
 DB_CONNECTION_ADDR = "127.0.0.1:9563"
 DB_CONNECTION_USER = "sys"
 DB_CONNECTION_PASS = "exasol"

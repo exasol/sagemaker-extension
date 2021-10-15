@@ -33,13 +33,13 @@ jobs:
           sudo luarocks install exaerror
       - name: Generate sql script
         run: |
-          ./scripts/generate_sql_script.sh
+          ./scripts/generate_create_statement_exporting_sql.sh
       - name: Run Lua unit tests
         run: |
           ./scripts/run_lua_unittests.sh
 
       - name: Setup integration test environment
-        run: ./scripts/run_integration_test.sh
+        run: ./scripts/setup_integration_test.sh
 
       - name: Poetry run pytest integration tests
         run: poetry run pytest tests
