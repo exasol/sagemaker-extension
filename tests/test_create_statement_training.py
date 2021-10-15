@@ -28,7 +28,8 @@ def setup_database():
 
 
 def get_created_scripts(conn):
-    exa_all_scripts_list = conn.export_to_list("Select SCRIPT_NAME FROM EXA_ALL_SCRIPTS")
+    exa_all_scripts_list = conn.export_to_list(
+        "Select SCRIPT_NAME FROM EXA_ALL_SCRIPTS")
     return sum(exa_all_scripts_list, [])
 
 
