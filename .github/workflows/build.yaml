@@ -35,7 +35,7 @@ jobs:
           sudo luarocks install exaerror
       - name: Generate sql script
         run: |
-          python ./exasol_sagemaker_extension/resources/generate_create_statement_exporting_sql.py
+          python ./exasol_sagemaker_extension/deployment/generate_create_statement_exporting_sql.py
       - name: Run Lua unit tests
         run: |
           ./scripts/run_lua_unittests.sh

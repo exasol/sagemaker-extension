@@ -2,10 +2,11 @@
 from setuptools import setup
 
 packages = \
-['exasol_sagemaker_extension', 'exasol_sagemaker_extension.resources']
+['exasol_sagemaker_extension', 'exasol_sagemaker_extension.deployment']
 
 package_data = \
-{'': ['*'], 'exasol_sagemaker_extension': ['lua/src/*', 'lua/test/*']}
+{'': ['*'],
+ 'exasol_sagemaker_extension': ['lua/src/*', 'lua/test/*', 'resources/*']}
 
 install_requires = \
 ['boto>=2.49.0,<3.0.0',
