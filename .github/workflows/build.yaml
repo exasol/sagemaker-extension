@@ -22,6 +22,8 @@ jobs:
         run: poetry install
       - name: Build Poetry
         run: poetry build
+      - name: Install project whl
+        run: pip install dist/*.whl
 
       - name:  Install Lua dependencies
         run: |
