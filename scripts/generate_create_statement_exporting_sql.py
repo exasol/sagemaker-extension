@@ -71,4 +71,5 @@ def run():
     insert_bundle_into_sql_script()
 
 
-run()
+if __name__ == "__main__":
+    run()

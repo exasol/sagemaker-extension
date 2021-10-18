@@ -1,6 +1,5 @@
 import argparse
 import pyexasol
-import subprocess
 from scripts import generate_create_statement_exporting_sql
 
 
