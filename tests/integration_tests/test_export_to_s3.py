@@ -3,9 +3,12 @@ import pyexasol
 import json
 import os.path
 import localstack_client.session
+import importlib_resources
 
+package = importlib_resources.files("exasol_sagemaker_extension")
+SQL_CREATE_STATEMENT_FILE_PATH = \
+    package.joinpath("target").joinpath("create_statement_exporting.sql")
 
-SQL_CREATE_STATEMENT_FILE_PATH = "./target/create_statement_exporting.sql"
 DB_CONNECTION_ADDR = "127.0.0.1:9563"
 DB_CONNECTION_USER = "sys"
 DB_CONNECTION_PASS = "exasol"

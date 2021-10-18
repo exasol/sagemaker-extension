@@ -1,7 +1,11 @@
 import pyexasol
 import pytest
+import importlib_resources
 
-SQL_CREATE_STATEMENT_FILE_PATH = "./scripts/create_statement_training.sql"
+package = importlib_resources.files("exasol_sagemaker_extension")
+SQL_CREATE_STATEMENT_FILE_PATH = \
+    package.joinpath("resources").joinpath("create_statement_training.sql")
+
 DB_CONNECTION_ADDR = "127.0.0.1:9563"
 DB_CONNECTION_USER = "sys"
 DB_CONNECTION_PASS = "exasol"
