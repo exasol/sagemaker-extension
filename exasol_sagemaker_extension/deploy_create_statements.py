@@ -1,12 +1,15 @@
 import argparse
 import pyexasol
-from scripts import generate_create_statement_exporting_sql
+import importlib_resources
+from exasol_sagemaker_extension.resources import \
+    generate_create_statement_exporting_sql
 
 
-TRAINING_CREATE_STATEMENT_SQL_PATH = \
-    "scripts/create_statement_training.sql"
-EXPORTING_CREATE_STATEMENT_SQL_PATH = \
-    "target/create_statement_exporting.sql"
+package = importlib_resources.files("exasol_sagemaker_extension")
+TRAINING_CREATE_STATEMENT_SQL_PATH = package.joinpath(
+    "resources").joinpath("create_statement_training.sql")
+EXPORTING_CREATE_STATEMENT_SQL_PATH = package.joinpath(
+    "target").joinpath("create_statement_exporting.sql")
 
 
 class DeployCreateStatements:
@@ -24,18 +27,17 @@ class DeployCreateStatements:
             compression=True)
 
     def run(self):
-        statement_list = []
         exportig_create_stmt = self._create_exporting_statement()
         training_create_stmt = self._create_training_statement()
-        statement_list = [
-                exportig_create_stmt,
-                training_create_stmt
-            ]
+        statement_maps= {
+                "exporting create statement": exportig_create_stmt,
+                "training create statement": training_create_stmt
+        }
         if not self._to_print:
             self._open_schema()
-            self._execute_statements(statement_list)
+            self._execute_statements(statement_maps)
         else:
-            print("\n".join(statement_list))
+            print("\n".join(statement_maps.values()))
 
     def _create_exporting_statement(self):
         generate_create_statement_exporting_sql.run()
@@ -54,9 +56,10 @@ class DeployCreateStatements:
         for query in queries:
             self.__exasol_conn.execute(query.format(schema_name=self._schema))
 
-    def _execute_statements(self, statement_list: list):
-        for stmt in statement_list:
+    def _execute_statements(self, statement_list: dict):
+        for desc, stmt in statement_list.items():
             self.__exasol_conn.execute(stmt)
+            print(f"Executed {desc}")
 
 
 if __name__ == "__main__":

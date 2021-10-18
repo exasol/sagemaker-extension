@@ -1,33 +1,34 @@
 import os.path
 import subprocess
 from pathlib import Path
-
+import importlib_resources
 
 # This script packages Lua modules into a single file and generates
 # the CREATE SCRIPT statement sql by inserting the packaged module
 # inside the sql script.
 
 
-BASE_DIR = os.getcwd()
+BASE_DIR = importlib_resources.files("exasol_sagemaker_extension")
 
-LUA_SRC_DIR = os.path.join(BASE_DIR, "lua", "src")
-TARGET_DIR = os.path.join(BASE_DIR, "target")
+LUA_SRC_DIR = (BASE_DIR / "lua" / "src")
+TARGET_DIR = (BASE_DIR / "target")
 
-LUA_BUNDLED_SOURCES_PATH = os.path.join(TARGET_DIR, "bundle_sources.lua")
-LUA_BUNDLED_EXAERROR_PATH = os.path.join(TARGET_DIR, "bundle_exaerror.lua")
-LUA_BUNDLED_FINAL_PATH = os.path.join(TARGET_DIR, "bundle_final.lua")
+LUA_BUNDLED_SOURCES_PATH = TARGET_DIR.joinpath("bundle_sources.lua")
+LUA_BUNDLED_EXAERROR_PATH = TARGET_DIR.joinpath("bundle_exaerror.lua")
+LUA_BUNDLED_FINAL_PATH = TARGET_DIR.joinpath("bundle_final.lua")
 lua_remove_artifact_list = [
     LUA_BUNDLED_SOURCES_PATH,
     LUA_BUNDLED_EXAERROR_PATH]
 
-EXPORTING_CREATE_SCRIPT_TEMPLATE_PATH = os.path.join(
-    BASE_DIR, "scripts", "create_statement_exporting_template.sql")
-EXPORTING_CREATE_SCRIPT_PATH = os.path.join(
-    TARGET_DIR, "create_statement_exporting.sql")
+EXPORTING_CREATE_SCRIPT_TEMPLATE_PATH =  BASE_DIR.joinpath(
+    "resources").joinpath("create_statement_exporting_template.sql")
+EXPORTING_CREATE_SCRIPT_PATH = TARGET_DIR.joinpath(
+    "create_statement_exporting.sql")
 
 
 def create_target_dir():
     Path(TARGET_DIR).mkdir(parents=True, exist_ok=True)
+    print(f"{TARGET_DIR} is created if not exist")
 
 
 def bundle_lua_scripts():
@@ -73,3 +74,4 @@ def run():
 
 if __name__ == "__main__":
     run()
+

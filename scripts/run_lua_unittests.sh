@@ -5,7 +5,7 @@
 
 readonly script_dir=$(dirname "$(readlink -f "$0")")
 readonly base_dir=$(readlink -f "$script_dir/..")
-readonly lua_dir="$base_dir/lua"
+readonly lua_dir="$base_dir/exasol_sagemaker_extension/lua"
 
 
 if ! cd "$lua_dir"
