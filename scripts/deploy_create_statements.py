@@ -1,9 +1,9 @@
 import argparse
 import pyexasol
 import subprocess
+from scripts import generate_create_statement_exporting_sql
 
-EXPORTING_CREATE_STATEMENT_EXEC_PATH = \
-    "scripts/generate_create_statement_exporting_sql.sh"
+
 TRAINING_CREATE_STATEMENT_SQL_PATH = \
     "scripts/create_statement_training.sql"
 EXPORTING_CREATE_STATEMENT_SQL_PATH = \
@@ -39,7 +39,7 @@ class DeployCreateStatements:
             print("\n".join(statement_list))
 
     def _create_exporting_statement(self):
-        subprocess.call(EXPORTING_CREATE_STATEMENT_EXEC_PATH, shell=True)
+        generate_create_statement_exporting_sql.run()
         with open(EXPORTING_CREATE_STATEMENT_SQL_PATH) as f:
             statement_str = f.read()
         return statement_str
