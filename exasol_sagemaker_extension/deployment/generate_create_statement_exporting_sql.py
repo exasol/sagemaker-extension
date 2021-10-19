@@ -11,12 +11,11 @@ from exasol_sagemaker_extension.deployment.constants import logger
 # inside the sql script.
 
 
-class ExportingCreateStatementGenerator:
-
-    def __init__(self):
-        self._lua_copy_source_list = [
-            constants.LUA_SRC_EXECUTER,
-            constants.LUA_SRC_AWS_HANDLER]
+class BaseCreateStatementGenerator:
+    def __init__(self, lua_src_files, modules):
+        self._lua_copy_source_list = lua_src_files
+        self._lua_modules = modules
+        self._lua_modules_str = " ".join(modules)
 
     def _copy_lua_source_files(self):
         for lua_src_file in self._lua_copy_source_list:
@@ -28,14 +27,10 @@ class ExportingCreateStatementGenerator:
 
     def _bundle_lua_scripts(self):
         bash_command = \
-            "cd {tmp_dir} " \
-            "&& amalg.lua -o {src_path} -s execute_exporter.lua aws_s3_handler " \
-            "&& amalg.lua -o {err_path} -s {src_path} exaerror " \
-            "&& amalg.lua -o {fin_path} -s {err_path} message_expander".format(
+            "cd {tmp_dir} && amalg.lua -o {fin_path} -s {modules}".format(
                 tmp_dir=constants.TMP_DIR,
-                src_path=constants.LUA_BUNDLED_SOURCES_PATH,
-                err_path=constants.LUA_BUNDLED_EXAERROR_PATH,
-                fin_path=constants.LUA_BUNDLED_FINAL_PATH)
+                fin_path=constants.LUA_BUNDLED_FINAL_PATH,
+                modules=self._lua_modules_str)
 
         subprocess.check_call(bash_command, shell=True)
         logger.debug(f"Lua scripts are bundled into "
@@ -64,3 +59,14 @@ class ExportingCreateStatementGenerator:
         return stmt
 
 
+class ExportingCreateStatementGenerator(BaseCreateStatementGenerator):
+    def __init__(self):
+        self._lua_src_files = [
+            constants.LUA_SRC_EXECUTER,
+            constants.LUA_SRC_AWS_HANDLER]
+        self._modules = [
+            "execute_exporter.lua",
+            "aws_s3_handler",  
+            "exaerror",  
+            "message_expander"]
+        super().__init__(self._lua_src_files, self._modules)
