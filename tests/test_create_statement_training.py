@@ -3,8 +3,8 @@ import pytest
 import importlib_resources
 
 package = importlib_resources.files("exasol_sagemaker_extension")
-SQL_CREATE_STATEMENT_FILE_PATH = \
-    package.joinpath("resources").joinpath("create_statement_training.sql")
+training_create_statement_sql_path_obj = package.joinpath(
+    "resources").joinpath("create_statement_training.sql")
 
 DB_CONNECTION_ADDR = "127.0.0.1:9563"
 DB_CONNECTION_USER = "sys"
@@ -40,8 +40,7 @@ def get_created_scripts(conn):
 def test_export_table(setup_database):
     db_conn = setup_database
 
-    with open(SQL_CREATE_STATEMENT_FILE_PATH) as f:
-        statement_str = f.read()
+    statement_str = training_create_statement_sql_path_obj.read_text()
     db_conn.execute(statement_str)
 
     exa_all_created_scripts = get_created_scripts(db_conn)
