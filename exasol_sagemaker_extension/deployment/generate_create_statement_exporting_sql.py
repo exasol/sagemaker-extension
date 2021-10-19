@@ -1,43 +1,28 @@
 import os.path
 import subprocess
-from pathlib import Path
 import importlib_resources
+from exasol_sagemaker_extension.deployment import constants
 
 # This script packages Lua modules into a single file and generates
 # the CREATE SCRIPT statement sql by inserting the packaged module
 # inside the sql script.
 
 
-BASE_DIR = importlib_resources.files("exasol_sagemaker_extension")
-LUA_SRC_DIR = (BASE_DIR / "lua" / "src")
-TMP_DIR = "/tmp"
-
-
-LUA_SRC_EXECUTER = "execute_exporter.lua"
-LUA_SRC_AWS_HANDLER = "aws_s3_handler.lua"
-LUA_BUNDLED_SOURCES_PATH = os.path.join(TMP_DIR, "bundle_sources.lua")
-LUA_BUNDLED_EXAERROR_PATH = os.path.join(TMP_DIR, "bundle_exaerror.lua")
-LUA_BUNDLED_FINAL_PATH = os.path.join(TMP_DIR, "bundle_final.lua")
-
 lua_copy_source_list = [
-    LUA_SRC_EXECUTER,
-    LUA_SRC_AWS_HANDLER]
-lua_remove_artifact_list = [
-    LUA_BUNDLED_SOURCES_PATH,
-    LUA_BUNDLED_EXAERROR_PATH]
+    constants.LUA_SRC_EXECUTER,
+    constants.LUA_SRC_AWS_HANDLER]
 
-EXPORTING_CREATE_SCRIPT_PATH = os.path.join(
-    TMP_DIR, "create_statement_exporting.sql")
-exporting_create_statement_template_sql_path_obj = BASE_DIR.joinpath(
-    "resources").joinpath("create_statement_exporting_template.sql")
+lua_remove_artifact_list = [
+    constants.LUA_BUNDLED_SOURCES_PATH,
+    constants.LUA_BUNDLED_EXAERROR_PATH]
 
 
 def copy_lua_source_files():
     for lua_src_file in lua_copy_source_list:
-        src_data = (LUA_SRC_DIR / lua_src_file).read_text()
-        with open(os.path.join(TMP_DIR, lua_src_file), "w") as file:
+        src_data = (constants.LUA_SRC_DIR / lua_src_file).read_text()
+        with open(os.path.join(constants.TMP_DIR, lua_src_file), "w") as file:
             file.write(src_data)
-            print(f"Copy {lua_src_file} to {TMP_DIR}")
+            print(f"Copy {lua_src_file} to {constants.TMP_DIR}")
 
 
 def bundle_lua_scripts():
@@ -46,13 +31,13 @@ def bundle_lua_scripts():
         "&& amalg.lua -o {src_path} -s execute_exporter.lua aws_s3_handler " \
         "&& amalg.lua -o {err_path} -s {src_path} exaerror " \
         "&& amalg.lua -o {fin_path} -s {err_path} message_expander".format(
-            tmp_dir=TMP_DIR,
-            src_path=LUA_BUNDLED_SOURCES_PATH,
-            err_path=LUA_BUNDLED_EXAERROR_PATH,
-            fin_path=LUA_BUNDLED_FINAL_PATH)
+            tmp_dir=constants.TMP_DIR,
+            src_path=constants.LUA_BUNDLED_SOURCES_PATH,
+            err_path=constants.LUA_BUNDLED_EXAERROR_PATH,
+            fin_path=constants.LUA_BUNDLED_FINAL_PATH)
 
     subprocess.check_call(bash_command, shell=True)
-    print(f"Lua scripts are bundled into {LUA_BUNDLED_FINAL_PATH}")
+    print(f"Lua scripts are bundled into {constants.LUA_BUNDLED_FINAL_PATH}")
 
 
 def clean_lua_artifacts():
@@ -62,15 +47,17 @@ def clean_lua_artifacts():
 
 
 def insert_bundle_into_sql_script():
-    sql_template = exporting_create_statement_template_sql_path_obj.read_text()
+    sql_template = constants.\
+        EXPORTING_CREATE_STATEMENT_TEMPLATE_SQL_PATH_OBJ.read_text()
 
-    with open(LUA_BUNDLED_FINAL_PATH, "r") as file:
+    with open(constants.LUA_BUNDLED_FINAL_PATH, "r") as file:
         lua_bundled_data = file.read()
 
-    with open(EXPORTING_CREATE_SCRIPT_PATH, "w") as file:
+    with open(constants.EXPORTING_CREATE_SCRIPT_PATH, "w") as file:
         file.write(sql_template.format(BUNDLED_SCRIPT=lua_bundled_data))
 
-    print(f"Create statement is saved as {EXPORTING_CREATE_SCRIPT_PATH}")
+    print(f"Create statement is saved as "
+          f"{constants.EXPORTING_CREATE_SCRIPT_PATH}")
 
 
 def run():

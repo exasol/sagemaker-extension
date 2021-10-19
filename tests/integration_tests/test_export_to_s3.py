@@ -4,10 +4,8 @@ import json
 import os.path
 import localstack_client.session
 import importlib_resources
+from exasol_sagemaker_extension.deployment import constants
 
-TMP_DIR = "/tmp"
-EXPORTING_CREATE_SCRIPT_PATH = os.path.join(
-    TMP_DIR, "create_statement_exporting.sql")
 
 DB_CONNECTION_ADDR = "127.0.0.1:9563"
 DB_CONNECTION_USER = "sys"
@@ -57,7 +55,7 @@ def create_aws_connection(conn):
 
 
 def create_scripts(conn):
-    with open(EXPORTING_CREATE_SCRIPT_PATH, "r") as file:
+    with open(constants.EXPORTING_CREATE_SCRIPT_PATH, "r") as file:
         statement_str = file.read()
     conn.execute(statement_str)
     print("create statement script is executed!")

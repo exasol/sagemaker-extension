@@ -2,17 +2,9 @@ import argparse
 import pyexasol
 import os.path
 import importlib_resources
+from exasol_sagemaker_extension.deployment import constants
 from exasol_sagemaker_extension.deployment import \
     generate_create_statement_exporting_sql
-
-
-package = importlib_resources.files("exasol_sagemaker_extension")
-training_create_statement_sql_path_obj = package.joinpath(
-    "resources").joinpath("create_statement_training.sql")
-
-TMP_DIR = "/tmp"
-EXPORTING_CREATE_SCRIPT_PATH = os.path.join(
-    TMP_DIR, "create_statement_exporting.sql")
 
 
 class DeployCreateStatements:
@@ -42,14 +34,16 @@ class DeployCreateStatements:
         else:
             print("\n".join(statement_maps.values()))
 
+
     def _create_exporting_statement(self):
         generate_create_statement_exporting_sql.run()
-        with open(EXPORTING_CREATE_SCRIPT_PATH, "r") as file:
+        with open(constants.EXPORTING_CREATE_SCRIPT_PATH, "r") as file:
             statement_str = file.read()
         return statement_str
 
     def _create_training_statement(self):
-        statement_str = training_create_statement_sql_path_obj.read_text()
+        statement_str = constants.\
+            TRAINING_CREATE_STATEMENT_SQL_PATH_OBJ.read_text()
         return statement_str
 
     def _open_schema(self):
