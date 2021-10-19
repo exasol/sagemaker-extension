@@ -1,16 +1,21 @@
 import os.path
-import importlib_resources
 import logging
+import tempfile
+import importlib_resources
 
+# set logger
 logging.basicConfig(
     format='%(asctime)s - %(module)s  - %(message)s',
     level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
+# create tmp folder
+TMP_DIR_OBJ = tempfile.TemporaryDirectory()
+TMP_DIR = TMP_DIR_OBJ.name
 
+# set deployment paths
 BASE_DIR = importlib_resources.files("exasol_sagemaker_extension")
 LUA_SRC_DIR = (BASE_DIR / "lua" / "src")
-TMP_DIR = "/tmp"
 
 LUA_SRC_EXECUTER = "execute_exporter.lua"
 LUA_SRC_AWS_HANDLER = "aws_s3_handler.lua"
