@@ -3,8 +3,8 @@ import pyexasol
 import os.path
 import importlib_resources
 from exasol_sagemaker_extension.deployment import constants
-from exasol_sagemaker_extension.deployment import \
-    generate_create_statement_exporting_sql
+from exasol_sagemaker_extension.deployment.\
+    generate_create_statement_exporting_sql import ExportingCreateStatementGenerator
 
 
 class DeployCreateStatements:
@@ -26,19 +26,17 @@ class DeployCreateStatements:
         training_create_stmt = self._create_training_statement()
         statement_maps= {
                 "exporting create statement": exportig_create_stmt,
-                "training create statement": training_create_stmt
-        }
+                "training create statement": training_create_stmt}
+        
         if not self._to_print:
             self._open_schema()
             self._execute_statements(statement_maps)
         else:
             print("\n".join(statement_maps.values()))
 
-
     def _create_exporting_statement(self):
-        generate_create_statement_exporting_sql.run()
-        with open(constants.EXPORTING_CREATE_SCRIPT_PATH, "r") as file:
-            statement_str = file.read()
+        statement_generator = ExportingCreateStatementGenerator()
+        statement_str = statement_generator.get_statement()
         return statement_str
 
     def _create_training_statement(self):

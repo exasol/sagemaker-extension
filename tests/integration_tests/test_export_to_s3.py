@@ -5,7 +5,8 @@ import os.path
 import localstack_client.session
 import importlib_resources
 from exasol_sagemaker_extension.deployment import constants
-
+from exasol_sagemaker_extension.deployment.\
+    generate_create_statement_exporting_sql import ExportingCreateStatementGenerator
 
 DB_CONNECTION_ADDR = "127.0.0.1:9563"
 DB_CONNECTION_USER = "sys"
@@ -55,8 +56,8 @@ def create_aws_connection(conn):
 
 
 def create_scripts(conn):
-    with open(constants.EXPORTING_CREATE_SCRIPT_PATH, "r") as file:
-        statement_str = file.read()
+    statement_generator = ExportingCreateStatementGenerator()
+    statement_str = statement_generator.get_statement()
     conn.execute(statement_str)
     print("create statement script is executed!")
 
