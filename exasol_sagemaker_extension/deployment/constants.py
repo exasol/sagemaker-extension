@@ -1,5 +1,11 @@
 import os.path
 import importlib_resources
+import logging
+
+logging.basicConfig(
+    format='%(asctime)s - %(module)s  - %(message)s',
+    level=logging.DEBUG)
+logger = logging.getLogger(__name__)
 
 
 BASE_DIR = importlib_resources.files("exasol_sagemaker_extension")

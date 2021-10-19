@@ -3,8 +3,10 @@ import pyexasol
 import os.path
 import importlib_resources
 from exasol_sagemaker_extension.deployment import constants
+from exasol_sagemaker_extension.deployment.constants import logger
 from exasol_sagemaker_extension.deployment.\
-    generate_create_statement_exporting_sql import ExportingCreateStatementGenerator
+    generate_create_statement_exporting_sql \
+    import ExportingCreateStatementGenerator
 
 
 class DeployCreateStatements:
@@ -24,6 +26,8 @@ class DeployCreateStatements:
     def run(self):
         exportig_create_stmt = self._create_exporting_statement()
         training_create_stmt = self._create_training_statement()
+        logger.debug(f"Create statements are obtained")
+
         statement_maps= {
                 "exporting create statement": exportig_create_stmt,
                 "training create statement": training_create_stmt}
@@ -49,11 +53,12 @@ class DeployCreateStatements:
                    "OPEN SCHEMA {schema_name}"]
         for query in queries:
             self.__exasol_conn.execute(query.format(schema_name=self._schema))
+        logger.debug(f"Scheme -{schema_name}- is opened")
 
     def _execute_statements(self, statement_list: dict):
         for desc, stmt in statement_list.items():
             self.__exasol_conn.execute(stmt)
-            print(f"Executed {desc}")
+            logger.debug(f"Statement -{desc}- is executed")
 
 
 if __name__ == "__main__":
