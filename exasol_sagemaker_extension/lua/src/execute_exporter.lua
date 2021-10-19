@@ -124,7 +124,7 @@ end
 function main(json_str)
 	local args = parse_arguments(json_str)
 
-	local aws_s3_handler = require("exasol_sagemaker_extension.lua.src.aws_s3_handler")
+	local aws_s3_handler = require("aws_s3_handler")
 	local success = aws_s3_handler.export_to_s3(
 			args['input_schema_name'],
 			args['input_table_or_view_name'],

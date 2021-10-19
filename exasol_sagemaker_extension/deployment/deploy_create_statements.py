@@ -1,5 +1,6 @@
 import argparse
 import pyexasol
+import os.path
 import importlib_resources
 from exasol_sagemaker_extension.deployment import \
     generate_create_statement_exporting_sql
@@ -8,8 +9,10 @@ from exasol_sagemaker_extension.deployment import \
 package = importlib_resources.files("exasol_sagemaker_extension")
 training_create_statement_sql_path_obj = package.joinpath(
     "resources").joinpath("create_statement_training.sql")
-exporting_create_statement_sql_path_obj = package.joinpath(
-    "target").joinpath("create_statement_exporting.sql")
+
+TMP_DIR = "/tmp"
+EXPORTING_CREATE_SCRIPT_PATH = os.path.join(
+    TMP_DIR, "create_statement_exporting.sql")
 
 
 class DeployCreateStatements:
@@ -41,7 +44,8 @@ class DeployCreateStatements:
 
     def _create_exporting_statement(self):
         generate_create_statement_exporting_sql.run()
-        statement_str = exporting_create_statement_sql_path_obj.read_text()
+        with open(EXPORTING_CREATE_SCRIPT_PATH, "r") as file:
+            statement_str = file.read()
         return statement_str
 
     def _create_training_statement(self):
