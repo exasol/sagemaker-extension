@@ -13,17 +13,28 @@ BASE_DIR = importlib_resources.files("exasol_sagemaker_extension")
 LUA_SRC_DIR = (BASE_DIR / "lua" / "src")
 TARGET_DIR = (BASE_DIR / "target")
 
-LUA_BUNDLED_SOURCES_PATH = TARGET_DIR.joinpath("bundle_sources.lua")
-LUA_BUNDLED_EXAERROR_PATH = TARGET_DIR.joinpath("bundle_exaerror.lua")
-LUA_BUNDLED_FINAL_PATH = TARGET_DIR.joinpath("bundle_final.lua")
+
+def get_temp_file_path(path_obj : Path):
+    with importlib_resources.as_file(path_obj) as path:
+        file_path = path
+    return file_path
+
+
+LUA_BUNDLED_SOURCES_PATH = get_temp_file_path(
+    TARGET_DIR.joinpath("bundle_sources.lua"))
+LUA_BUNDLED_EXAERROR_PATH = get_temp_file_path(
+    TARGET_DIR.joinpath("bundle_exaerror.lua"))
+LUA_BUNDLED_FINAL_PATH = get_temp_file_path(
+    TARGET_DIR.joinpath("bundle_final.lua"))
 lua_remove_artifact_list = [
     LUA_BUNDLED_SOURCES_PATH,
     LUA_BUNDLED_EXAERROR_PATH]
 
-EXPORTING_CREATE_SCRIPT_TEMPLATE_PATH =  BASE_DIR.joinpath(
-    "resources").joinpath("create_statement_exporting_template.sql")
-EXPORTING_CREATE_SCRIPT_PATH = TARGET_DIR.joinpath(
-    "create_statement_exporting.sql")
+EXPORTING_CREATE_SCRIPT_TEMPLATE_PATH =  get_temp_file_path(
+    BASE_DIR.joinpath("resources").joinpath(
+        "create_statement_exporting_template.sql"))
+EXPORTING_CREATE_SCRIPT_PATH = get_temp_file_path(TARGET_DIR.joinpath(
+    "create_statement_exporting.sql"))
 
 
 def create_target_dir():
