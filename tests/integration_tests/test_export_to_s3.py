@@ -3,10 +3,9 @@ import pyexasol
 import json
 import os.path
 import localstack_client.session
-import importlib_resources
-from exasol_sagemaker_extension.deployment import constants
 from exasol_sagemaker_extension.deployment.\
-    generate_create_statement_exporting_sql import ExportingCreateStatementGenerator
+    generate_create_statement_autopilot_training import \
+    AutopilotTrainingCreateStatementGenerator
 
 DB_CONNECTION_ADDR = "127.0.0.1:9563"
 DB_CONNECTION_USER = "sys"
@@ -56,7 +55,7 @@ def create_aws_connection(conn):
 
 
 def create_scripts(conn):
-    statement_generator = ExportingCreateStatementGenerator()
+    statement_generator = AutopilotTrainingCreateStatementGenerator()
     statement_str = statement_generator.get_statement()
     conn.execute(statement_str)
     print("create statement script is executed!")

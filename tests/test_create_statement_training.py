@@ -37,7 +37,7 @@ def get_created_scripts(conn):
 def test_export_table(setup_database):
     db_conn = setup_database
 
-    statement_str = constants.TRAINING_CREATE_STATEMENT_SQL_PATH_OBJ.read_text()
+    statement_str = constants.CREATE_STATEMENT_AUTOPILOT_TRAINING_UDF_RESOURCE.read_text()
     db_conn.execute(statement_str)
 
     exa_all_created_scripts = get_created_scripts(db_conn)
