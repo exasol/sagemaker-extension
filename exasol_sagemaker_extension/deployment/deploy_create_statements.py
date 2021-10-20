@@ -52,7 +52,7 @@ class DeployCreateStatements:
         """
         Generate and return exporting CREATE SCRIPT sql statement.
 
-        :return str: exporting CREATE SCRIPT sql statement
+        :return: The exporting CREATE SCRIPT sql statement
         """
         statement_generator = ExportingCreateStatementGenerator()
         statement_str = statement_generator.get_statement()
@@ -62,7 +62,7 @@ class DeployCreateStatements:
         """
         Read and return training CREATE SCRIPT udf script statement
 
-        :return str: training CREATE SCRIPT udf script statement
+        :return: The training CREATE SCRIPT udf script statement
         """
         statement_str = constants.\
             TRAINING_CREATE_STATEMENT_SQL_PATH_OBJ.read_text()

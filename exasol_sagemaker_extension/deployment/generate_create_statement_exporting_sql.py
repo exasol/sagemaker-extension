@@ -15,8 +15,8 @@ class BaseCreateStatementGenerator:
     the CREATE SCRIPT statement sql by inserting the packaged module
     inside the sql script.
 
-    :param List[str] lua_src_files: list of lua source file names
-    :param List[str] modules: list of module names
+    :param lua_src_files: List of Lua source file names
+    :param modules: List of Lua module names
     """
     def __init__(self, lua_src_files: List[str], modules: List[str]):
         self._lua_copy_source_list = lua_src_files
@@ -29,7 +29,7 @@ class BaseCreateStatementGenerator:
         Copy Lua source files into the temporary directory where amalg script
         is executed and the bundle script is generated
 
-        :param str tmp_dir: temporary directory  path
+        :param tmp_dir: Temporary directory path
         """
         for lua_src_file in self._lua_copy_source_list:
             src_data = (constants.LUA_SRC_DIR / lua_src_file).read_text()
@@ -41,7 +41,7 @@ class BaseCreateStatementGenerator:
         """
         Executes amalg.lua script to bundle given Lua modules.
 
-        :param str tmp_dir: temporary directory  path
+        :param tmp_dir: Temporary directory path
         """
         lua_bundle_path = os.path.join(tmp_dir, constants.LUA_BUNDLED)
         bash_command = \
@@ -58,9 +58,9 @@ class BaseCreateStatementGenerator:
         Insert the bundled Lua script read in  temporary directory to
         the CREATE SCRIPT sql statement read from Resources.
 
-        :param str tmp_dir: temporary directory  path
+        :param tmp_dir: Temporary directory path
 
-        :return str: completed CREATE SCRIPT sql statement
+        :return: The generated CREATE SCRIPT sql statement
         """
         sql_tmplate = constants.\
             EXPORTING_CREATE_STATEMENT_TEMPLATE_SQL_PATH_OBJ.read_text()
@@ -76,7 +76,7 @@ class BaseCreateStatementGenerator:
         Executes helper functions sequentially
         to generate CREATE SCRIPT sql statement
 
-        :return str: completed CREATE SCRIPT sql statement
+        :return: The generated CREATE SCRIPT sql statement
         """
         with tempfile.TemporaryDirectory() as tmp_dir:
             self._copy_lua_source_files(tmp_dir)
