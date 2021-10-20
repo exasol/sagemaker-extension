@@ -1,6 +1,7 @@
 import argparse
 import pyexasol
 import os.path
+from typing import Dict
 import importlib_resources
 from exasol_sagemaker_extension.deployment import constants
 from exasol_sagemaker_extension.deployment.constants import logger
@@ -10,6 +11,11 @@ from exasol_sagemaker_extension.deployment.\
 
 
 class DeployCreateStatements:
+    """
+    This class executes or prints out CREATE SCRIPT sql statements
+    that generate scripts deploying the sagemaker-extension project.
+    """
+
     def __init__(self, **kwargs):
         self._db_host = kwargs['host']
         self._db_port = kwargs['port']
@@ -24,6 +30,9 @@ class DeployCreateStatements:
             compression=True)
 
     def run(self):
+        """
+        Run the deployment by retrieving the CREATE SCRIPTS sql statements
+        """
         exportig_create_stmt = self._create_exporting_statement()
         training_create_stmt = self._create_training_statement()
         logger.debug(f"Create statements are obtained")
@@ -39,23 +48,39 @@ class DeployCreateStatements:
             print("\n".join(statement_maps.values()))
 
     def _create_exporting_statement(self):
+        """
+        Generate and return exporting CREATE SCRIPT sql statement.
+
+        :return str: exporting CREATE SCRIPT sql statement
+        """
         statement_generator = ExportingCreateStatementGenerator()
         statement_str = statement_generator.get_statement()
         return statement_str
 
     def _create_training_statement(self):
+        """
+        Read and return training CREATE SCRIPT udf script statement
+
+        :return str: training CREATE SCRIPT udf script statement
+        """
         statement_str = constants.\
             TRAINING_CREATE_STATEMENT_SQL_PATH_OBJ.read_text()
         return statement_str
 
     def _open_schema(self):
+        """
+        Open and use the  schema  for where deployment is performed
+        """
         queries = ["CREATE SCHEMA IF NOT EXISTS {schema_name}",
                    "OPEN SCHEMA {schema_name}"]
         for query in queries:
             self.__exasol_conn.execute(query.format(schema_name=self._schema))
         logger.debug(f"Scheme -{schema_name}- is opened")
 
-    def _execute_statements(self, statement_list: dict):
+    def _execute_statements(self, statement_list: Dict[str, str]):
+        """
+        Executes CREATE SCRIPT sql statements on Exasol db
+        """
         for desc, stmt in statement_list.items():
             self.__exasol_conn.execute(stmt)
             logger.debug(f"Statement -{desc}- is executed")
