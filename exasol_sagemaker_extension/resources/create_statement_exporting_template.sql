@@ -10,7 +10,7 @@ CREATE OR REPLACE LUA SCRIPT "TRAIN_WITH_SAGEMAKER_AUTOPILOT" (json_str)  AS
         end
     )
 
-BUNDLED_SCRIPT
+{BUNDLED_SCRIPT}
 
 main(json_str)
 /

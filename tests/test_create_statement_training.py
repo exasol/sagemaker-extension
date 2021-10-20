@@ -1,7 +1,8 @@
 import pyexasol
 import pytest
+import importlib_resources
+from exasol_sagemaker_extension.deployment import constants
 
-SQL_CREATE_STATEMENT_FILE_PATH = "./scripts/create_statement_training.sql"
 DB_CONNECTION_ADDR = "127.0.0.1:9563"
 DB_CONNECTION_USER = "sys"
 DB_CONNECTION_PASS = "exasol"
@@ -28,15 +29,15 @@ def setup_database():
 
 
 def get_created_scripts(conn):
-    exa_all_scripts_list = conn.export_to_list("Select SCRIPT_NAME FROM EXA_ALL_SCRIPTS")
+    exa_all_scripts_list = conn.export_to_list(
+        "Select SCRIPT_NAME FROM EXA_ALL_SCRIPTS")
     return sum(exa_all_scripts_list, [])
 
 
 def test_export_table(setup_database):
     db_conn = setup_database
 
-    with open(SQL_CREATE_STATEMENT_FILE_PATH) as f:
-        statement_str = f.read()
+    statement_str = constants.TRAINING_CREATE_STATEMENT_SQL_PATH_OBJ.read_text()
     db_conn.execute(statement_str)
 
     exa_all_created_scripts = get_created_scripts(db_conn)

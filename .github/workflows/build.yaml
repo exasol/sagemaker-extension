@@ -22,6 +22,8 @@ jobs:
         run: poetry install
       - name: Build Poetry
         run: poetry build
+      - name: Install project whl
+        run: pip install dist/*.whl
 
       - name:  Install Lua dependencies
         run: |
@@ -31,9 +33,7 @@ jobs:
           sudo luarocks install luaunit
           sudo luarocks install mockagne
           sudo luarocks install exaerror
-      - name: Generate sql script
-        run: |
-          ./scripts/generate_create_statement_exporting_sql.sh
+
       - name: Run Lua unit tests
         run: |
           ./scripts/run_lua_unittests.sh
