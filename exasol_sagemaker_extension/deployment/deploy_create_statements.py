@@ -1,4 +1,3 @@
-import argparse
 import pyexasol
 import os.path
 from typing import Dict
@@ -16,13 +15,14 @@ class DeployCreateStatements:
     that generate scripts deploying the sagemaker-extension project.
     """
 
-    def __init__(self, **kwargs):
-        self._db_host = kwargs['host']
-        self._db_port = kwargs['port']
-        self._db_user = kwargs['user']
-        self._db_pass = kwargs['pass']
-        self._schema = kwargs['schema']
-        self._to_print = kwargs['print']
+    def __init__(self, db_host: str, db_port: str,  db_user: str, 
+                 db_pass: str, schema: str, to_print: bool):
+        self._db_host = db_host
+        self._db_port = db_port
+        self._db_user = db_user
+        self._db_pass = db_pass
+        self._schema = schema
+        self._to_print = to_print
         self.__exasol_conn = pyexasol.connect(
             dsn="{host}:{port}".format(host=self._db_host, port=self._db_port),
             user=self._db_user,
@@ -84,19 +84,3 @@ class DeployCreateStatements:
         for desc, stmt in statement_list.items():
             self.__exasol_conn.execute(stmt)
             logger.debug(f"Statement -{desc}- is executed")
-
-
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser(
-        description="deploy the Sagemaker Extension")
-    parser.add_argument("--host", help="db host address", required=True)
-    parser.add_argument("--port", help="db host port", required=True)
-    parser.add_argument("--user", help="db user name", required=True)
-    parser.add_argument("--pass", help="db user password", required=True)
-    parser.add_argument("--schema", help="schema name", required=True)
-    parser.add_argument("--print", help="print out statements",
-                        required=False, action="store_true")
-
-    args = vars(parser.parse_args())
-    deployment = DeployCreateStatements(**args)
-    deployment.run()
