@@ -1,3 +1,4 @@
+import logging
 import argparse
 from exasol_sagemaker_extension.deployment.deploy_create_statements \
     import DeployCreateStatements
@@ -12,6 +13,10 @@ if __name__ == "__main__":
     parser.add_argument("--schema", help="schema name", required=True)
     parser.add_argument("--print", help="print out statements",
                         required=False, action="store_true")
+
+    logging.basicConfig(
+        format='%(asctime)s - %(module)s  - %(message)s',
+        level=logging.DEBUG)
 
     args = vars(parser.parse_args())
     deployment = DeployCreateStatements(

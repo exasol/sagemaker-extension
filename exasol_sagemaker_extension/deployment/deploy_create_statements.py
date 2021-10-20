@@ -3,10 +3,11 @@ import os.path
 from typing import Dict
 import importlib_resources
 from exasol_sagemaker_extension.deployment import constants
-from exasol_sagemaker_extension.deployment.constants import logger
 from exasol_sagemaker_extension.deployment.\
     generate_create_statement_exporting_sql \
     import ExportingCreateStatementGenerator
+import logging
+logger = logging.getLogger(__name__)
 
 
 class DeployCreateStatements:

@@ -5,11 +5,8 @@ from typing import List
 from pathlib import Path
 import importlib_resources
 from exasol_sagemaker_extension.deployment import constants
-from exasol_sagemaker_extension.deployment.constants import logger
-
-# This script packages Lua modules into a single file and generates
-# the CREATE SCRIPT statement sql by inserting the packaged module
-# inside the sql script.
+import logging
+logger = logging.getLogger(__name__)
 
 
 class BaseCreateStatementGenerator:
@@ -25,6 +22,7 @@ class BaseCreateStatementGenerator:
         self._lua_copy_source_list = lua_src_files
         self._lua_modules = modules
         self._lua_modules_str = " ".join(modules)
+        
 
     def _copy_lua_source_files(self, tmp_dir: str):
         """
