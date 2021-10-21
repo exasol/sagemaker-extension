@@ -1,13 +1,12 @@
-import pyexasol
 import pytest
-from exasol_sagemaker_extension.deployment.deploy_create_statements import \
-    DeployCreateStatements
+import pyexasol
+from exasol_sagemaker_extension.deployment import deploy_cli
 
 DB_CONNECTION_HOST = "127.0.0.1"
 DB_CONNECTION_PORT = "9563"
 DB_CONNECTION_USER = "sys"
 DB_CONNECTION_PASS = "exasol"
-DB_SCHEMA = "TEST_DEPLOY_SCHEMA"
+DB_SCHEMA = "TEST_CLI_SCHEMA"
 AUTOPILOT_TRAINING_LUA_SCRIPT_NAME = "TRAIN_WITH_SAGEMAKER_AUTOPILOT"
 AUTOPILOT_TRAINING_UDF_NAME = "AutopilotTrainingUDF"
 
@@ -35,17 +34,15 @@ def get_all_scripts(db_conn):
     return list(map(lambda x: x[0], all_scripts))
 
 
-def test_deploy_create_statements(db_conn):
-    deployer = DeployCreateStatements(
-        db_host=DB_CONNECTION_HOST,
-        db_port=DB_CONNECTION_PORT,
-        db_user=DB_CONNECTION_USER,
-        db_pass=DB_CONNECTION_PASS,
-        schema=DB_SCHEMA,
-        to_print=False
-    )
-
-    deployer.run()
+def test_deploy_cli_main(db_conn):
+    args_list = [
+        "--host", DB_CONNECTION_HOST,
+        "--port", DB_CONNECTION_PORT,
+        "--user", DB_CONNECTION_USER,
+        "--pass", DB_CONNECTION_PASS,
+        "--schema", DB_SCHEMA
+    ]
+    deploy_cli.main(args_list)
 
     all_schemas = get_all_schemas(db_conn)
     all_scripts = get_all_scripts(db_conn)
@@ -53,3 +50,4 @@ def test_deploy_create_statements(db_conn):
     assert DB_SCHEMA.upper() in all_schemas
     assert AUTOPILOT_TRAINING_LUA_SCRIPT_NAME.upper() in all_scripts
     assert AUTOPILOT_TRAINING_UDF_NAME.upper() in all_scripts
+
