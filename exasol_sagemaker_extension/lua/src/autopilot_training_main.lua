@@ -1,5 +1,5 @@
 ---
--- @module execute_exporter
+-- @module autopilot_training_main
 --
 -- This module exports a given Exasol table into AWS S3.
 --

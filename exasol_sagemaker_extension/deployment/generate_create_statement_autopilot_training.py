@@ -1,25 +1,25 @@
 from exasol_sagemaker_extension.deployment import constants
-from exasol_sagemaker_extension.deployment.generate_create_statement_base import \
-    BaseCreateStatementGenerator
+from exasol_sagemaker_extension.deployment.generate_create_statement_base \
+    import BaseCreateStatementGenerator
 
 
-class AutopilotTrainingCreateStatementGenerator(BaseCreateStatementGenerator):
+class AutopilotTrainingLuaScriptCreateStatementGenerator(BaseCreateStatementGenerator):
     """
     This is a custom class which generates CREATE SCRIPT sql statement
     exporting a given Exasol table into AWS S3 and
-    training the exported data with AWS Sagemaker Autopilot
+    run a training on the exported data with AWS Sagemaker Autopilot
     """
     def __init__(self):
         self._lua_src_files = [
-            constants.LUA_SRC_EXECUTER,
-            constants.LUA_SRC_AWS_HANDLER]
+            constants.LUA_SRC_AUTOPILOT_TRAINING_MAIN_NAME,
+            constants.LUA_SRC_MODULE_AWS_S3_HANDLER_NAME]
         self._modules = [
-            "execute_exporter.lua",
+            "autopilot_training_main.lua",
             "aws_s3_handler",
             "exaerror",
             "message_expander"]
-        self._create_statement_template = \
-            constants.CREATE_STATEMENT_TEMPLATE_AUTOPILOT_TRAINING_RESOURCE
+        self._create_statement_template = constants.\
+            CREATE_STATEMENT_TEMPLATE_AUTOPILOT_TRAINING_LUA_SCRIPT_RESOURCE
 
         super().__init__(
             lua_src_files=self._lua_src_files,

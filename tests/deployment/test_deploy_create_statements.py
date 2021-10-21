@@ -8,8 +8,8 @@ DB_CONNECTION_PORT = "9563"
 DB_CONNECTION_USER = "sys"
 DB_CONNECTION_PASS = "exasol"
 DB_SCHEMA = "TESTSCHEMA"
-SCRIPT_AUTOPILOT_TRAINING_UDF = "AutopilotTrainingUDF"
-SCRIPT_AUTOPILOT_TRAINING = "TRAIN_WITH_SAGEMAKER_AUTOPILOT"
+AUTOPILOT_TRAINING_LUA_SCRIPT_NAME = "TRAIN_WITH_SAGEMAKER_AUTOPILOT"
+AUTOPILOT_TRAINING_UDF_NAME = "AutopilotTrainingUDF"
 
 
 @pytest.fixture(scope="session")
@@ -51,5 +51,5 @@ def test_deploy_create_statements(db_conn):
     all_scripts = get_all_scripts(db_conn)
 
     assert DB_SCHEMA.upper() in all_schemas
-    assert SCRIPT_AUTOPILOT_TRAINING.upper() in all_scripts
-    assert SCRIPT_AUTOPILOT_TRAINING_UDF.upper() in all_scripts
+    assert AUTOPILOT_TRAINING_LUA_SCRIPT_NAME.upper() in all_scripts
+    assert AUTOPILOT_TRAINING_UDF_NAME.upper() in all_scripts

@@ -5,7 +5,7 @@ import os.path
 import localstack_client.session
 from exasol_sagemaker_extension.deployment.\
     generate_create_statement_autopilot_training import \
-    AutopilotTrainingCreateStatementGenerator
+    AutopilotTrainingLuaScriptCreateStatementGenerator
 
 DB_CONNECTION_ADDR = "127.0.0.1:9563"
 DB_CONNECTION_USER = "sys"
@@ -55,7 +55,7 @@ def create_aws_connection(conn):
 
 
 def create_scripts(conn):
-    statement_generator = AutopilotTrainingCreateStatementGenerator()
+    statement_generator = AutopilotTrainingLuaScriptCreateStatementGenerator()
     statement_str = statement_generator.get_statement()
     conn.execute(statement_str)
     print("create statement script is executed!")

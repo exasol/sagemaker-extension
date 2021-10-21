@@ -4,7 +4,7 @@ from typing import Dict
 from exasol_sagemaker_extension.deployment import constants
 from exasol_sagemaker_extension.deployment.\
     generate_create_statement_autopilot_training \
-    import AutopilotTrainingCreateStatementGenerator
+    import AutopilotTrainingLuaScriptCreateStatementGenerator
 
 logger = logging.getLogger(__name__)
 
@@ -53,7 +53,8 @@ class DeployCreateStatements:
 
         :return: The exporting CREATE SCRIPT sql statement
         """
-        statement_generator = AutopilotTrainingCreateStatementGenerator()
+        statement_generator = \
+            AutopilotTrainingLuaScriptCreateStatementGenerator()
         statement_str = statement_generator.get_statement()
         return statement_str
 
