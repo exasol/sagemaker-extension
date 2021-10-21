@@ -84,19 +84,14 @@ def create_s3_bucket():
 
 
 @pytest.fixture(scope="session")
-def setup_database():
-    conn = pyexasol.connect(
-        dsn=DB_CONNECTION_ADDR,
-        user=DB_CONNECTION_USER,
-        password=DB_CONNECTION_PASS)
-
-    open_schema(conn)
-    create_aws_connection(conn)
-    create_scripts(conn)
-    create_table(conn, table_name=INPUT_DICT["input_table_or_view_name"])
-    insert_into_table(conn, table_name=INPUT_DICT["input_table_or_view_name"])
+def setup_database(db_conn):
+    open_schema(db_conn)
+    create_aws_connection(db_conn)
+    create_scripts(db_conn)
+    create_table(db_conn, table_name=INPUT_DICT["input_table_or_view_name"])
+    insert_into_table(db_conn, table_name=INPUT_DICT["input_table_or_view_name"])
     create_s3_bucket()
-    return conn
+    return db_conn
 
 
 def get_export_to_s3_query():

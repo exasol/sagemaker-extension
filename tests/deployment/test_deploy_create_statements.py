@@ -1,25 +1,10 @@
-import pyexasol
-import pytest
 from exasol_sagemaker_extension.deployment.deploy_create_statements import \
     DeployCreateStatements
 
-DB_CONNECTION_HOST = "127.0.0.1"
-DB_CONNECTION_PORT = "9563"
-DB_CONNECTION_USER = "sys"
-DB_CONNECTION_PASS = "exasol"
+
 DB_SCHEMA = "TEST_DEPLOY_SCHEMA"
 AUTOPILOT_TRAINING_LUA_SCRIPT_NAME = "TRAIN_WITH_SAGEMAKER_AUTOPILOT"
 AUTOPILOT_TRAINING_UDF_NAME = "AutopilotTrainingUDF"
-
-
-@pytest.fixture(scope="session")
-def db_conn():
-    conn = pyexasol.connect(
-        dsn=f"{DB_CONNECTION_HOST}:{DB_CONNECTION_PORT}",
-        user=DB_CONNECTION_USER,
-        password=DB_CONNECTION_PASS)
-
-    return conn
 
 
 def get_all_schemas(db_conn, ):
@@ -35,12 +20,12 @@ def get_all_scripts(db_conn):
     return list(map(lambda x: x[0], all_scripts))
 
 
-def test_deploy_create_statements(db_conn):
+def test_deploy_create_statements(get_params, db_conn):
     deployer = DeployCreateStatements(
-        db_host=DB_CONNECTION_HOST,
-        db_port=DB_CONNECTION_PORT,
-        db_user=DB_CONNECTION_USER,
-        db_pass=DB_CONNECTION_PASS,
+        db_host=get_params["DB_CONNECTION_HOST"],
+        db_port=get_params["DB_CONNECTION_PORT"],
+        db_user=get_params["DB_CONNECTION_USER"],
+        db_pass=get_params["DB_CONNECTION_PASS"],
         schema=DB_SCHEMA,
         to_print=False
     )

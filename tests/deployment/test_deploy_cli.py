@@ -1,24 +1,8 @@
-import pytest
-import pyexasol
 from exasol_sagemaker_extension.deployment import deploy_cli
 
-DB_CONNECTION_HOST = "127.0.0.1"
-DB_CONNECTION_PORT = "9563"
-DB_CONNECTION_USER = "sys"
-DB_CONNECTION_PASS = "exasol"
 DB_SCHEMA = "TEST_CLI_SCHEMA"
 AUTOPILOT_TRAINING_LUA_SCRIPT_NAME = "TRAIN_WITH_SAGEMAKER_AUTOPILOT"
 AUTOPILOT_TRAINING_UDF_NAME = "AutopilotTrainingUDF"
-
-
-@pytest.fixture(scope="session")
-def db_conn():
-    conn = pyexasol.connect(
-        dsn=f"{DB_CONNECTION_HOST}:{DB_CONNECTION_PORT}",
-        user=DB_CONNECTION_USER,
-        password=DB_CONNECTION_PASS)
-
-    return conn
 
 
 def get_all_schemas(db_conn, ):
@@ -34,12 +18,12 @@ def get_all_scripts(db_conn):
     return list(map(lambda x: x[0], all_scripts))
 
 
-def test_deploy_cli_main(db_conn):
+def test_deploy_cli_main(get_params, db_conn):
     args_list = [
-        "--host", DB_CONNECTION_HOST,
-        "--port", DB_CONNECTION_PORT,
-        "--user", DB_CONNECTION_USER,
-        "--pass", DB_CONNECTION_PASS,
+        "--host", get_params["DB_CONNECTION_HOST"],
+        "--port", get_params["DB_CONNECTION_PORT"],
+        "--user", get_params["DB_CONNECTION_USER"],
+        "--pass", get_params["DB_CONNECTION_PASS"],
         "--schema", DB_SCHEMA
     ]
     deploy_cli.main(args_list)
@@ -50,4 +34,3 @@ def test_deploy_cli_main(db_conn):
     assert DB_SCHEMA.upper() in all_schemas
     assert AUTOPILOT_TRAINING_LUA_SCRIPT_NAME.upper() in all_scripts
     assert AUTOPILOT_TRAINING_UDF_NAME.upper() in all_scripts
-
