@@ -3,9 +3,7 @@ import pytest
 import importlib_resources
 from exasol_sagemaker_extension.deployment import constants
 
-DB_CONNECTION_ADDR = "127.0.0.1:9563"
-DB_CONNECTION_USER = "sys"
-DB_CONNECTION_PASS = "exasol"
+
 SCHEMA_NAME = "TEST_SCHEMA"
 CREATE_SCRIPT_NAME = "AutopilotTrainingUDF".upper()
 
@@ -18,14 +16,9 @@ def open_schema(conn):
 
 
 @pytest.fixture(scope="session")
-def setup_database():
-    conn = pyexasol.connect(
-        dsn=DB_CONNECTION_ADDR,
-        user=DB_CONNECTION_USER,
-        password=DB_CONNECTION_PASS)
-
-    open_schema(conn)
-    return conn
+def setup_database(db_conn):
+    open_schema(db_conn)
+    return db_conn
 
 
 def get_created_scripts(conn):
@@ -37,7 +30,8 @@ def get_created_scripts(conn):
 def test_export_table(setup_database):
     db_conn = setup_database
 
-    statement_str = constants.TRAINING_CREATE_STATEMENT_SQL_PATH_OBJ.read_text()
+    statement_str = constants.\
+        CREATE_STATEMENT_AUTOPILOT_TRAINING_UDF_RESOURCE.read_text()
     db_conn.execute(statement_str)
 
     exa_all_created_scripts = get_created_scripts(db_conn)

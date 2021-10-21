@@ -3,10 +3,9 @@ import pyexasol
 import json
 import os.path
 import localstack_client.session
-import importlib_resources
-from exasol_sagemaker_extension.deployment import constants
 from exasol_sagemaker_extension.deployment.\
-    generate_create_statement_exporting_sql import ExportingCreateStatementGenerator
+    generate_create_statement_autopilot_training import \
+    AutopilotTrainingLuaScriptCreateStatementGenerator
 
 DB_CONNECTION_ADDR = "127.0.0.1:9563"
 DB_CONNECTION_USER = "sys"
@@ -56,7 +55,7 @@ def create_aws_connection(conn):
 
 
 def create_scripts(conn):
-    statement_generator = ExportingCreateStatementGenerator()
+    statement_generator = AutopilotTrainingLuaScriptCreateStatementGenerator()
     statement_str = statement_generator.get_statement()
     conn.execute(statement_str)
     print("create statement script is executed!")
@@ -85,19 +84,14 @@ def create_s3_bucket():
 
 
 @pytest.fixture(scope="session")
-def setup_database():
-    conn = pyexasol.connect(
-        dsn=DB_CONNECTION_ADDR,
-        user=DB_CONNECTION_USER,
-        password=DB_CONNECTION_PASS)
-
-    open_schema(conn)
-    create_aws_connection(conn)
-    create_scripts(conn)
-    create_table(conn, table_name=INPUT_DICT["input_table_or_view_name"])
-    insert_into_table(conn, table_name=INPUT_DICT["input_table_or_view_name"])
+def setup_database(db_conn):
+    open_schema(db_conn)
+    create_aws_connection(db_conn)
+    create_scripts(db_conn)
+    create_table(db_conn, table_name=INPUT_DICT["input_table_or_view_name"])
+    insert_into_table(db_conn, table_name=INPUT_DICT["input_table_or_view_name"])
     create_s3_bucket()
-    return conn
+    return db_conn
 
 
 def get_export_to_s3_query():

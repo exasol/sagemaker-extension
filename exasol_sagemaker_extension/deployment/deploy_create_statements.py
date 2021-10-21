@@ -1,12 +1,11 @@
+import logging
 import pyexasol
-import os.path
 from typing import Dict
-import importlib_resources
 from exasol_sagemaker_extension.deployment import constants
 from exasol_sagemaker_extension.deployment.\
-    generate_create_statement_exporting_sql \
-    import ExportingCreateStatementGenerator
-import logging
+    generate_create_statement_autopilot_training \
+    import AutopilotTrainingLuaScriptCreateStatementGenerator
+
 logger = logging.getLogger(__name__)
 
 
@@ -54,7 +53,8 @@ class DeployCreateStatements:
 
         :return: The exporting CREATE SCRIPT sql statement
         """
-        statement_generator = ExportingCreateStatementGenerator()
+        statement_generator = \
+            AutopilotTrainingLuaScriptCreateStatementGenerator()
         statement_str = statement_generator.get_statement()
         return statement_str
 
@@ -65,7 +65,7 @@ class DeployCreateStatements:
         :return: The training CREATE SCRIPT udf script statement
         """
         statement_str = constants.\
-            TRAINING_CREATE_STATEMENT_SQL_PATH_OBJ.read_text()
+            CREATE_STATEMENT_AUTOPILOT_TRAINING_UDF_RESOURCE.read_text()
         return statement_str
 
     def _open_schema(self):
@@ -76,7 +76,7 @@ class DeployCreateStatements:
                    "OPEN SCHEMA {schema_name}"]
         for query in queries:
             self.__exasol_conn.execute(query.format(schema_name=self._schema))
-        logger.debug(f"Scheme -{schema_name}- is opened")
+        logger.debug(f"Schema -{self._schema}- is opened")
 
     def _execute_statements(self, statement_list: Dict[str, str]):
         """

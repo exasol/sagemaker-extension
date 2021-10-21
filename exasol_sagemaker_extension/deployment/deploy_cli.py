@@ -1,9 +1,15 @@
+import sys
 import logging
 import argparse
 from exasol_sagemaker_extension.deployment.deploy_create_statements \
     import DeployCreateStatements
 
-if __name__ == "__main__":
+
+def main(args):
+    logging.basicConfig(
+        format='%(asctime)s - %(module)s  - %(message)s',
+        level=logging.DEBUG)
+
     parser = argparse.ArgumentParser(
         description="deploy the Sagemaker Extension")
     parser.add_argument("--host", help="db host address", required=True)
@@ -14,11 +20,7 @@ if __name__ == "__main__":
     parser.add_argument("--print", help="print out statements",
                         required=False, action="store_true")
 
-    logging.basicConfig(
-        format='%(asctime)s - %(module)s  - %(message)s',
-        level=logging.DEBUG)
-
-    args = vars(parser.parse_args())
+    args = vars(parser.parse_args(args))
     deployment = DeployCreateStatements(
         db_host=args['host'],
         db_port=args['port'],
@@ -27,3 +29,8 @@ if __name__ == "__main__":
         schema=args['schema'],
         to_print=args['print'])
     deployment.run()
+
+
+if __name__ == "__main__":
+    main(sys.argv[1:])
+
