@@ -6,6 +6,10 @@ from exasol_sagemaker_extension.deployment.deploy_create_statements \
 
 
 def main(args):
+    logging.basicConfig(
+        format='%(asctime)s - %(module)s  - %(message)s',
+        level=logging.DEBUG)
+
     parser = argparse.ArgumentParser(
         description="deploy the Sagemaker Extension")
     parser.add_argument("--host", help="db host address", required=True)
@@ -28,9 +32,5 @@ def main(args):
 
 
 if __name__ == "__main__":
-    logging.basicConfig(
-        format='%(asctime)s - %(module)s  - %(message)s',
-        level=logging.DEBUG)
-
     main(sys.argv[1:])
 
