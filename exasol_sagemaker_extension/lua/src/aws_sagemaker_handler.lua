@@ -12,6 +12,7 @@ local M = {}
 -- @return boolean indicating whether it is exported successfully
 --
 function M.autopilot_training(
+        schema_name,
         model_name,
         aws_s3_connection,
         aws_region,
@@ -38,6 +39,7 @@ function M.autopilot_training(
         :max_runtime_per_training_job_in_seconds
         )]]
     local params = {
+        schema = schema_name,
         model_name = model_name,
         aws_s3_connection = aws_s3_connection,
         aws_region = aws_region,

@@ -12,14 +12,14 @@ _G.global_env = {
 }
 
 local required_args = {
-	model_name = nil,
+	model_name = true,
 	input_schema_name = true,
 	input_table_or_view_name = true,
 	aws_credentials_connection_name = true,
 	s3_output_path = true,
-	s3_bucket_uri = nil,
-	iam_sagemaker_role = nil,
-	target_attribute_name = nil,
+	s3_bucket_uri = true,
+	iam_sagemaker_role = true,
+	target_attribute_name = true,
 	problem_type = nil,
 	max_runtime_for_automl_job_in_seconds = nil,
 	max_runtime_per_training_job_in_seconds = nil,
@@ -83,7 +83,7 @@ function parse_arguments(json_str)
 	if not contains_required_arguments(args) then
 		local error_obj = exaerror.create("",
 				"Missing required arguments"
-		):add_mitigations("Following required arguments have to be specified:specified.")
+		):add_mitigations('Following required arguments have to be specified:' .. concat_required_args())
 		_G.global_env.error(tostring(error_obj))
 	end
 
@@ -119,11 +119,12 @@ end
 -- @param json_str	input parameters as json string
 --
 --
-function main(json_str)
+function main(json_str, exa)
 	local aws_s3_handler = require("aws_s3_handler")
 	local aws_sagemaker_handler = require("aws_sagemaker_handler")
 
 	local args = parse_arguments(json_str)
+	local schema_name = exa.meta.script_schema
 
 	local succ_exporting, res_exporting = aws_s3_handler.export_to_s3(
 			args['input_schema_name'],
@@ -136,6 +137,7 @@ function main(json_str)
 
 
 	local succ_training, res_training = aws_sagemaker_handler.autopilot_training(
+			schema_name,
 			args['model_name'],
 			args['aws_credentials_connection_name'],
 			args['aws_region'],
