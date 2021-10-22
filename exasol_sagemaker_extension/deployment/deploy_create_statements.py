@@ -33,13 +33,17 @@ class DeployCreateStatements:
         """
         Run the deployment by retrieving the CREATE SCRIPTS sql statements
         """
-        exportig_create_stmt = self._create_exporting_statement()
-        training_create_stmt = self._create_training_statement()
+        autopilot_training_lua_script_stmt = \
+            self._create_autopilot_training_lua_script_statement()
+        autopilot_training_udf_stmt = \
+            self._create_autopilot_training_udf_statement()
         logger.debug(f"Create statements are obtained")
 
-        statement_maps= {
-                "exporting create statement": exportig_create_stmt,
-                "training create statement": training_create_stmt}
+        statement_maps = {
+                "Create statement of autopilot training lua script":
+                    autopilot_training_lua_script_stmt,
+                "Create statement of autopilot training  udf":
+                    autopilot_training_udf_stmt}
         
         if not self._to_print:
             self._open_schema()
@@ -47,7 +51,7 @@ class DeployCreateStatements:
         else:
             print("\n".join(statement_maps.values()))
 
-    def _create_exporting_statement(self):
+    def _create_autopilot_training_lua_script_statement(self):
         """
         Generate and return exporting CREATE SCRIPT sql statement.
 
@@ -58,7 +62,7 @@ class DeployCreateStatements:
         statement_str = statement_generator.get_statement()
         return statement_str
 
-    def _create_training_statement(self):
+    def _create_autopilot_training_udf_statement(self):
         """
         Read and return training CREATE SCRIPT udf script statement
 
@@ -76,7 +80,7 @@ class DeployCreateStatements:
                    "OPEN SCHEMA {schema_name}"]
         for query in queries:
             self.__exasol_conn.execute(query.format(schema_name=self._schema))
-        logger.debug(f"Schema -{self._schema}- is opened")
+        logger.debug(f"Schema {self._schema} is opened")
 
     def _execute_statements(self, statement_list: Dict[str, str]):
         """
@@ -84,4 +88,4 @@ class DeployCreateStatements:
         """
         for desc, stmt in statement_list.items():
             self.__exasol_conn.execute(stmt)
-            logger.debug(f"Statement -{desc}- is executed")
+            logger.debug(f"{desc} is executed")

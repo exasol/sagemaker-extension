@@ -1,13 +1,11 @@
 import os
-import json
 from typing import Callable
-from datetime import datetime
 from exasol_sagemaker_extension import autopilot_handler
 
 
 class AutopilotTrainingStatusUDF:
     def __init__(self, exa, check_training_status_method: \
-            Callable=autopilot_handler.check_training_status):
+            Callable= autopilot_handler.check_training_status):
         self.exa = exa
         self.counter = 0
         self.check_training_status_method= check_training_status_method

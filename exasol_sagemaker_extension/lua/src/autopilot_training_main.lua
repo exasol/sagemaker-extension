@@ -26,7 +26,7 @@ local required_args = {
 	max_candidates = nil,
 	model_info_schema_name = nil,
 	model_info_table_name = nil,
-	objective = nil,
+	objective = Nil,
 	aws_tags = nil
 }
 
@@ -76,37 +76,35 @@ function parse_arguments(json_str)
 		args = {}
 		local error_obj = exaerror.create("",
 				"Error while parsing input json string, it could not be converted to json object."
-		)                         :add_mitigations(
-				"Check syntax of the input string json is correct")
+		):add_mitigations("Check syntax of the input string json is correct")
 		_G.global_env.error(tostring(error_obj))
 	end
 
 	if not contains_required_arguments(args) then
-		local errobj = exaerror.create("",
+		local error_obj = exaerror.create("",
 				"Missing required arguments"
-		):add_mitigations(
-				"Following required arguments have to be specified:specified.")
-		_G.global_env.error(tostring(errobj))
+		):add_mitigations("Following required arguments have to be specified:specified.")
+		_G.global_env.error(tostring(error_obj))
 	end
 
 	if not args['problem_type'] then
-		args['problem_type'] = nil
+		args['problem_type'] = NULL
 	end
 
 	if not args['max_runtime_for_automl_job_in_seconds'] then
-		args['max_runtime_for_automl_job_in_seconds'] = nil
+		args['max_runtime_for_automl_job_in_seconds'] = NULL
 	end
 
 	if not args['max_runtime_per_training_job_in_seconds'] then
-		args['max_runtime_per_training_job_in_seconds'] = nil
+		args['max_runtime_per_training_job_in_seconds'] = NULL
 	end
 
 	if not args['max_candidates'] then
-		args['max_candidates'] = nil
+		args['max_candidates'] = NULL
 	end
 
 	if not args['objective'] then
-		args['objective'] = nil
+		args['objective'] = NULL
 	end
 
 	args['compression_type'] = 'gzip' -- default : 'gzip'
@@ -122,19 +120,38 @@ end
 --
 --
 function main(json_str)
+	local aws_s3_handler = require("aws_s3_handler")
+	local aws_sagemaker_handler = require("aws_sagemaker_handler")
+
 	local args = parse_arguments(json_str)
 
-	local aws_s3_handler = require("aws_s3_handler")
-	local success = aws_s3_handler.export_to_s3(
+	local succ_exporting, res_exporting = aws_s3_handler.export_to_s3(
 			args['input_schema_name'],
 			args['input_table_or_view_name'],
 			args['aws_credentials_connection_name'],
-			args['s3_output_path']
-	)
-
-	if not success then
-		_G.global_env.error('Error occured in exporting Exasol table to AWS S3')
+			args['s3_output_path'])
+	if not succ_exporting then
+		_G.global_env.error('Error occured in exporting Exasol table to AWS S3' .. res_exporting.error_message)
 	end
+
+
+	local succ_training, res_training = aws_sagemaker_handler.autopilot_training(
+			args['model_name'],
+			args['aws_credentials_connection_name'],
+			args['aws_region'],
+			args['iam_sagemaker_role'],
+			args['s3_bucket_uri'],
+			args['target_attribute_name'],
+			args['problem_type'],
+			args['objective'],
+			args['max_runtime_for_automl_job_in_seconds'],
+			args['max_candidates'],
+			args['max_runtime_per_training_job_in_seconds'])
+	if not succ_training then
+		_G.global_env.error('Error occurred in training with Sagemaker Autopilot ' .. res_training.error_message)
+	end
+
+	-- TODO save table name into table
 
 end
 
