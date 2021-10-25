@@ -65,6 +65,7 @@ function M.prepare_export_query(
 		query_export = query_export .. ' FILE :' .. key_
 		params[key_] = val_
 	end
+	query_export = query_export .. ' WITH COLUMN NAMES'
 
 	return query_export, params
 end
