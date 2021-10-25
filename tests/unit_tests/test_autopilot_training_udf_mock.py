@@ -13,7 +13,7 @@ AWS_ACCESS_KEY = "test_aws_access_key"
 AWS_REGION = "eu-central-1"
 AWS_S3_URI = f"https://127.0.0.1:4566"
 AWS_CONNECTION_NAME = "S3_CONNECTION"
-AWS_BUCKET_NAME = "exasol-sagemaker-extension"
+AWS_BUCKET_NAME = "exasol-sagemaker-extension/train"
 
 
 def udf_wrapper():

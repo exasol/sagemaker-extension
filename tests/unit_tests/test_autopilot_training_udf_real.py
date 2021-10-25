@@ -6,8 +6,8 @@ from exasol_sagemaker_extension.autopilot_training_udf import \
 
 AWS_CONNECTION = "AWS_CONNECTION"
 AWS_REGION = "eu-central-1"
+AWS_S3_URI = "exasol-sagemaker-extension/train"
 AWS_ROLE = ""
-AWS_S3_URI = ""
 AWS_KEY_ID = ""
 AWS_ACCESS_KEY = ""
 AWS_SESSION_TOKEN = ""
@@ -74,7 +74,7 @@ def test_autopilot_training_udf_real():
         AWS_CONNECTION,
         AWS_REGION,
         AWS_ROLE,
-        'exasol-sagemaker-extension',
+        'exasol-sagemaker-extension/train',
         'CLASS_POS',
         'BinaryClassification',
         '{"MetricName": "Accuracy"}',

@@ -12,7 +12,7 @@ def train_model(
         max_candidates: int = None,
         max_runtime_per_training_job_in_seconds: int = None):
 
-    s3_train_path = 's3://{}/train'.format(bucket)
+    s3_train_path = 's3://{}'.format(bucket)
     automl_job = AutoML(
         role=role,
         target_attribute_name=target_attribute_name,
