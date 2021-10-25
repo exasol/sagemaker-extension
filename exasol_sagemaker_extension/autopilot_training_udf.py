@@ -40,7 +40,7 @@ class AutopilotTrainingUDF:
         os.environ["AWS_SECRET_ACCESS_KEY"] = aws_s3_conn_obj.password
 
         job_name = self.training_method(
-            model_name= unique_model_name,
+            model_name=unique_model_name,
             role=role,
             bucket=bucket,
             target_attribute_name=target_attribute_name,
