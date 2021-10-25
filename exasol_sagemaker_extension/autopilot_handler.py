@@ -1,10 +1,12 @@
+import os.path
 from sagemaker.automl.automl import AutoML, AutoMLInput
 
 
 def train_model(
         model_name: str,
         role: str,
-        bucket: str,
+        s3_bucket_uri: str,
+        s3_output_path: str,
         target_attribute_name: str,
         problem_type: str = None,
         objective: str = None,
@@ -12,7 +14,7 @@ def train_model(
         max_candidates: int = None,
         max_runtime_per_training_job_in_seconds: int = None):
 
-    s3_train_path = 's3://{}'.format(bucket)
+    s3_train_path = os.path.join(s3_bucket_uri, s3_output_path)
     automl_job = AutoML(
         role=role,
         target_attribute_name=target_attribute_name,

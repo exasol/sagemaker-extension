@@ -41,7 +41,8 @@ def test_autopilot_training_udf_real():
                      aws_s3_connection: str,
                      aws_region: str,
                      role: str,
-                     bucket: str,
+                     s3_bucket_uri: str,
+                     s3_output_path: str,
                      target_attribute_name: str,
                      problem_type: str,
                      objective: str,
@@ -52,7 +53,8 @@ def test_autopilot_training_udf_real():
             self.aws_s3_connection = aws_s3_connection
             self.aws_region = aws_region
             self.role = role
-            self.bucket = bucket
+            self.s3_bucket_uri = s3_bucket_uri
+            self.s3_output_path = s3_output_path
             self.target_attribute_name = target_attribute_name
             self.problem_type = problem_type
             self.objective = objective
@@ -74,7 +76,8 @@ def test_autopilot_training_udf_real():
         AWS_CONNECTION,
         AWS_REGION,
         AWS_ROLE,
-        'exasol-sagemaker-extension/train',
+        's3://exasol-sagemaker-extension',
+        'train',
         'CLASS_POS',
         'BinaryClassification',
         '{"MetricName": "Accuracy"}',

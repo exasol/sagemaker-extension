@@ -13,7 +13,8 @@ AWS_ACCESS_KEY = "test_aws_access_key"
 AWS_REGION = "eu-central-1"
 AWS_S3_URI = f"https://127.0.0.1:4566"
 AWS_CONNECTION_NAME = "S3_CONNECTION"
-AWS_BUCKET_NAME = "exasol-sagemaker-extension/train"
+AWS_BUCKET_URI = "s3://exasol-sagemaker-extension"
+AWS_OUTPUT_PATH = "train"
 
 
 def udf_wrapper():
@@ -38,7 +39,8 @@ def create_mock_metadata():
             Column("aws_s3_connection", str, "VARCHAR(2000000)"),
             Column("aws_region", str, "VARCHAR(2000000)"),
             Column("role", str, "VARCHAR(2000000)"),
-            Column("bucket", str, "VARCHAR(2000000)"),
+            Column("s3_bucket_uri", str, "VARCHAR(2000000)"),
+            Column("s3_output_path", str, "VARCHAR(2000000)"),
             Column("target_attribute_name", str, "VARCHAR(2000000)"),
             Column("problem_type", str, "VARCHAR(2000000)"),
             Column("objective", str, "VARCHAR(2000000)"),
@@ -67,7 +69,8 @@ def test_autopilot_training_udf_mock():
         AWS_CONNECTION_NAME,
         AWS_REGION,
         AWS_SAGEMAKER_ROLE,
-        AWS_BUCKET_NAME,
+        AWS_BUCKET_URI,
+        AWS_OUTPUT_PATH,
         "CLASS_POS",
         "BinaryClassification",
         '{"MetricName": "Accuracy"}',

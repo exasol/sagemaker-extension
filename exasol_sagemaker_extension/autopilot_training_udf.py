@@ -18,7 +18,8 @@ class AutopilotTrainingUDF:
         aws_s3_connection = ctx.aws_s3_connection
         aws_region = ctx.aws_region  # TODO
         role = ctx.role
-        bucket = ctx.bucket
+        s3_bucket_uri = ctx.s3_bucket_uri
+        s3_output_path = ctx.s3_output_path
         target_attribute_name = ctx.target_attribute_name
         problem_type = ctx.problem_type
         objective = ctx.objective
@@ -36,13 +37,15 @@ class AutopilotTrainingUDF:
 
         aws_s3_conn_obj = self.exa.get_connection(aws_s3_connection)
         os.environ["AWS_DEFAULT_REGION"] = aws_region
+        os.environ["AWS_DEFAULT_REGION"] = aws_region
         os.environ["AWS_ACCESS_KEY_ID"] = aws_s3_conn_obj.user
         os.environ["AWS_SECRET_ACCESS_KEY"] = aws_s3_conn_obj.password
 
         job_name = self.training_method(
             model_name=unique_model_name,
             role=role,
-            bucket=bucket,
+            s3_bucket_uri=s3_bucket_uri,
+            s3_output_path=s3_output_path,
             target_attribute_name=target_attribute_name,
             problem_type=problem_type,
             objective=objective,
