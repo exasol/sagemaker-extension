@@ -114,45 +114,58 @@ end
 
 
 ---
+-- This function invokes export_to_s3 method in aws_s3_handler module
+--
+-- @param args		A table including input parameters
+--
+function call_export_to_s3(args)
+	local aws_s3_handler = require("aws_s3_handler")
+	aws_s3_handler.export_to_s3(
+			args['input_schema_name'],
+			args['input_table_or_view_name'],
+			args['aws_credentials_connection_name'],
+			args['s3_output_path'])
+end
+
+---
+-- This function invokes autopilot_training in aws_sagemaker_handler module
+--
+-- @param arg			A table including input parameters
+-- @param exa			Exa context
+--
+-- @return job_name		Job name of the Autopilot training run
+--
+function call_autopilot_training(args, exa)
+	local schema_name = exa.meta.script_schema
+	local aws_sagemaker_handler = require("aws_sagemaker_handler")
+	local job_name = aws_sagemaker_handler.autopilot_training(
+		schema_name,
+		args['model_name'],
+		args['aws_credentials_connection_name'],
+		args['aws_region'],
+		args['iam_sagemaker_role'],
+		args['s3_bucket_uri'],
+		args['s3_output_path'],
+		args['target_attribute_name'],
+		args['problem_type'],
+		args['objective'],
+		args['max_runtime_for_automl_job_in_seconds'],
+		args['max_candidates'],
+		args['max_runtime_per_training_job_in_seconds'])
+
+	return job_name
+end
+
+---
 -- This is the main function of exporting to S3.
 --
 -- @param json_str	input parameters as json string
 --
 --
 function main(json_str, exa)
-	local aws_s3_handler = require("aws_s3_handler")
-	local aws_sagemaker_handler = require("aws_sagemaker_handler")
-
 	local args = parse_arguments(json_str)
-	local schema_name = exa.meta.script_schema
-
-	local succ_exporting, res_exporting = aws_s3_handler.export_to_s3(
-			args['input_schema_name'],
-			args['input_table_or_view_name'],
-			args['aws_credentials_connection_name'],
-			args['s3_output_path'])
-	if not succ_exporting then
-		_G.global_env.error('Error occured in exporting Exasol table to AWS S3' .. res_exporting.error_message)
-	end
-
-
-	local succ_training, res_training = aws_sagemaker_handler.autopilot_training(
-			schema_name,
-			args['model_name'],
-			args['aws_credentials_connection_name'],
-			args['aws_region'],
-			args['iam_sagemaker_role'],
-			args['s3_bucket_uri'],
-			args['s3_output_path'],
-			args['target_attribute_name'],
-			args['problem_type'],
-			args['objective'],
-			args['max_runtime_for_automl_job_in_seconds'],
-			args['max_candidates'],
-			args['max_runtime_per_training_job_in_seconds'])
-	if not succ_training then
-		_G.global_env.error('Error occurred in training with Sagemaker Autopilot ' .. res_training.error_message)
-	end
+	call_export_to_s3(args)
+	local job_name = call_autopilot_training(args, exa)
 
 	-- TODO save table name into table
 

@@ -9,7 +9,7 @@ local M = {}
 ---
 -- Invoke AWS Sagemaker Autopilot training
 --
--- @return boolean indicating whether it is exported successfully
+-- @return result   The name of the Autopilot run job
 --
 function M.autopilot_training(
         schema_name,
@@ -57,7 +57,11 @@ function M.autopilot_training(
     }
 
     local success, result = _G.global_env.pquery(query_training, params)
-    return success, result
+	if not success then
+		_G.global_env.error('Error occurred in training with Sagemaker Autopilot ' .. result.error_message)
+	end
+
+    return result
 end
 
 return M;

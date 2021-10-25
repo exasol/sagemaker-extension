@@ -79,8 +79,6 @@ end
 -- @param aws_credentials_connection_name	the name of the connection object with the AWS credentials
 -- @param s3_output_path			the s3 bucket path to be placed
 --
--- @return	boolean indicating whether it is exported successfully
---
 function M.export_to_s3(schema_name, table_name, aws_credentials_connection_name, s3_output_path)
 	local n_nodes = M.get_node_count()
 
@@ -90,7 +88,9 @@ function M.export_to_s3(schema_name, table_name, aws_credentials_connection_name
 
 	-- execute
 	local success, result = _G.global_env.pquery(query_export, params)
-	return success, result
+	if not success then
+		_G.global_env.error('Error occurred in exporting Exasol table to AWS S3' .. result.error_message)
+	end
 
 end
 

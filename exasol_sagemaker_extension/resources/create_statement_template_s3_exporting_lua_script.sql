@@ -13,12 +13,7 @@ CREATE OR REPLACE LUA SCRIPT EXPORT_TO_S3 (json_str)  AS
 {BUNDLED_SCRIPT}
 
 local args = parse_arguments(json_str)
-local aws_s3_handler = require("aws_s3_handler")
-aws_s3_handler.export_to_s3(
-			args['input_schema_name'],
-			args['input_table_or_view_name'],
-			args['aws_credentials_connection_name'],
-			args['s3_output_path'])
+call_export_to_s3(args)
 /
 
 
