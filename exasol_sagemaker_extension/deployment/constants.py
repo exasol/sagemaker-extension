@@ -13,6 +13,9 @@ LUA_BUNDLED = "bundle_final.lua"
 CREATE_STATEMENT_TEMPLATE_AUTOPILOT_TRAINING_LUA_SCRIPT_RESOURCE = BASE_DIR.\
     joinpath("resources").\
     joinpath("create_statement_template_autopilot_training_lua_script.sql")
+CREATE_STATEMENT_TEMPLATE_S3_EXPORTING_LUA_SCRIPT_RESOURCE = BASE_DIR.\
+    joinpath("resources").\
+    joinpath("create_statement_template_s3_exporting_lua_script.sql")
 CREATE_STATEMENT_AUTOPILOT_TRAINING_UDF_RESOURCE = BASE_DIR.\
     joinpath("resources").\
     joinpath("create_statement_autopilot_training_udf.sql")
