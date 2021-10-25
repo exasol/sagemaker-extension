@@ -37,7 +37,6 @@ class AutopilotTrainingUDF:
 
         aws_s3_conn_obj = self.exa.get_connection(aws_s3_connection)
         os.environ["AWS_DEFAULT_REGION"] = aws_region
-        os.environ["AWS_DEFAULT_REGION"] = aws_region
         os.environ["AWS_ACCESS_KEY_ID"] = aws_s3_conn_obj.user
         os.environ["AWS_SECRET_ACCESS_KEY"] = aws_s3_conn_obj.password
 

@@ -6,15 +6,8 @@ from exasol_udf_mock_python.mock_exa_environment import MockExaEnvironment
 from exasol_udf_mock_python.mock_meta_data import MockMetaData
 from exasol_udf_mock_python.udf_mock_executor import UDFMockExecutor
 
-AWS_AUTOML_JOB_NAME = "test-model-name"
-AWS_SAGEMAKER_ROLE = "aws_test_role"
-AWS_KEY_ID = "test_aws_key_id"
-AWS_ACCESS_KEY = "test_aws_access_key"
-AWS_REGION = "eu-central-1"
-AWS_S3_URI = f"https://127.0.0.1:4566"
-AWS_CONNECTION_NAME = "S3_CONNECTION"
-AWS_BUCKET_URI = "s3://exasol-sagemaker-extension"
-AWS_OUTPUT_PATH = "train"
+
+MODEL_NAME = "test_model_name"
 
 
 def udf_wrapper():
@@ -56,21 +49,24 @@ def create_mock_metadata():
     return meta
 
 
-def test_autopilot_training_udf_mock():
+def test_autopilot_training_udf_mock(get_mock_params):
     executor = UDFMockExecutor()
     meta = create_mock_metadata()
     aws_s3_connection = Connection(
-        address=AWS_S3_URI, user=AWS_KEY_ID, password=AWS_ACCESS_KEY)
+        address=get_mock_params["AWS_S3_URI"],
+        user=get_mock_params["AWS_KEY_ID"],
+        password=get_mock_params["AWS_ACCESS_KEY"])
     exa = MockExaEnvironment(
-        meta, connections={AWS_CONNECTION_NAME: aws_s3_connection})
+        meta,
+        connections={get_mock_params["AWS_CONNECTION_NAME"]: aws_s3_connection})
 
     input_data = (
-        "test_model_name",
-        AWS_CONNECTION_NAME,
-        AWS_REGION,
-        AWS_SAGEMAKER_ROLE,
-        AWS_BUCKET_URI,
-        AWS_OUTPUT_PATH,
+        MODEL_NAME,
+        get_mock_params["AWS_CONNECTION_NAME"],
+        get_mock_params["AWS_REGION"],
+        get_mock_params["AWS_SAGEMAKER_ROLE"],
+        get_mock_params["AWS_BUCKET_URI"],
+        get_mock_params["AWS_OUTPUT_PATH"],
         "CLASS_POS",
         "BinaryClassification",
         '{"MetricName": "Accuracy"}',
@@ -84,7 +80,11 @@ def test_autopilot_training_udf_mock():
         result_row = group.rows
         assert len(result_row) == 1
         job_name = result_row[0][0]
-        assert job_name == AWS_AUTOML_JOB_NAME
-        assert os.environ["AWS_ACCESS_KEY_ID"] == AWS_KEY_ID
-        assert os.environ["AWS_SECRET_ACCESS_KEY"] == AWS_ACCESS_KEY
-        assert os.environ["AWS_DEFAULT_REGION"] == AWS_REGION
+        assert job_name == \
+               get_mock_params["AWS_AUTOML_JOB_NAME"]
+        assert os.environ["AWS_ACCESS_KEY_ID"] == \
+               get_mock_params["AWS_KEY_ID"]
+        assert os.environ["AWS_SECRET_ACCESS_KEY"] == \
+               get_mock_params["AWS_ACCESS_KEY"]
+        assert os.environ["AWS_DEFAULT_REGION"] == \
+               get_mock_params["AWS_REGION"]

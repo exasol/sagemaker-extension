@@ -4,14 +4,8 @@ from typing import Dict
 from exasol_sagemaker_extension.autopilot_training_udf import \
     AutopilotTrainingUDF
 
-AWS_CONNECTION = "AWS_CONNECTION"
-AWS_REGION = "eu-central-1"
-AWS_S3_URI = "exasol-sagemaker-extension/train"
-AWS_ROLE = ""
-AWS_KEY_ID = ""
-AWS_ACCESS_KEY = ""
-AWS_SESSION_TOKEN = ""
-os.environ["AWS_SESSION_TOKEN"] = AWS_SESSION_TOKEN
+
+MODEL_NAME = "test-model-name"
 
 
 class Connection:
@@ -31,10 +25,11 @@ class ExaEnvironment:
         return self._connections[name]
 
 
-@pytest.mark.skipif(
-    "AWS_SESSION_TOKEN" not in os.environ or not os.environ["AWS_SESSION_TOKEN"],
-    reason="AWS_SESSION_TOKEN is not set")
-def test_autopilot_training_udf_real():
+def test_autopilot_training_udf_real(get_real_params):
+    if "AWS_SESSION_TOKEN" not in os.environ or \
+            not os.environ["AWS_SESSION_TOKEN"]:
+        pytest.skip("AWS_SESSION_TOKEN is not set")
+
     class Context:
         def __init__(self,
                      model_name: str,
@@ -72,12 +67,12 @@ def test_autopilot_training_udf_real():
             return self._emitted
 
     ctx = Context(
-        "test-model-name",
-        AWS_CONNECTION,
-        AWS_REGION,
-        AWS_ROLE,
-        's3://exasol-sagemaker-extension',
-        'train',
+        MODEL_NAME,
+        get_real_params["AWS_CONNECTION"],
+        get_real_params["AWS_REGION"],
+        get_real_params["AWS_ROLE"],
+        get_real_params["AWS_S3_URI"],
+        get_real_params["AWS_OUTPUT_PATH"],
         'CLASS_POS',
         'BinaryClassification',
         '{"MetricName": "Accuracy"}',
@@ -87,8 +82,10 @@ def test_autopilot_training_udf_real():
     )
 
     aws_s3_connection = Connection(
-        address=AWS_S3_URI, user=AWS_KEY_ID, password=AWS_ACCESS_KEY)
-    exa = ExaEnvironment({AWS_CONNECTION: aws_s3_connection})
+        address=get_real_params["AWS_S3_URI"],
+        user=get_real_params["AWS_KEY_ID"],
+        password=get_real_params["AWS_ACCESS_KEY"])
+    exa = ExaEnvironment({get_real_params["AWS_CONNECTION"]: aws_s3_connection})
     autopilot_training_udf_obj = AutopilotTrainingUDF(exa)
     autopilot_training_udf_obj.run(ctx)
     assert ctx.get_emitted()
