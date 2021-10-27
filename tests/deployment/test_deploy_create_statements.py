@@ -4,7 +4,7 @@ from exasol_sagemaker_extension.deployment.deploy_create_statements import \
 
 DB_SCHEMA = "TEST_DEPLOY_SCHEMA"
 AUTOPILOT_TRAINING_LUA_SCRIPT_NAME = "TRAIN_WITH_SAGEMAKER_AUTOPILOT"
-AUTOPILOT_TRAINING_UDF_NAME = "AutopilotTrainingUDF"
+AUTOPILOT_TRAINING_UDF_NAME = "AUTOPILOT_TRAINING_UDF"
 
 
 def get_all_schemas(db_conn, ):

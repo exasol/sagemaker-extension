@@ -5,7 +5,7 @@ from exasol_sagemaker_extension.deployment import constants
 
 
 SCHEMA_NAME = "TEST_SCHEMA"
-CREATE_SCRIPT_NAME = "AutopilotTrainingUDF".upper()
+CREATE_SCRIPT_NAME = "AUTOPILOT_TRAINING_UDF"
 
 
 def open_schema(conn):
