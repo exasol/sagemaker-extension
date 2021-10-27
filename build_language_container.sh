@@ -13,7 +13,7 @@ RELEASE_BUILD_STEP_DIST_DIRECTORY="$FLAVOR_PATH/flavor_base/release/dist"
 echo "Copy" dist/*.whl "$RELEASE_BUILD_STEP_DIST_DIRECTORY"
 mkdir -p "$RELEASE_BUILD_STEP_DIST_DIRECTORY" || true
 cp dist/*.whl "$RELEASE_BUILD_STEP_DIST_DIRECTORY"
-# trap 'rm -rf "$RELEASE_BUILD_STEP_DIST_DIRECTORY"' EXIT
+trap 'rm -rf "$RELEASE_BUILD_STEP_DIST_DIRECTORY"' EXIT
 
 echo "Build container"
 ./language_container/exaslct export --flavor-path "$FLAVOR_PATH"

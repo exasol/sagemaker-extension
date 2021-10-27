@@ -1,9 +1,10 @@
 import os.path
+from pathlib import PosixPath
 from exasol_sagemaker_extension.deployment import constants
 from exasol_sagemaker_extension.deployment.generate_create_statement_base \
     import BaseCreateStatementGenerator
 
-UTILS_PATH = os.path.join("tests", "integration_tests", "utils")
+UTILS_PATH = PosixPath("tests/integration_tests/utils")
 CREATE_STMT_PATH = os.path.join(
     UTILS_PATH, "create_statement_template_s3_exporting_lua_script.sql")
 

@@ -27,7 +27,7 @@ def get_created_scripts(conn):
     return sum(exa_all_scripts_list, [])
 
 
-def test_export_table(setup_database):
+def test_export_table(setup_database, upload_language_container):
     db_conn = setup_database
     db_conn.execute(
         constants.CREATE_STATEMENT_AUTOPILOT_TRAINING_UDF_RESOURCE_TEXT)
