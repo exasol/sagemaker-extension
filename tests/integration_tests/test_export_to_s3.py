@@ -2,9 +2,8 @@ import json
 import pytest
 import os.path
 import localstack_client.session
-from exasol_sagemaker_extension.deployment.\
-    generate_create_statement_s3_exporting import \
-    S3ExportingLuaScriptCreateStatementGenerator
+from tests.integration_tests.utils.generate_create_statement_s3_exporting \
+    import  S3ExportingLuaScriptCreateStatementGenerator
 
 DB_CONNECTION_ADDR = "127.0.0.1:9563"
 DB_CONNECTION_USER = "sys"

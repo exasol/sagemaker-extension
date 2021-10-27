@@ -2,9 +2,6 @@ import os.path
 import tempfile
 import subprocess
 from typing import List
-
-import importlib_resources
-
 from exasol_sagemaker_extension.deployment import constants
 import logging
 logger = logging.getLogger(__name__)
@@ -18,15 +15,15 @@ class BaseCreateStatementGenerator:
 
     :param lua_src_files: List of Lua source file names
     :param modules: List of Lua module names
-    :param create_statement_template: Template of the create statement to
+    :param create_statement_template_text: Template of the create statement to
     which the bundled scripts will be inserted.
     """
     def __init__(self, lua_src_files: List[str], modules: List[str],
-                 create_statement_template: importlib_resources):
+                 create_statement_template_text: str):
         self._lua_copy_source_list = lua_src_files
         self._lua_modules = modules
         self._lua_modules_str = " ".join(modules)
-        self._create_statement_template = create_statement_template
+        self._create_statement_template_text = create_statement_template_text
 
     def _copy_lua_source_files(self, tmp_dir: str):
         """
@@ -66,13 +63,12 @@ class BaseCreateStatementGenerator:
 
         :return: The generated CREATE SCRIPT sql statement
         """
-        sql_tmplate = self._create_statement_template.read_text()
-
         with open(os.path.join(tmp_dir, constants.LUA_BUNDLED), "r") as file:
             lua_bundled_data = file.read()
 
         logger.debug("Bundled script is inserted into create statement")
-        return sql_tmplate.format(BUNDLED_SCRIPT=lua_bundled_data)
+        return self._create_statement_template_text.format(
+            BUNDLED_SCRIPT=lua_bundled_data)
 
     def get_statement(self):
         """

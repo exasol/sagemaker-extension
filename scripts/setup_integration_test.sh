@@ -43,7 +43,7 @@ function run_localstack_container {
   cnt_func=$((cnt_func+1))
   echo -e "${YEL} Step-$cnt_func: ${GRA} Run Localstack container ${NC}"
   docker run -d  -e SERVICES=s3  -p 4566:4566 -p 4571:4571 --net it-network \
-     --ip 192.168.0.2 localstack/localstack
+     --ip 192.168.0.2 localstack/localstack --name
 }
 
 function add_exasol_container_into_the_network {

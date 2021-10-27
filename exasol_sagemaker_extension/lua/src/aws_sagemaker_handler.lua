@@ -6,6 +6,13 @@
 
 local M = {}
 
+local exaerror = require("exaerror")
+
+_G.global_env = {
+	pquery = pquery,
+	error = error
+}
+
 ---
 -- Invoke AWS Sagemaker Autopilot training
 --

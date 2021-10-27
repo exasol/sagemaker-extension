@@ -69,7 +69,7 @@ class DeployCreateStatements:
         :return: The training CREATE SCRIPT udf script statement
         """
         statement_str = constants.\
-            CREATE_STATEMENT_AUTOPILOT_TRAINING_UDF_RESOURCE.read_text()
+            CREATE_STATEMENT_AUTOPILOT_TRAINING_UDF_RESOURCE_TEXT
         return statement_str
 
     def _open_schema(self):

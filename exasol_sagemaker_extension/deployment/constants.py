@@ -10,14 +10,13 @@ LUA_SRC_MODULE_AWS_S3_HANDLER_NAME = "aws_s3_handler.lua"
 LUA_SRC_MODULE_AWS_SAGEMAKER_HANDLER_NAME = "aws_sagemaker_handler.lua"
 LUA_BUNDLED = "bundle_final.lua"
 
-CREATE_STATEMENT_TEMPLATE_AUTOPILOT_TRAINING_LUA_SCRIPT_RESOURCE = BASE_DIR.\
+CREATE_STATEMENT_TEMPLATE_AUTOPILOT_TRAINING_LUA_SCRIPT_TEXT = BASE_DIR.\
     joinpath("resources").\
-    joinpath("create_statement_template_autopilot_training_lua_script.sql")
-CREATE_STATEMENT_TEMPLATE_S3_EXPORTING_LUA_SCRIPT_RESOURCE = BASE_DIR.\
+    joinpath("create_statement_template_autopilot_training_lua_script.sql").\
+    read_text()
+CREATE_STATEMENT_AUTOPILOT_TRAINING_UDF_RESOURCE_TEXT = BASE_DIR.\
     joinpath("resources").\
-    joinpath("create_statement_template_s3_exporting_lua_script.sql")
-CREATE_STATEMENT_AUTOPILOT_TRAINING_UDF_RESOURCE = BASE_DIR.\
-    joinpath("resources").\
-    joinpath("create_statement_autopilot_training_udf.sql")
+    joinpath("create_statement_autopilot_training_udf.sql").\
+    read_text()
 
 

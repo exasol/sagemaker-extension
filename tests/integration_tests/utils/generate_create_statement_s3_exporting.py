@@ -1,6 +1,11 @@
+import os.path
 from exasol_sagemaker_extension.deployment import constants
 from exasol_sagemaker_extension.deployment.generate_create_statement_base \
     import BaseCreateStatementGenerator
+
+UTILS_PATH = os.path.join("tests", "integration_tests", "utils")
+CREATE_STMT_PATH = os.path.join(
+    UTILS_PATH, "create_statement_template_s3_exporting_lua_script.sql")
 
 
 class S3ExportingLuaScriptCreateStatementGenerator(BaseCreateStatementGenerator):
@@ -9,6 +14,7 @@ class S3ExportingLuaScriptCreateStatementGenerator(BaseCreateStatementGenerator)
     exporting a given Exasol table into AWS S3 and
     run a training on the exported data with AWS Sagemaker Autopilot
     """
+
     def __init__(self):
         self._lua_src_files = [
             constants.LUA_SRC_MODULE_AUTOPILOT_TRAINING_MAIN_NAME,
@@ -18,10 +24,10 @@ class S3ExportingLuaScriptCreateStatementGenerator(BaseCreateStatementGenerator)
             "aws_s3_handler",
             "exaerror",
             "message_expander"]
-        self._create_statement_template = constants.\
-            CREATE_STATEMENT_TEMPLATE_S3_EXPORTING_LUA_SCRIPT_RESOURCE
+        with open(CREATE_STMT_PATH, "r") as file:
+            self._create_statement_template_text = file.read()
 
         super().__init__(
             lua_src_files=self._lua_src_files,
             modules=self._modules,
-            create_statement_template=self._create_statement_template)
+            create_statement_template_text=self._create_statement_template_text)
