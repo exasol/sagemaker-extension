@@ -75,15 +75,14 @@ function parse_arguments(json_str)
 	if not success then
 		args = {}
 		local error_obj = exaerror.create("",
-				"Error while parsing input json string, it could not be converted to json object."
+				"Error while parsing input json string, it could not be converted to json object:"
 		):add_mitigations("Check syntax of the input string json is correct")
 		_G.global_env.error(tostring(error_obj))
 	end
 
 	if not contains_required_arguments(args) then
-		local error_obj = exaerror.create("",
-				"Missing required arguments"
-		):add_mitigations('Following required arguments have to be specified:' .. concat_required_args())
+		local error_obj = exaerror.create("", "Missing required arguments"
+		):add_mitigations('Following required arguments have to be specified: ' .. concat_required_args())
 		_G.global_env.error(tostring(error_obj))
 	end
 

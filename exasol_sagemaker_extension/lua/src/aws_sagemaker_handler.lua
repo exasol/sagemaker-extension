@@ -26,7 +26,7 @@ function M.autopilot_training(
         max_candidates,
         max_runtime_per_training_job_in_seconds)
 
-    local query_training = [[SELECT ::schema.AUTOPILOTTRAININGUDF(
+    local query_training = [[SELECT ::schema.AUTOPILOT_TRAINING_UDF(
         :model_name ,
         :aws_s3_connection ,
         :aws_region ,
@@ -58,7 +58,10 @@ function M.autopilot_training(
 
     local success, result = _G.global_env.pquery(query_training, params)
 	if not success then
-		_G.global_env.error('Error occurred in training with Sagemaker Autopilot ' .. result.error_message)
+		local error_obj = exaerror.create("",
+				'Error occurred in training with Sagemaker Autopilot: ' .. result.error_message
+		) :add_mitigations("Please create an error report")
+		_G.global_env.error(tostring(error_obj))
 	end
 
     return result
