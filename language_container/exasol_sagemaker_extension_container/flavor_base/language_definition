@@ -1,1 +1,1 @@
-PYTHON3_DSUP=localzmq+protobuf:///{{ bucketfs_name }}/{{ bucket_name }}/{{ path_in_bucket }}{{ release_name }}?lang=python#buckets/{{ bucketfs_name }}/{{ bucket_name }}/{{ path_in_bucket }}{{ release_name }}/exaudf/exaudfclient_py3
+PYTHON3_SME=localzmq+protobuf:///{{ bucketfs_name }}/{{ bucket_name }}/{{ path_in_bucket }}{{ release_name }}?lang=python#buckets/{{ bucketfs_name }}/{{ bucket_name }}/{{ path_in_bucket }}{{ release_name }}/exaudf/exaudfclient_py3

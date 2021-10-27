@@ -1,4 +1,4 @@
-# Details for exasol-data-science-utils-python-container flavor
+# Details for exasol-sagemaker-extension flavor
 
 ## Packages
 
