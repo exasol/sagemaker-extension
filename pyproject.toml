@@ -34,7 +34,7 @@ pytest-cov = "^2.12.1"
 Sphinx = "^4.1.2"
 coverage = "^5.5"
 exasol-udf-mock-python = { git = "https://github.com/exasol/udf-mock-python.git", branch = "master" }
-exasol-bucketfs-utils-python = { git = "https://github.com/exasol/bucketfs-utils-python.git", branch = "master" }
+exasol-bucketfs-utils-python = { git = "https://github.com/exasol/bucketfs-utils-python.git", branch = "main" }
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
