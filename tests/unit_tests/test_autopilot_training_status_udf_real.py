@@ -4,7 +4,7 @@ from typing import Dict
 from exasol_sagemaker_extension.autopilot_training_status_udf import \
     AutopilotTrainingStatusUDF
 
-MODEL_NAME = "TESTEXA"
+MODEL_NAME = "end2end-27Oct21-0722"
 
 
 class Connection:
@@ -25,9 +25,9 @@ class ExaEnvironment:
 
 
 def test_autopilot_training_status_udf_real(get_real_params):
-    if "AWS_SESSION_TOKEN" not in os.environ or \
-            not os.environ["AWS_SESSION_TOKEN"]:
-        pytest.skip("AWS_SESSION_TOKEN is not set")
+    if "AWS_ACCESS_KEY" not in get_real_params \
+            or not get_real_params["AWS_ACCESS_KEY"]:
+        pytest.skip("AWS credentials are not set")
 
     class Context:
         def __init__(self,

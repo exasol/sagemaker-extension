@@ -66,8 +66,7 @@ function M.autopilot_training(
     local success, result = _G.global_env.pquery(query_training, params)
 	if not success then
 		local error_obj = exaerror.create("",
-				'Error occurred in training with Sagemaker Autopilot: ' .. result.error_message
-		) :add_mitigations("Please create an error report")
+				'Error occurred in training with Sagemaker Autopilot: ' .. result.error_message)
 		_G.global_env.error(tostring(error_obj))
 	end
 
