@@ -1,7 +1,7 @@
 ---
 -- @module aws_sagemaker_handler
 --
--- this module handles AWS Sagemaker service operations
+-- This module handles AWS Sagemaker service operations
 --
 
 local M = {}
@@ -18,7 +18,7 @@ _G.global_env = {
 --
 -- @return result   The name of the Autopilot run job
 --
-function M.autopilot_training(
+function M.train_autopilot(
         schema_name,
         model_name,
         aws_s3_connection,
@@ -70,7 +70,7 @@ function M.autopilot_training(
 		_G.global_env.error(tostring(error_obj))
 	end
 
-    return result
+    return  result[1][1]
 end
 
 return M;

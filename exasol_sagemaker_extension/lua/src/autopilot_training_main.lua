@@ -117,7 +117,7 @@ end
 --
 -- @param args		A table including input parameters
 --
-function call_export_to_s3(args)
+function export_to_s3_caller(args)
 	local aws_s3_handler = require("aws_s3_handler")
 	aws_s3_handler.export_to_s3(
 			args['input_schema_name'],
@@ -129,15 +129,15 @@ end
 ---
 -- This function invokes autopilot_training in aws_sagemaker_handler module
 --
--- @param arg			A table including input parameters
 -- @param exa			Exa context
+-- @param arg			A table including input parameters
 --
 -- @return job_name		Job name of the Autopilot training run
 --
-function call_autopilot_training(args, exa)
+function train_autopilot_caller(exa, args)
 	local schema_name = exa.meta.script_schema
 	local aws_sagemaker_handler = require("aws_sagemaker_handler")
-	local job_name = aws_sagemaker_handler.autopilot_training(
+	local job_name = aws_sagemaker_handler.train_autopilot(
 		schema_name,
 		args['model_name'],
 		args['aws_credentials_connection_name'],
@@ -155,16 +155,45 @@ function call_autopilot_training(args, exa)
 	return job_name
 end
 
+
+---
+-- This method saves the metdata of the job running for training in Autopilot to Database
+--
+-- @param exa			Exa context
+-- @param args			A table including input parameters
+-- @param job_name		The name of the Autopilot job
+--
+function insert_metadata_into_db_caller(exa, args, job_name)
+	local schema_name = exa.meta.script_schema
+	local db_metadata_writer = require("db_metadata_writer")
+	db_metadata_writer.insert_metadata_into_db(
+			schema_name,
+			job_name,
+			args['aws_credentials_connection_name'],
+			args['iam_sagemaker_role'],
+			args['s3_bucket_uri'],
+			args['s3_output_path'],
+			args['target_attribute_name'],
+			args['problem_type'],
+			args['objective'],
+			args['max_runtime_for_automl_job_in_seconds'],
+			args['max_candidates'],
+			args['max_runtime_per_training_job_in_seconds'],
+			exa.meta.session_id,
+			exa.meta.current_user
+	)
+end
+
 ---
 -- This is the main function of exporting to S3.
 --
 -- @param json_str	input parameters as json string
 --
---
 function main(json_str, exa)
 	local args = parse_arguments(json_str)
-	call_export_to_s3(args)
-	local job_name = call_autopilot_training(args, exa)
+	export_to_s3_caller(args)
+	local job_name = train_autopilot_caller(exa, args)
+	insert_metadata_into_db_caller(exa, args, job_name)
 
 	-- TODO save table name into table
 

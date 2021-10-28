@@ -5,12 +5,13 @@ local aws_sagemaker_handler = require("./src/aws_sagemaker_handler")
 
 test_aws_sagemaker_handler = {
     job_name = 'autopilot_job_name',
-    query_training = [[SELECT AUTOPILOT_TRAINING_UDF(
+    query = [[SELECT ::schema.AUTOPILOT_TRAINING_UDF(
         :model_name ,
         :aws_s3_connection ,
         :aws_region ,
         :role ,
-        :bucket ,
+        :s3_bucket_uri,
+        :s3_output_path,
         :target_attribute_name ,
         :problem_type ,
         :objective ,
@@ -19,20 +20,23 @@ test_aws_sagemaker_handler = {
         :max_runtime_per_training_job_in_seconds
         )]],
     params = {
+        schema = 'schema_name',
         model_name = 'model_name',
         aws_s3_connection = 'aws_s3_connection',
         aws_region = 'aws_region',
         role = 'role',
-        bucket = 'bucket',
+        s3_bucket_uri = 's3_bucket_uri',
+        s3_output_path = 's3_output_path',
         target_attribute_name = 'target_attribute_name',
         problem_type = 'problem_type',
-        total_job_runtime_in_seconds = 100,
-        max_candidates = 5,
-        max_runtime_per_training_job_in_seconds = 10
+        objective = 'objective',
+        total_job_runtime_in_seconds = 'total_job_runtime_in_seconds',
+        max_candidates = 'max_candidates',
+        max_runtime_per_training_job_in_seconds = 'max_runtime_per_training_job_in_seconds'
     }
 }
 
-local function mock_pquery_autopilot(exa_mock, query_str, query_params, success, job_name)
+local function mock_pquery_train(exa_mock, query_str, query_params, success, job_name)
     mockagne.when(exa_mock.pquery(query_str, query_params)).thenAnswer(success, job_name)
 end
 
@@ -48,15 +52,32 @@ function  test_aws_sagemaker_handler.setUp()
 end
 
 
-function test_aws_sagemaker_handler.test_autopilot_training_success()
-    mock_pquery_autopilot(exa_mock, M.query_training, M.params, true, M.job_name)
-    local sucess, result = aws_sagemaker_handler.autopilot_training()
-    luaunit.assertEquals(sucess, true)
-    luaunit.assertEquals(result, M.job_name)
+function test_aws_sagemaker_handler.test_train_autopilot_success()
+    mock_pquery_train(
+            exa_mock,
+            test_aws_sagemaker_handler.query,
+            test_aws_sagemaker_handler.params,
+            true,
+            {{test_aws_sagemaker_handler.job_name}})
+    local result = aws_sagemaker_handler.train_autopilot(
+            'schema_name',
+            'model_name',
+            'aws_s3_connection',
+            'aws_region',
+            'role',
+            's3_bucket_uri',
+            's3_output_path',
+            'target_attribute_name',
+            'problem_type',
+            'objective',
+            'total_job_runtime_in_seconds',
+            'max_candidates',
+            'max_runtime_per_training_job_in_seconds'
+    )
+    luaunit.assertEquals(result, test_aws_sagemaker_handler.job_name)
+
 end
 
-function test_aws_sagemaker_handler.test_autopilot_training_fail()
-    mock_pquery_autopilot(exa_mock, M.query_training, nil, false,nil)
-    local sucess, result = aws_sagemaker_handler.autopilot_training()
-    luaunit.assertEquals(sucess, false)
-end
+
+
+os.exit(luaunit.LuaUnit.run())

@@ -2,7 +2,7 @@ import logging
 import pyexasol
 from typing import Dict
 from exasol_sagemaker_extension.deployment import constants
-from exasol_sagemaker_extension.deployment.\
+from exasol_sagemaker_extension.deployment. \
     generate_create_statement_autopilot_training \
     import AutopilotTrainingLuaScriptCreateStatementGenerator
 
@@ -15,7 +15,7 @@ class DeployCreateStatements:
     that generate scripts deploying the sagemaker-extension project.
     """
 
-    def __init__(self, db_host: str, db_port: str,  db_user: str, 
+    def __init__(self, db_host: str, db_port: str, db_user: str,
                  db_pass: str, schema: str, to_print: bool):
         self._db_host = db_host
         self._db_port = db_port
@@ -33,18 +33,16 @@ class DeployCreateStatements:
         """
         Run the deployment by retrieving the CREATE SCRIPTS sql statements
         """
-        autopilot_training_lua_script_stmt = \
-            self._create_autopilot_training_lua_script_statement()
-        autopilot_training_udf_stmt = \
-            self._create_autopilot_training_udf_statement()
+        statement_maps = {
+            "Create statement of autopilot training lua script":
+                self._create_autopilot_training_lua_script_statement(),
+            "Create statement of autopilot training udf":
+                constants.CREATE_STATEMENT_AUTOPILOT_TRAINING_UDF_RESOURCE_TEXT,
+            "Create statement of autopilot jobs metadata table":
+                constants.CREATE_STATEMENT_AUTOPILOT_JOBS_METADATA_TABLE_RESOURCE_TEXT
+        }
         logger.debug(f"Create statements are obtained")
 
-        statement_maps = {
-                "Create statement of autopilot training lua script":
-                    autopilot_training_lua_script_stmt,
-                "Create statement of autopilot training  udf":
-                    autopilot_training_udf_stmt}
-        
         if not self._to_print:
             self._open_schema()
             self._execute_statements(statement_maps)
@@ -60,16 +58,6 @@ class DeployCreateStatements:
         statement_generator = \
             AutopilotTrainingLuaScriptCreateStatementGenerator()
         statement_str = statement_generator.get_statement()
-        return statement_str
-
-    def _create_autopilot_training_udf_statement(self):
-        """
-        Read and return training CREATE SCRIPT udf script statement
-
-        :return: The training CREATE SCRIPT udf script statement
-        """
-        statement_str = constants.\
-            CREATE_STATEMENT_AUTOPILOT_TRAINING_UDF_RESOURCE_TEXT
         return statement_str
 
     def _open_schema(self):
