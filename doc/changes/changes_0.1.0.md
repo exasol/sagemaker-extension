@@ -13,6 +13,7 @@ Initial implementation
   - #14 Added CREATE SCRIPT statements for deployment of the training UDF
   - #13 Created Python CLI Tool to deploy the extension
   - #17 Enhanced the deployment of the extension
+  - #11 Added UDF which polls Autopilot training status
 
   
     
