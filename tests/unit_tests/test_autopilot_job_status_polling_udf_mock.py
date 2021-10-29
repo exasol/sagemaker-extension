@@ -9,17 +9,18 @@ from exasol_udf_mock_python.udf_mock_executor import UDFMockExecutor
 
 JOB_STATUS = "InProgress"
 JOB_SECONDARY_STATUS = "Feature Engineering"
+MODEL_NAME = "end2end-27Oct21-0722"
 
 
 def udf_wrapper():
     from exasol_udf_mock_python.udf_context import UDFContext
-    from exasol_sagemaker_extension.autopilot_training_status_udf \
-        import AutopilotTrainingStatusUDF
+    from exasol_sagemaker_extension.autopilot_job_status_polling_udf \
+        import AutopilotJobStatusPollingUDF
 
     def mocked_check_training_status_method(model_name: str):
         return "InProgress", "Feature Engineering"
 
-    udf = AutopilotTrainingStatusUDF(
+    udf = AutopilotJobStatusPollingUDF(
         exa, check_training_status_method=mocked_check_training_status_method)
 
     def run(ctx: UDFContext):
@@ -56,7 +57,7 @@ def test_autopilot_training_status_udf_mock(get_mock_params):
         connections={get_mock_params["AWS_CONNECTION_NAME"]: aws_s3_connection})
 
     input_data = (
-        "test_model_name",
+        MODEL_NAME,
         get_mock_params["AWS_CONNECTION_NAME"],
         get_mock_params["AWS_REGION"],
     )

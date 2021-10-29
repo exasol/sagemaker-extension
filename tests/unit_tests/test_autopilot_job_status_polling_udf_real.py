@@ -1,8 +1,7 @@
-import os
 import pytest
 from typing import Dict
-from exasol_sagemaker_extension.autopilot_training_status_udf import \
-    AutopilotTrainingStatusUDF
+from exasol_sagemaker_extension.autopilot_job_status_polling_udf import \
+    AutopilotJobStatusPollingUDF
 
 MODEL_NAME = "end2end-27Oct21-0722"
 
@@ -56,6 +55,6 @@ def test_autopilot_training_status_udf_real(get_real_params):
         user=get_real_params["AWS_KEY_ID"],
         password=get_real_params["AWS_ACCESS_KEY"])
     exa = ExaEnvironment({get_real_params["AWS_CONNECTION"]: aws_s3_connection})
-    autopilot_training_status_udf_obj = AutopilotTrainingStatusUDF(exa)
+    autopilot_training_status_udf_obj = AutopilotJobStatusPollingUDF(exa)
     autopilot_training_status_udf_obj.run(ctx)
     assert ctx.get_emitted()

@@ -35,8 +35,8 @@ def train_model(
     return model_name
 
 
-def check_training_status(model_name: str):
-    automl = AutoML.attach(auto_ml_job_name=model_name)
+def check_training_status(job_name: str):
+    automl = AutoML.attach(auto_ml_job_name=job_name)
 
     describe_response = automl.describe_auto_ml_job()
     return \
