@@ -1,4 +1,4 @@
-CREATE OR REPLACE LUA SCRIPT EXPORT_TO_S3 (json_str)  AS
+CREATE OR REPLACE LUA SCRIPT "EXPORT_TO_S3" (json_str)  AS
     table.insert(_G.package.searchers,
         function (module_name)
             local loader = package.preload[module_name]
