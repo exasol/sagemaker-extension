@@ -3,7 +3,7 @@ from typing import Dict
 from exasol_sagemaker_extension.autopilot_job_status_polling_udf import \
     AutopilotJobStatusPollingUDF
 
-MODEL_NAME = "end2end-27Oct21-0722"
+JOB_NAME = "end2end-27Oct21-0722"
 
 
 class Connection:
@@ -30,10 +30,10 @@ def test_autopilot_training_status_udf_real(get_real_params):
 
     class Context:
         def __init__(self,
-                     model_name: str,
+                     job_name: str,
                      aws_s3_connection: str,
                      aws_region: str):
-            self.model_name = model_name
+            self.job_name = job_name
             self.aws_s3_connection = aws_s3_connection
             self.aws_region = aws_region
             self._emitted = []
@@ -45,7 +45,7 @@ def test_autopilot_training_status_udf_real(get_real_params):
             return self._emitted
 
     ctx = Context(
-        MODEL_NAME,
+        JOB_NAME,
         get_real_params["AWS_CONNECTION"],
         get_real_params["AWS_REGION"]
     )

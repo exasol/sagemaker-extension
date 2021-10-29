@@ -73,7 +73,7 @@ def test_autopilot_training_udf_real(get_real_params):
         get_real_params["AWS_ROLE"],
         get_real_params["AWS_S3_URI"],
         get_real_params["AWS_OUTPUT_PATH"],
-        'CLASS_POS',
+        'IDX',
         'BinaryClassification',
         '{"MetricName": "Accuracy"}',
         100,

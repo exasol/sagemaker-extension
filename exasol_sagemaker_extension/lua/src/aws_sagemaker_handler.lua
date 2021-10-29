@@ -33,7 +33,7 @@ function M.train_autopilot(
         max_candidates,
         max_runtime_per_training_job_in_seconds)
 
-    local query_training = [[SELECT ::schema.AUTOPILOT_TRAINING_UDF(
+    local query_training = [[SELECT ::schema."SME_AUTOPILOT_TRAINING_UDF"(
         :model_name ,
         :aws_s3_connection ,
         :aws_region ,

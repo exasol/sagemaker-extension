@@ -5,7 +5,7 @@ local aws_sagemaker_handler = require("./src/aws_sagemaker_handler")
 
 test_aws_sagemaker_handler = {
     job_name = 'autopilot_job_name',
-    query = [[SELECT ::schema.AUTOPILOT_TRAINING_UDF(
+    query = [[SELECT ::schema."SME_AUTOPILOT_TRAINING_UDF"(
         :model_name ,
         :aws_s3_connection ,
         :aws_region ,

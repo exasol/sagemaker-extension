@@ -20,7 +20,7 @@ _G.global_env = {
 -- @param aws_region			aws region
 --
 function poll_autopilot_job_status(schema_name, job_name, aws_s3_connection, aws_region)
-	local query = [[SELECT ::schema.AUTOPILOT_JOB_STATUS_POLLING_UDF(
+	local query = [[SELECT ::schema."SME_AUTOPILOT_JOB_STATUS_POLLING_UDF"(
 		:job_name,
 		:aws_s3_connection,
 		:aws_region

@@ -32,7 +32,7 @@ function M.insert_metadata_into_db(
 			session_id,
 			script_user
 )
-	local query_inserting = [[INSERT INTO ::schema.METADATA_AUTOPILOT_JOBS VALUES(
+	local query_inserting = [[INSERT INTO ::schema.SME_METADATA_AUTOPILOT_JOBS VALUES(
 			CURRENT_TIMESTAMP,
 			:job_name,
 			:aws_credentials_connection_name,

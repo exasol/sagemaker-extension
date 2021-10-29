@@ -3,7 +3,7 @@ local mockagne = require("mockagne")
 local db_metadata_writer = require("./src/db_metadata_writer")
 
 test_db_metadata_writer = {
-     query = [[INSERT INTO ::schema.METADATA_AUTOPILOT_JOBS VALUES(
+     query = [[INSERT INTO ::schema.SME_METADATA_AUTOPILOT_JOBS VALUES(
 			CURRENT_TIMESTAMP,
 			:job_name,
 			:aws_credentials_connection_name,

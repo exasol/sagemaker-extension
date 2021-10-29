@@ -1,4 +1,4 @@
-CREATE OR REPLACE LUA SCRIPT POLL_SAGEMAKER_AUTOPILOT_JOB_STATUS (job_name, aws_s3_connection, aws_region)  RETURNS TABLE AS
+CREATE OR REPLACE LUA SCRIPT "SME_POLL_SAGEMAKER_AUTOPILOT_JOB_STATUS" (job_name, aws_s3_connection, aws_region)  RETURNS TABLE AS
     table.insert(_G.package.searchers,
         function (module_name)
             local loader = package.preload[module_name]

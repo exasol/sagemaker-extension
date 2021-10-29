@@ -9,7 +9,7 @@ from exasol_udf_mock_python.udf_mock_executor import UDFMockExecutor
 
 JOB_STATUS = "InProgress"
 JOB_SECONDARY_STATUS = "Feature Engineering"
-MODEL_NAME = "end2end-27Oct21-0722"
+JOB_NAME = "end2end-27Oct21-0722"
 
 
 def udf_wrapper():
@@ -32,7 +32,7 @@ def create_mock_metadata():
         script_code_wrapper_function=udf_wrapper,
         input_type="SET",
         input_columns=[
-            Column("model_name", str, "VARCHAR(2000000)"),
+            Column("job_name", str, "VARCHAR(2000000)"),
             Column("aws_s3_connection", str, "VARCHAR(2000000)"),
             Column("aws_region", str, "VARCHAR(2000000)")
         ],
@@ -57,7 +57,7 @@ def test_autopilot_training_status_udf_mock(get_mock_params):
         connections={get_mock_params["AWS_CONNECTION_NAME"]: aws_s3_connection})
 
     input_data = (
-        MODEL_NAME,
+        JOB_NAME,
         get_mock_params["AWS_CONNECTION_NAME"],
         get_mock_params["AWS_REGION"],
     )
