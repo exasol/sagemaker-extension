@@ -1,9 +1,10 @@
-CREATE OR REPLACE PYTHON3 SET SCRIPT AutopilotTrainingUDF(
+CREATE OR REPLACE PYTHON3_SME SET SCRIPT "SME_AUTOPILOT_TRAINING_UDF"(
     model_name VARCHAR(23),
     aws_s3_connection VARCHAR(50),
     aws_region VARCHAR(20),
     role VARCHAR(200),
-    bucket VARCHAR(200),
+    s3_bucket_uri VARCHAR(200),
+    s3_output_path VARCHAR(200),
     target_attribute_name VARCHAR(200),
     problem_type VARCHAR(20),
     objective VARCHAR(20),

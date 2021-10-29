@@ -1,4 +1,4 @@
-CREATE OR REPLACE LUA SCRIPT "SME_TRAIN_WITH_SAGEMAKER_AUTOPILOT" (json_str)  AS
+CREATE OR REPLACE LUA SCRIPT "EXPORT_TO_S3" (json_str)  AS
     table.insert(_G.package.searchers,
         function (module_name)
             local loader = package.preload[module_name]
@@ -12,7 +12,8 @@ CREATE OR REPLACE LUA SCRIPT "SME_TRAIN_WITH_SAGEMAKER_AUTOPILOT" (json_str)  AS
 
 {BUNDLED_SCRIPT}
 
-main(json_str, exa)
+local args = parse_arguments(json_str)
+export_to_s3_caller(args)
 /
 
 

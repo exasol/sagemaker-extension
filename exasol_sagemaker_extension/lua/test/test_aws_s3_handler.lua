@@ -114,7 +114,7 @@ function test_aws_s3_handler.test_export_to_s3_with_correct_node_count()
                 test_aws_s3_handler.table_name,
                 test_aws_s3_handler.connection_name,
                 test_aws_s3_handler.s3_output_path)
-        luaunit.assertEquals(res, true)
+        luaunit.assertEquals(res, nil)
     end
 end
 

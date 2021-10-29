@@ -1,8 +1,14 @@
 from exasol_sagemaker_extension.deployment import deploy_cli
 
 DB_SCHEMA = "TEST_CLI_SCHEMA"
-AUTOPILOT_TRAINING_LUA_SCRIPT_NAME = "TRAIN_WITH_SAGEMAKER_AUTOPILOT"
-AUTOPILOT_TRAINING_UDF_NAME = "AutopilotTrainingUDF"
+AUTOPILOT_TRAINING_LUA_SCRIPT_NAME = \
+    "SME_TRAIN_WITH_SAGEMAKER_AUTOPILOT"
+AUTOPILOT_TRAINING_UDF_NAME = \
+    "SME_AUTOPILOT_TRAINING_UDF"
+AUTOPILOT_JOB_STATUS_POLLING_LUA_SCRIPT_NAME = \
+    "SME_POLL_SAGEMAKER_AUTOPILOT_JOB_STATUS"
+AUTOPILOT_JOB_STATUS_POLLING_UDF_NAME = \
+    "SME_AUTOPILOT_JOB_STATUS_POLLING_UDF"
 
 
 def get_all_schemas(db_conn, ):
@@ -18,7 +24,7 @@ def get_all_scripts(db_conn):
     return list(map(lambda x: x[0], all_scripts))
 
 
-def test_deploy_cli_main(get_params, db_conn):
+def test_deploy_cli_main(get_params, db_conn, upload_language_container):
     args_list = [
         "--host", get_params["DB_CONNECTION_HOST"],
         "--port", get_params["DB_CONNECTION_PORT"],
@@ -34,3 +40,5 @@ def test_deploy_cli_main(get_params, db_conn):
     assert DB_SCHEMA.upper() in all_schemas
     assert AUTOPILOT_TRAINING_LUA_SCRIPT_NAME.upper() in all_scripts
     assert AUTOPILOT_TRAINING_UDF_NAME.upper() in all_scripts
+    assert AUTOPILOT_JOB_STATUS_POLLING_LUA_SCRIPT_NAME.upper() in all_scripts
+    assert AUTOPILOT_JOB_STATUS_POLLING_UDF_NAME.upper() in all_scripts

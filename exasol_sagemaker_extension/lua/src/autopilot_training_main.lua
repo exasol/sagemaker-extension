@@ -12,21 +12,21 @@ _G.global_env = {
 }
 
 local required_args = {
-	model_name = nil,
+	model_name = true,
 	input_schema_name = true,
 	input_table_or_view_name = true,
 	aws_credentials_connection_name = true,
+	s3_bucket_uri = true,
 	s3_output_path = true,
-	s3_bucket_uri = nil,
-	iam_sagemaker_role = nil,
-	target_attribute_name = nil,
+	iam_sagemaker_role = true,
+	target_attribute_name = true,
 	problem_type = nil,
 	max_runtime_for_automl_job_in_seconds = nil,
 	max_runtime_per_training_job_in_seconds = nil,
 	max_candidates = nil,
 	model_info_schema_name = nil,
 	model_info_table_name = nil,
-	objective = nil,
+	objective = Nil,
 	aws_tags = nil
 }
 
@@ -75,38 +75,35 @@ function parse_arguments(json_str)
 	if not success then
 		args = {}
 		local error_obj = exaerror.create("",
-				"Error while parsing input json string, it could not be converted to json object."
-		)                         :add_mitigations(
-				"Check syntax of the input string json is correct")
+				"Error while parsing input json string, it could not be converted to json object:"
+		):add_mitigations("Check syntax of the input string json is correct")
 		_G.global_env.error(tostring(error_obj))
 	end
 
 	if not contains_required_arguments(args) then
-		local errobj = exaerror.create("",
-				"Missing required arguments"
-		):add_mitigations(
-				"Following required arguments have to be specified:specified.")
-		_G.global_env.error(tostring(errobj))
+		local error_obj = exaerror.create("", "Missing required arguments"
+		):add_mitigations('Following required arguments have to be specified: ' .. concat_required_args())
+		_G.global_env.error(tostring(error_obj))
 	end
 
 	if not args['problem_type'] then
-		args['problem_type'] = nil
+		args['problem_type'] = NULL
 	end
 
 	if not args['max_runtime_for_automl_job_in_seconds'] then
-		args['max_runtime_for_automl_job_in_seconds'] = nil
+		args['max_runtime_for_automl_job_in_seconds'] = NULL
 	end
 
 	if not args['max_runtime_per_training_job_in_seconds'] then
-		args['max_runtime_per_training_job_in_seconds'] = nil
+		args['max_runtime_per_training_job_in_seconds'] = NULL
 	end
 
 	if not args['max_candidates'] then
-		args['max_candidates'] = nil
+		args['max_candidates'] = NULL
 	end
 
 	if not args['objective'] then
-		args['objective'] = nil
+		args['objective'] = NULL
 	end
 
 	args['compression_type'] = 'gzip' -- default : 'gzip'
@@ -116,25 +113,89 @@ end
 
 
 ---
+-- This function invokes export_to_s3 method in aws_s3_handler module
+--
+-- @param args		A table including input parameters
+--
+function export_to_s3_caller(args)
+	local aws_s3_handler = require("aws_s3_handler")
+	aws_s3_handler.export_to_s3(
+			args['input_schema_name'],
+			args['input_table_or_view_name'],
+			args['aws_credentials_connection_name'],
+			args['s3_output_path'])
+end
+
+---
+-- This function invokes autopilot_training in aws_sagemaker_handler module
+--
+-- @param exa			Exa context
+-- @param arg			A table including input parameters
+--
+-- @return job_name		Job name of the Autopilot training run
+--
+function train_autopilot_caller(exa, args)
+	local schema_name = exa.meta.script_schema
+	local aws_sagemaker_handler = require("aws_sagemaker_handler")
+	local job_name = aws_sagemaker_handler.train_autopilot(
+		schema_name,
+		args['model_name'],
+		args['aws_credentials_connection_name'],
+		args['aws_region'],
+		args['iam_sagemaker_role'],
+		args['s3_bucket_uri'],
+		args['s3_output_path'],
+		args['target_attribute_name'],
+		args['problem_type'],
+		args['objective'],
+		args['max_runtime_for_automl_job_in_seconds'],
+		args['max_candidates'],
+		args['max_runtime_per_training_job_in_seconds'])
+
+	return job_name
+end
+
+
+---
+-- This method saves the metdata of the job running for training in Autopilot to Database
+--
+-- @param exa			Exa context
+-- @param args			A table including input parameters
+-- @param job_name		The name of the Autopilot job
+--
+function insert_metadata_into_db_caller(exa, args, job_name)
+	local schema_name = exa.meta.script_schema
+	local db_metadata_writer = require("db_metadata_writer")
+	db_metadata_writer.insert_metadata_into_db(
+			schema_name,
+			job_name,
+			args['aws_credentials_connection_name'],
+			args['iam_sagemaker_role'],
+			args['s3_bucket_uri'],
+			args['s3_output_path'],
+			args['target_attribute_name'],
+			args['problem_type'],
+			args['objective'],
+			args['max_runtime_for_automl_job_in_seconds'],
+			args['max_candidates'],
+			args['max_runtime_per_training_job_in_seconds'],
+			exa.meta.session_id,
+			exa.meta.current_user
+	)
+end
+
+---
 -- This is the main function of exporting to S3.
 --
 -- @param json_str	input parameters as json string
 --
---
-function main(json_str)
+function main(json_str, exa)
 	local args = parse_arguments(json_str)
+	export_to_s3_caller(args)
+	local job_name = train_autopilot_caller(exa, args)
+	insert_metadata_into_db_caller(exa, args, job_name)
 
-	local aws_s3_handler = require("aws_s3_handler")
-	local success = aws_s3_handler.export_to_s3(
-			args['input_schema_name'],
-			args['input_table_or_view_name'],
-			args['aws_credentials_connection_name'],
-			args['s3_output_path']
-	)
-
-	if not success then
-		_G.global_env.error('Error occured in exporting Exasol table to AWS S3')
-	end
+	-- TODO save table name into table
 
 end
 

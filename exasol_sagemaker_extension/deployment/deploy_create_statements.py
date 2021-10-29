@@ -3,6 +3,9 @@ import pyexasol
 from typing import Dict
 from exasol_sagemaker_extension.deployment import constants
 from exasol_sagemaker_extension.deployment.\
+    generate_create_statement_autopilot_job_status_polling import \
+    AutopilotJobStatusPollingLuaScriptCreateStatementGenerator
+from exasol_sagemaker_extension.deployment. \
     generate_create_statement_autopilot_training \
     import AutopilotTrainingLuaScriptCreateStatementGenerator
 
@@ -15,7 +18,7 @@ class DeployCreateStatements:
     that generate scripts deploying the sagemaker-extension project.
     """
 
-    def __init__(self, db_host: str, db_port: str,  db_user: str, 
+    def __init__(self, db_host: str, db_port: str, db_user: str,
                  db_pass: str, schema: str, to_print: bool):
         self._db_host = db_host
         self._db_port = db_port
@@ -33,21 +36,38 @@ class DeployCreateStatements:
         """
         Run the deployment by retrieving the CREATE SCRIPTS sql statements
         """
-        exportig_create_stmt = self._create_exporting_statement()
-        training_create_stmt = self._create_training_statement()
+        statement_maps = {
+            "Create statement of autopilot training lua script":
+                self._create_autopilot_training_lua_script_statement(),
+            "Create statement of autopilot training udf":
+                constants.CREATE_STATEMENT_AUTOPILOT_TRAINING_UDF_RESOURCE_TEXT,
+            "Create statement of autopilot jobs metadata table":
+                constants.CREATE_STATEMENT_AUTOPILOT_JOBS_METADATA_TABLE_RESOURCE_TEXT,
+            "Create statement of autopilot job status polling lua script":
+                self._create_autopilot_job_status_polling_lua_script_statement(),
+            "Create statement of autopilot job status polling udf":
+                constants.CREATE_STATEMENT_AUTOPILOT_JOB_STATUS_POLLING_UDF_RESOURCE_TEXT,
+        }
         logger.debug(f"Create statements are obtained")
 
-        statement_maps= {
-                "exporting create statement": exportig_create_stmt,
-                "training create statement": training_create_stmt}
-        
         if not self._to_print:
             self._open_schema()
             self._execute_statements(statement_maps)
         else:
             print("\n".join(statement_maps.values()))
 
-    def _create_exporting_statement(self):
+    def _create_autopilot_job_status_polling_lua_script_statement(self):
+        """
+        Generate and return job status polling CREATE SCRIPT sql statement.
+
+        :return: The polling CREATE SCRIPT sql statement
+        """
+        statement_generator = \
+            AutopilotJobStatusPollingLuaScriptCreateStatementGenerator()
+        statement_str = statement_generator.get_statement()
+        return statement_str
+
+    def _create_autopilot_training_lua_script_statement(self):
         """
         Generate and return exporting CREATE SCRIPT sql statement.
 
@@ -58,16 +78,6 @@ class DeployCreateStatements:
         statement_str = statement_generator.get_statement()
         return statement_str
 
-    def _create_training_statement(self):
-        """
-        Read and return training CREATE SCRIPT udf script statement
-
-        :return: The training CREATE SCRIPT udf script statement
-        """
-        statement_str = constants.\
-            CREATE_STATEMENT_AUTOPILOT_TRAINING_UDF_RESOURCE.read_text()
-        return statement_str
-
     def _open_schema(self):
         """
         Open and use the  schema  for where deployment is performed
@@ -76,7 +86,7 @@ class DeployCreateStatements:
                    "OPEN SCHEMA {schema_name}"]
         for query in queries:
             self.__exasol_conn.execute(query.format(schema_name=self._schema))
-        logger.debug(f"Schema -{self._schema}- is opened")
+        logger.debug(f"Schema {self._schema} is opened")
 
     def _execute_statements(self, statement_list: Dict[str, str]):
         """
@@ -84,4 +94,4 @@ class DeployCreateStatements:
         """
         for desc, stmt in statement_list.items():
             self.__exasol_conn.execute(stmt)
-            logger.debug(f"Statement -{desc}- is executed")
+            logger.debug(f"{desc} is executed")

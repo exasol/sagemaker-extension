@@ -1,4 +1,4 @@
-CREATE OR REPLACE LUA SCRIPT "SME_TRAIN_WITH_SAGEMAKER_AUTOPILOT" (json_str)  AS
+CREATE OR REPLACE LUA SCRIPT "SME_POLL_SAGEMAKER_AUTOPILOT_JOB_STATUS" (job_name, aws_s3_connection, aws_region)  RETURNS TABLE AS
     table.insert(_G.package.searchers,
         function (module_name)
             local loader = package.preload[module_name]
@@ -12,7 +12,8 @@ CREATE OR REPLACE LUA SCRIPT "SME_TRAIN_WITH_SAGEMAKER_AUTOPILOT" (json_str)  AS
 
 {BUNDLED_SCRIPT}
 
-main(json_str, exa)
+local result, cols = main(exa, job_name, aws_s3_connection, aws_region)
+return result, cols
 /
 
 
