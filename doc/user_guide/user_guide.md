@@ -1,66 +1,39 @@
 # User Guide
 
-Exasol Sagemaker Extension provides a Python library that trains data stored in Exasol using AWS SageMaker Autopilot service.
+Exasol Sagemaker Extension provides a Python library and Exasol Scripts and UDFs that trains data stored in Exasol using AWS SageMaker Autopilot service.
 
-The extension basically imports a given Exasol table into AWS S3, and then triggers Machine Learning training using the AWS Autopilot service with the specified parameters. In addition, the training status can be polled using the auxiliary scripts provided within the scope of the project.
+The extension basically exports a given Exasol table into AWS S3, and then triggers Machine Learning training using the AWS Autopilot service with the specified parameters. In addition, the training status can be polled using the auxiliary scripts provided within the scope of the project.
 
 ## Table of Contents
 
-- [1.Getting Started](#getting-started)
-- [2.Installation](#installation)
-- [3.Deployment](#deployment)
-- [4.Execution of Training](#execution_of_training)
-- [5.Polling Training Status](#polling_training_status)
+- [Getting Started](#getting-started)
+- [Installation](#installation)
+- [Deployment](#deployment)
+- [Execution of Training](#execution-of-training)
+- [Polling Training Status](#polling-training-status)
 
 
-## 1.Getting Started
+## Getting Started
 - Exasol DB
   - The Exasol cluster must already be running with version 7.1 or later.
 - AWS connection from Exasol 
-  - An Exasol connection object must be created with AWS credentials that has AWS Sagemaker Execution permission
-  
+  - An Exasol connection object must be created with AWS credentials that has AWS Sagemaker Execution permission. An example connection object is created as follows. For more information please check [Create Connection in Exasol](https://docs.exasol.com/sql/create_connection.htm?Highlight=connection):  
+  ```buildoutcfg
+  CREATE OR REPLACE  CONNECTION <CONNECTION_NAME>
+      TO '<S3_BUCKET_ADDRESS>'
+      USER '<AWS_KEY_ID>'
+      IDENTIFIED BY '<AWS_ACCESS_KEY>'
+  ```  
 
-## 2.Installation
-### Clone the project
-Clone the sagemaker-extension project :
-```buildoutcfg
-git clone git@github.com:exasol/sagemaker-extension.git
-```
 
-### Build language container
-- Build script-language container containing all required scripts for Sagemaker extension.
+## Installation
+- Install the packaged sagemaker-extension project as follows:
 ```buildoutcfg
-./build_language_container.sh
-```
-- Upload the built container to the Exasol Database
-```buildoutcfg
-cd language_container/
-```
-```buildoutcfg
-./exaslct upload \ 
-    --flavor-path  exasol_sagemaker_extension_container \
-    --database-host <DB_HOST>  \
-    --bucketfs-port <DB_PORT>  \
-    --bucketfs-username <BUCKETFS_USER> \
-    --bucketfs-password <BUCKETFS_PASS>  \
-    --bucketfs-name <BUCKETFS_NAME>  \
-    --bucket-name <BUCKE_NAME>  \
-    --path-in-bucket <PATH_IN_BUCKET> \   
-    --release-name current 
-```
-
-### Build project
-- Build and package the project 
-```buildoutcfg
-poetry build
-```
-- Install the built archive
-```buildoutcfg
-pip install dist/exasol_sagemaker_extension-0.0.1.whl
+pip install exasol_sagemaker_extension-0.1.0.whl
 ```
 
 
-## 3.Deployment
+## Deployment
 - Deploy all necessary scripts installed in the previous step to the specified  ```SCHEMA``` in Exasol using the following python cli command: 
 ```buildoutcfg
 python -m exasol_sagemaker_extension.deployment.deploy_cli \
@@ -73,7 +46,7 @@ python -m exasol_sagemaker_extension.deployment.deploy_cli \
 
 
 
-## 4.Execution of Training
+## Execution of Training
 ### Execute Autopilot Training
 - Example usage of AWS Sagemaker Autopilot service in Exasol is as follows. `SME_TRAIN_WITH_SAGEMAKER_AUTOPILOT` UDF script takes the necessary parameters as json string and triggers the Autopilot training on the selected table with the specified parameters:
 ```buildoutcfg
@@ -96,19 +69,19 @@ EXECUTE SCRIPT SME_TRAIN_WITH_SAGEMAKER_AUTOPILOT('{
 ```
 
 - Parameters:
-  - ```model_name```: It is a unique model name that will be internally concantaned with the execution datetime  in runtime.
-  - ```aws_credentials_connection_name```: It is an Exasol connection object containing AWS credentials. 
-  - ```aws_region```: It is the AWS region credential.
-  - ```iam_sagemaker_role```: It is the AWS IAM identity having  the Sagemaker execution privileges.
-  - ```s3_bucket_uri```: It is the  AWS S3 Bucket URI from which to export the table to be trained.
-  - ```s3_output_path``` : It is the path in AWS S3 bucket from which to export the table to be trained.
-  - ```input_schema_name```: It is the schema of the  table to be trained.
-  - ```input_table_or_view_name```: It is the table or view name to be trained.
-  - ```target_attribute_name```: It is the name of the column to which the model training will fit.
-  - ```objective (optional)```: It is the evaluation metric measuring prediction quality of an Autopilot training model. For more information please check [Autopilot API reference guide](https://docs.aws.amazon.com/sagemaker/latest/dg/autopilot-reference.html).
-  - ```max_runtime_for_automl_job_in_seconds (optional)```: It is one of the completion criteria of a Autopilot job, specifies the maximum runtime in seconds required to complete an Autopilot job. If a  job exceeds the maximum runtime, the job is stopped automatically. For more information please check [Autopilot API reference guide](https://docs.aws.amazon.com/sagemaker/latest/dg/autopilot-reference.html).
-  - ```max_candidates (optional)```: It is one of the completion criteria of a Autopilot job, indicates that a job is allowed to create maximum number of model candidates. For more information please check [Autopilot API reference guide](https://docs.aws.amazon.com/sagemaker/latest/dg/autopilot-reference.html).
-  - ```max_runtime_per_training_job_in_seconds (optional)```:  It is the maximum runtime in seconds that each job is allowed to run. For more information please check [Autopilot API reference guide](https://docs.aws.amazon.com/sagemaker/latest/dg/autopilot-reference.html).
+  - ```model_name```: A unique model name that will be internally concantaned with the execution date time.
+  - ```aws_credentials_connection_name```: The name of an Exasol connection object with AWS credentials. 
+  - ```aws_region```: AWS region credential.
+  - ```iam_sagemaker_role```: The ARN of AWS IAM identity having  the Sagemaker execution privileges.
+  - ```s3_bucket_uri```: The URI to an AWS S3 Bucket to which the table gets exported for training. 
+  - ```s3_output_path``` : The path in the AWS S3 Bucket to which the table gets exported for training. 
+  - ```input_schema_name```: The schema name including the exported table for training.
+  - ```input_table_or_view_name```: The name of exported table or view for training.
+  - ```target_attribute_name```: The name of the column to which the Autopilot training will fit.
+  - ```objective (optional)```: The evaluation metric measuring prediction quality of an Autopilot training model. For more information please check [Autopilot API reference guide](https://docs.aws.amazon.com/sagemaker/latest/dg/autopilot-reference.html).
+  - ```max_runtime_for_automl_job_in_seconds (optional)```: The maximum runtime in seconds required to complete an Autopilot job. If a  job exceeds the maximum runtime, the job is stopped automatically. For more information please check [Autopilot API reference guide](https://docs.aws.amazon.com/sagemaker/latest/dg/autopilot-reference.html).
+  - ```max_candidates (optional)```: The maximum number of model candidates that a job is allowed to create. For more information please check [Autopilot API reference guide](https://docs.aws.amazon.com/sagemaker/latest/dg/autopilot-reference.html).
+  - ```max_runtime_per_training_job_in_seconds (optional)```:  The maximum runtime in seconds that each job is allowed to run. For more information please check [Autopilot API reference guide](https://docs.aws.amazon.com/sagemaker/latest/dg/autopilot-reference.html).
 
 
 ### Metadata of Autopitlot Job
@@ -129,7 +102,7 @@ EXECUTE SCRIPT SME_TRAIN_WITH_SAGEMAKER_AUTOPILOT('{
   - SCRIPT_USER
 
 
-## 5.Polling Training Status
+## Polling Training Status
 - You can poll the status of a training Autopilot job with the `SME_POLL_SAGEMAKER_AUTOPILOT_JOB_STATUS` UDF script. Example usage is given below:
 ```buildoutcfg
 EXECUTE SCRIPT SME_POLL_SAGEMAKER_AUTOPILOT_JOB_STATUS(
@@ -140,9 +113,9 @@ EXECUTE SCRIPT SME_POLL_SAGEMAKER_AUTOPILOT_JOB_STATUS(
 ```
 
 - Parameters:
-  - ```job_name```: It is a unique Autopilot job name
-  - ```aws_credentials_connection_name```:  It is an Exasol connection object containing AWS credentials having Sagemaker execution permission..
-  - ```aws_region```: It is the AWS region credential.
+  - ```job_name```: A unique Autopilot job name.
+  - ```aws_credentials_connection_name```:   The name of an Exasol connection object with AWS credentials with AWS credentials having Sagemaker execution permission.
+  - ```aws_region```: AWS region credential.
 
 
 - The polling script specifies the job statuses in two columns. These columns and their status information provided by AWS Sagemaker are given below (For more information see the [description of training job](https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_DescribeTrainingJob.html)): 
