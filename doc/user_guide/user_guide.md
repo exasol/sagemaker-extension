@@ -1,8 +1,13 @@
 # User Guide
 
-Exasol Sagemaker Extension provides a Python library and Exasol Scripts and UDFs that trains data stored in Exasol using AWS SageMaker Autopilot service.
+Exasol Sagemaker Extension provides a Python library together with Exasol Scripts 
+and UDFs that train Machine Learning Models on data stored in Exasol using AWS SageMaker 
+Autopilot service.
 
-The extension basically exports a given Exasol table into AWS S3, and then triggers Machine Learning training using the AWS Autopilot service with the specified parameters. In addition, the training status can be polled using the auxiliary scripts provided within the scope of the project.
+The extension basically exports a given Exasol table into AWS S3, and then triggers 
+Machine Learning training using the AWS Autopilot service with the specified parameters. 
+In addition, the training status can be polled using the auxiliary scripts provided 
+within the scope of the project.
 
 ## Table of Contents
 
@@ -17,7 +22,9 @@ The extension basically exports a given Exasol table into AWS S3, and then trigg
 - Exasol DB
   - The Exasol cluster must already be running with version 7.1 or later.
 - AWS connection from Exasol 
-  - An Exasol connection object must be created with AWS credentials that has AWS Sagemaker Execution permission. An example connection object is created as follows. For more information please check [Create Connection in Exasol](https://docs.exasol.com/sql/create_connection.htm?Highlight=connection):  
+  - An Exasol connection object must be created with AWS credentials that has 
+  AWS Sagemaker Execution permission. An example connection object is created 
+  as follows. For more information please check the [Create Connection in Exasol](https://docs.exasol.com/sql/create_connection.htm?Highlight=connection) document:  
   ```buildoutcfg
   CREATE OR REPLACE  CONNECTION <CONNECTION_NAME>
       TO '<S3_BUCKET_ADDRESS>'
@@ -27,10 +34,36 @@ The extension basically exports a given Exasol table into AWS S3, and then trigg
 
 
 ## Installation
-- Install the packaged sagemaker-extension project as follows:
+### Install The Built Archive
+- Install the packaged sagemaker-extension project as follows (Please check [the latest release](https://github.com/exasol/sagemaker-extension/releases/latest)):
 ```buildoutcfg
-pip install exasol_sagemaker_extension-0.1.0.whl
+pip install exasol_sagemaker_extension.whl
 ```
+### Install The Pre-built Container 
+- Upload the pre-built container into BucketFS. In order to do that you can use 
+either a [http(s) client](https://docs.exasol.com/database_concepts/bucketfs/file_access.htm) 
+or the [bucketfs-client](https://github.com/exasol/bucketfs-client). 
+The following example uploads a container to BucketFS through curl command, a http(s) client:
+```buildoutcfg
+curl -vX PUT -T \ 
+    "<CONTAINER_FILE>" 
+    "http://w:<BUCKETFS_WRITE_PASS>@$bucketfs_host:<BUCKETFS_PASS>/<BUCKETFS_NAME>/<PATH_IN_BUCKET><CONTAINER_FILE>"
+```
+For more details please check [Adding New Packages to Existing Script Languages](https://docs.exasol.com/database_concepts/udf_scripts/adding_new_packages_script_languages.htm).
+
+- Activate the uploaded container through adjusting session parameter `SCRIPT_LANGUAGES`. 
+The activating can be performed for either session-wide (`ALTER SESSION`) or 
+system-wide (`ALTER SYSTEM`). The following example query activates the container session-wide:
+```buildoutcfg
+ALTER SESSION SET SCRIPT_LANGUAGES=\
+<ALIAS>=localzmq+protobuf:///<BUCKETFS_NAME>/<BUCKET_NAME>/<PATH_IN_BUCKET><CONTAINER_NAME>/?\
+        lang=<LANGUAGE>#buckets/<BUCKETFS_NAME>/<BUCKET_NAME>/<PATH_IN_BUCKET><CONTAINER_NAME>/\
+        exaudf/exaudfclient_py3
+```
+where `ALIAS` is _PYTHON3_SME_, `LANGUAGE` is _python_ in the sagemaker-extension project.
+
+For more details please check [Adding New Packages to Existing Script Languages](https://docs.exasol.com/database_concepts/udf_scripts/adding_new_packages_script_languages.htm).
+
 
 
 ## Deployment
@@ -71,7 +104,7 @@ EXECUTE SCRIPT SME_TRAIN_WITH_SAGEMAKER_AUTOPILOT('{
 - Parameters:
   - ```model_name```: A unique model name that will be internally concantaned with the execution date time.
   - ```aws_credentials_connection_name```: The name of an Exasol connection object with AWS credentials. 
-  - ```aws_region```: AWS region credential.
+  - ```aws_region```: The AWS region where the training should run.
   - ```iam_sagemaker_role```: The ARN of AWS IAM identity having  the Sagemaker execution privileges.
   - ```s3_bucket_uri```: The URI to an AWS S3 Bucket to which the table gets exported for training. 
   - ```s3_output_path``` : The path in the AWS S3 Bucket to which the table gets exported for training. 
@@ -114,8 +147,8 @@ EXECUTE SCRIPT SME_POLL_SAGEMAKER_AUTOPILOT_JOB_STATUS(
 
 - Parameters:
   - ```job_name```: A unique Autopilot job name.
-  - ```aws_credentials_connection_name```:   The name of an Exasol connection object with AWS credentials with AWS credentials having Sagemaker execution permission.
-  - ```aws_region```: AWS region credential.
+  - ```aws_credentials_connection_name```:   The name of an Exasol connection object with AWS credentials having Sagemaker execution permission.
+  - ```aws_region```: The AWS region where the training should run.
 
 
 - The polling script specifies the job statuses in two columns. These columns and their status information provided by AWS Sagemaker are given below (For more information see the [description of training job](https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_DescribeTrainingJob.html)): 
