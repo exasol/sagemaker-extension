@@ -14,6 +14,8 @@ Initial implementation
   - #13 Created Python CLI Tool to deploy the extension
   - #17 Enhanced the deployment of the extension
   - #11 Added UDF which polls Autopilot training status
+  - #3 Added user guide
+
 
   
     
