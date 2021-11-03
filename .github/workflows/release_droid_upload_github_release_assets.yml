@@ -1,0 +1,60 @@
+name: Release Droid - Upload GitHub Release Assets
+
+on:
+  workflow_dispatch:
+    inputs:
+      upload_url:
+        description: 'Upload URL'
+        required: true
+
+
+jobs:
+  release:
+    runs-on: ubuntu-18.04
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+      - uses: abatilo/actions-poetry@v2.0.0
+        with:
+          poetry-version: 1.1.6
+      - name: Install Poetry
+        run: poetry install
+      - name: Build Poetry
+        run: poetry build
+      - name: Install project whl
+        run: pip install dist/*.whl
+
+      - name:  Install Lua dependencies
+        run: |
+          sudo apt-get install luarocks
+          sudo luarocks install amalg
+          sudo luarocks install lua-cjson
+          sudo luarocks install luaunit
+          sudo luarocks install mockagne
+          sudo luarocks install exaerror
+
+      - name: Run Lua unit tests
+        run: |
+          ./scripts/run_lua_unittests.sh
+
+      - name: Setup integration test environment
+        run: ./scripts/setup_integration_test.sh
+
+      - name: Poetry run pytest integration tests
+        run: poetry run pytest tests
+
+      - name: Upload assets to the GitHub release draft
+        uses: shogo82148/actions-upload-release-asset@v1
+        with:
+          upload_url: ${{ github.event.inputs.upload_url }}
+          asset_path: dist/*
+
+      # Since the container was built in the pytest run above, no need to rebuilt before the upload.
+      - name: Upload script-language container
+        uses: shogo82148/actions-upload-release-asset@v1
+        with:
+          upload_url: ${{ github.event.inputs.upload_url }}
+          asset_path: .build_output/cache/exports/*
