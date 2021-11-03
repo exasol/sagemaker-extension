@@ -10,7 +10,10 @@ on:
 
 jobs:
   release:
-    runs-on: ubuntu-18.04
+    strategy:
+      matrix:
+        python-version: [ 3.6 ]
+    runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v2
