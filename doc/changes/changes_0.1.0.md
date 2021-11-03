@@ -1,4 +1,4 @@
-# SageMaker Extension 0.1.0
+# SageMaker Extension 0.1.0, released 2021-11-03
 
 Code name: Add model training with AWS SageMaker Autopilot on data in Exasol and Status Job polling.
 
