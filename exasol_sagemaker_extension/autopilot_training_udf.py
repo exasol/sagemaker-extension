@@ -1,8 +1,6 @@
 import os
 import json
 from typing import Callable
-from datetime import datetime
-
 from exasol_sagemaker_extension import autopilot_handler
 
 
@@ -29,9 +27,6 @@ class AutopilotTrainingUDF:
         max_runtime_per_training_job_in_seconds = \
             ctx.max_runtime_per_training_job_in_seconds
 
-        unique_model_name = '-'.join(
-            (model_name, datetime.utcnow().strftime("%d%b%y-%H%M")))
-
         if objective:  # <dict> required, eg. '{"MetricName": "Accuracy"}'
             objective = json.loads(objective)
 
@@ -41,7 +36,7 @@ class AutopilotTrainingUDF:
         os.environ["AWS_SECRET_ACCESS_KEY"] = aws_s3_conn_obj.password
 
         job_name = self.training_method(
-            model_name=unique_model_name,
+            model_name=model_name,
             role=role,
             s3_bucket_uri=s3_bucket_uri,
             s3_output_path=s3_output_path,

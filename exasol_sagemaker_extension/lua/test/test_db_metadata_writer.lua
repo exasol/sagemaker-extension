@@ -2,7 +2,7 @@ local luaunit = require("luaunit")
 local mockagne = require("mockagne")
 local db_metadata_writer = require("./src/db_metadata_writer")
 
-test_db_metadata_writer = {
+local test_db_metadata_writer = {
      query = [[INSERT INTO ::schema."SME_METADATA_AUTOPILOT_JOBS VALUES"(
 			CURRENT_TIMESTAMP,
 			:job_name,

@@ -5,7 +5,7 @@ from exasol_sagemaker_extension.autopilot_training_udf import \
     AutopilotTrainingUDF
 
 
-MODEL_NAME = "test-model-name"
+MODEL_NAME = "end2endmodel"
 
 
 class Connection:

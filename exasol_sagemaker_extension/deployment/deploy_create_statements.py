@@ -3,11 +3,17 @@ import pyexasol
 from typing import Dict
 from exasol_sagemaker_extension.deployment import constants
 from exasol_sagemaker_extension.deployment.\
+    generate_create_statement_autopilot_endpoint_deletion \
+    import AutopilotEndpointDeletionLuaScriptCreateStatementGenerator
+from exasol_sagemaker_extension.deployment.\
     generate_create_statement_autopilot_job_status_polling import \
     AutopilotJobStatusPollingLuaScriptCreateStatementGenerator
 from exasol_sagemaker_extension.deployment. \
     generate_create_statement_autopilot_training \
     import AutopilotTrainingLuaScriptCreateStatementGenerator
+from exasol_sagemaker_extension.deployment.\
+    generate_create_statement_autopilot_endpoint_deployment \
+    import AutopilotEndpointDeploymentLuaScriptCreateStatementGenerator
 
 logger = logging.getLogger(__name__)
 
@@ -47,6 +53,14 @@ class DeployCreateStatements:
                 self._create_autopilot_job_status_polling_lua_script_statement(),
             "Create statement of autopilot job status polling udf":
                 constants.CREATE_STATEMENT_AUTOPILOT_JOB_STATUS_POLLING_UDF_RESOURCE_TEXT,
+            "Create statement of autopilot endpoint deployment lua script":
+                self._create_autopilot_endpoint_deployment_lua_script_statement(),
+            "Create statement of autopilot endpoint deployment udf":
+                constants.CREATE_STATEMENT_AUTOPILOT_ENDPOINT_DEPLOYMENT_UDF_RESOURCE_TEXT,
+            "Create statement of autopilot endpoint deletion lua script":
+                self._create_autopilot_endpoint_deletion_lua_script_statement(),
+            "Create statement of autopilot endpoint deletion udf":
+                constants.CREATE_STATEMENT_AUTOPILOT_ENDPOINT_DELETION_UDF_RESOURCE_TEXT,
         }
         logger.debug(f"Create statements are obtained")
 
@@ -55,6 +69,29 @@ class DeployCreateStatements:
             self._execute_statements(statement_maps)
         else:
             print("\n".join(statement_maps.values()))
+
+
+    def _create_autopilot_endpoint_deletion_lua_script_statement(self):
+        """
+        Generate and return an endpoint deletion CREATE SCRIPT sql statement.
+
+        :return: The deletion CREATE SCRIPT sql statement
+        """
+        statement_generator = \
+            AutopilotEndpointDeletionLuaScriptCreateStatementGenerator()
+        statement_str = statement_generator.get_statement()
+        return statement_str
+
+    def _create_autopilot_endpoint_deployment_lua_script_statement(self):
+        """
+        Generate and return an endpoint deployment CREATE SCRIPT sql statement.
+
+        :return: The deployment CREATE SCRIPT sql statement
+        """
+        statement_generator = \
+            AutopilotEndpointDeploymentLuaScriptCreateStatementGenerator()
+        statement_str = statement_generator.get_statement()
+        return statement_str
 
     def _create_autopilot_job_status_polling_lua_script_statement(self):
         """

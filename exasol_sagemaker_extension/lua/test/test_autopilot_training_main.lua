@@ -3,7 +3,7 @@ local mockagne = require("mockagne")
 require("./src/autopilot_training_main")
 
 
-test_train_autopilot_main = {}
+local test_train_autopilot_main = {}
 
 
 local function mock_error_return_nil(exa_mock)

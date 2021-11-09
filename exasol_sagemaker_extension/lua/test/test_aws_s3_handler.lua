@@ -3,7 +3,7 @@ local mockagne = require("mockagne")
 local aws_s3_handler = require("./src/aws_s3_handler")
 
 
-test_aws_s3_handler = {
+local test_aws_s3_handler = {
     schema_name = 'TEST_SCHEMA',
     table_name = 'TEST_TABLE',
     connection_name = 'TEST_CONNECTION',
