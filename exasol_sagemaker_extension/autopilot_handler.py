@@ -65,6 +65,10 @@ def deploy_endpoint(
 
 
 def delete_endpoint(endpoint_name: str):
+    # This function deletes the deployed models (located under "Models" section
+    # in Sagemaker web page), not  trained jobs, delete_endpoint() command also
+    # delete it, but in order to be sure,  run delete_model() beforehand.
+
     predictor = Predictor(endpoint_name)
     predictor.delete_model()
     predictor.delete_endpoint()

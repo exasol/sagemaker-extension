@@ -66,4 +66,5 @@ function main(exa, job_name, instance_type, instance_count, aws_s3_connection, a
 
 	local exa_conn = require('endpoint_connection_handler')
 	exa_conn.update_model_connection_object(endpoint_name, 'deployed')
+	-- TODO: PredictionUDF will be created here in the next PR
 end
