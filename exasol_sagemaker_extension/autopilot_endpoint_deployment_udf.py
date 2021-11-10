@@ -1,15 +1,12 @@
 import os
-import json
 from typing import Callable
-from datetime import datetime
-
-from exasol_sagemaker_extension import autopilot_handler
+from exasol_sagemaker_extension.autopilot_utils.enpoint_deployment import \
+    AutopilotEndpointDeployment
 
 
 class AutopilotEndpointDeploymentUDF:
     def __init__(self, exa,
-                 deploy_method: Callable =
-                 autopilot_handler.deploy_endpoint):
+                 deploy_method: Callable = AutopilotEndpointDeployment.deploy):
         self.exa = exa
         self.counter = 0
         self.deploy_method = deploy_method

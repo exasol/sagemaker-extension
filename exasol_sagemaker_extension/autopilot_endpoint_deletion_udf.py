@@ -1,15 +1,12 @@
 import os
-import json
 from typing import Callable
-from datetime import datetime
-
-from exasol_sagemaker_extension import autopilot_handler
+from exasol_sagemaker_extension.autopilot_utils.enpoint_deletion import \
+    AutopilotEndpointDeletion
 
 
 class AutopilotEndpointDeletionUDF:
     def __init__(self, exa,
-                 delete_method: Callable =
-                 autopilot_handler.delete_endpoint):
+                 delete_method: Callable = AutopilotEndpointDeletion.delete):
         self.exa = exa
         self.counter = 0
         self.delete_method = delete_method

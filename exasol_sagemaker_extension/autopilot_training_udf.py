@@ -1,12 +1,13 @@
 import os
 import json
 from typing import Callable
-from exasol_sagemaker_extension import autopilot_handler
+from exasol_sagemaker_extension.autopilot_utils.model_training import \
+    AutopilotTraining
 
 
 class AutopilotTrainingUDF:
     def __init__(self, exa,
-                 training_method: Callable = autopilot_handler.train_model):
+                 training_method: Callable = AutopilotTraining.train):
         self.exa = exa
         self.counter = 0
         self.training_method = training_method

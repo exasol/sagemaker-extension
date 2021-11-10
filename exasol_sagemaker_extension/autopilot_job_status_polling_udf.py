@@ -1,14 +1,15 @@
 import os
 from typing import Callable
-from exasol_sagemaker_extension import autopilot_handler
+from exasol_sagemaker_extension.autopilot_utils.status_polling import \
+    AutopilotPolling
 
 
 class AutopilotJobStatusPollingUDF:
-    def __init__(self, exa, check_training_status_method: \
-            Callable= autopilot_handler.check_training_status):
+    def __init__(self, exa,
+                 check_status_method: Callable= AutopilotPolling.check_status):
         self.exa = exa
         self.counter = 0
-        self.check_training_status_method= check_training_status_method
+        self.check_status_method = check_status_method
 
     def run(self, ctx):
         job_name = ctx.job_name
@@ -20,8 +21,7 @@ class AutopilotJobStatusPollingUDF:
         os.environ["AWS_ACCESS_KEY_ID"] = aws_s3_conn_obj.user
         os.environ["AWS_SECRET_ACCESS_KEY"] = aws_s3_conn_obj.password
 
-        job_status, job_secondary_status = \
-            self.check_training_status_method(job_name)
+        job_status, job_secondary_status = self.check_status_method(job_name)
 
         ctx.emit(job_status, job_secondary_status)
         self.counter += 1

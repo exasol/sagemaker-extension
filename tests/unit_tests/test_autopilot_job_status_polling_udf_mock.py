@@ -17,11 +17,11 @@ def udf_wrapper():
     from exasol_sagemaker_extension.autopilot_job_status_polling_udf \
         import AutopilotJobStatusPollingUDF
 
-    def mocked_check_training_status_method(model_name: str):
+    def mocked_check_status_method(model_name: str):
         return "InProgress", "Feature Engineering"
 
     udf = AutopilotJobStatusPollingUDF(
-        exa, check_training_status_method=mocked_check_training_status_method)
+        exa, check_status_method=mocked_check_status_method)
 
     def run(ctx: UDFContext):
         udf.run(ctx)
