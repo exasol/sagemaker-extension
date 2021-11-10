@@ -64,6 +64,6 @@ function main(exa, job_name, instance_type, instance_count, aws_s3_connection, a
 	local endpoint_name = deploy_autopilot_endpoint(
 			schema_name, job_name, instance_type, instance_count, aws_s3_connection, aws_region)
 
-	local exa_conn = require('exa_connection_handler')
+	local exa_conn = require('endpoint_connection_handler')
 	exa_conn.update_model_connection_object(endpoint_name, 'deployed')
 end

@@ -1,6 +1,6 @@
 local luaunit = require("luaunit")
 local mockagne = require("mockagne")
-local exa_connection_handler = require("src/exa_connection_handler")
+local endpoint_connection_handler = require("endpoint_connection_handler")
 
 
 local endpoint_name = 'endpoint_name'
@@ -8,7 +8,7 @@ local status = 'deployed'
 local conn_name = [[SME_SAGEMAKER_AUTOPILOT_ENDPOINT_CONNECTION_]] .. endpoint_name
 local conn_to = [[TO '{"name":"]] .. endpoint_name .. [[", "status":"]] .. status .. [["}']]
 
-local test_exa_connection_handler = {
+local test_endpoint_connection_handler = {
     query = [[CREATE OR REPLACE CONNECTION ]] .. conn_name .. [[ ]] .. conn_to
 }
 
@@ -21,22 +21,22 @@ local function mock_error_return_nil(exa_mock)
 end
 
 
-function  test_exa_connection_handler.setUp()
+function  test_endpoint_connection_handler.setUp()
     exa_mock = mockagne.getMock()
     _G.global_env = exa_mock
     mock_error_return_nil(exa_mock)
 end
 
 
-function test_exa_connection_handler.test_delete_autopilot_endpoint_success()
+function test_endpoint_connection_handler.test_delete_autopilot_endpoint_success()
     mock_pquery_train(
             exa_mock,
-            test_exa_connection_handler.query,
-            test_exa_connection_handler.params,
+            test_endpoint_connection_handler.query,
+            test_endpoint_connection_handler.params,
             true,
             nil)
-    local result = exa_connection_handler.update_model_connection_object(
-            test_exa_connection_handler.endpoint_name, test_exa_connection_handler.status)
+    local result = endpoint_connection_handler.update_model_connection_object(
+            test_endpoint_connection_handler.endpoint_name, test_endpoint_connection_handler.status)
 
     luaunit.assertEquals(result, nil)
 

@@ -52,6 +52,6 @@ function main(exa, endpoint_name, aws_s3_connection, aws_region)
 	local schema_name = exa.meta.script_schema
 	delete_autopilot_endpoint(schema_name, endpoint_name, aws_s3_connection, aws_region)
 
-	local exa_conn = require('exa_connection_handler')
+	local exa_conn = require('endpoint_connection_handler')
 	exa_conn.update_model_connection_object(endpoint_name, 'deleted')
 end

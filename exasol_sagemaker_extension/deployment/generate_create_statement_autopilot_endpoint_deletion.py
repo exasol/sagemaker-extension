@@ -11,10 +11,10 @@ class AutopilotEndpointDeletionLuaScriptCreateStatementGenerator(BaseCreateState
     def __init__(self):
         self._lua_src_files = [
             constants.LUA_SRC_MODULE_SAGEMAKER_ENDPOINT_DELETION_NAME,
-            constants.LUA_SRC_MODULE_EXA_CONNECTION_HANDLER_NAME]
+            constants.LUA_SRC_MODULE_ENDPOINT_CONNECTION_HANDLER_NAME]
         self._modules = [
             "autopilot_endpoint_deletion.lua",
-            "exa_connection_handler",
+            "endpoint_connection_handler",
             "exaerror",
             "message_expander"]
         self._create_statement_template_text = constants.\
