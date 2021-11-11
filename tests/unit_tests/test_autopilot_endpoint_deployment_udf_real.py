@@ -5,6 +5,7 @@ from exasol_sagemaker_extension.autopilot_endpoint_deployment_udf import \
 
 
 JOB_NAME = "end2endmodel"
+ENDPOINT_NAME = "end2endmodel-endpoint"
 INSTANCE_TYPE = "ml.m5.large"
 INSTANCE_COUNT = 1
 
@@ -26,33 +27,37 @@ class ExaEnvironment:
         return self._connections[name]
 
 
+class Context:
+    def __init__(self,
+                 job_name: str,
+                 endpoint_name: str,
+                 instance_type: str,
+                 instance_count: int,
+                 aws_s3_connection: str,
+                 aws_region: str):
+        self.job_name = job_name
+        self.endpoint_name = endpoint_name
+        self.instance_type = instance_type
+        self.instance_count = instance_count
+        self.aws_s3_connection = aws_s3_connection
+        self.aws_region = aws_region
+        self._emitted = []
+
+    def emit(self, *args):
+        self._emitted.append(args)
+
+    def get_emitted(self):
+        return self._emitted
+
+
 def test_autopilot_endpoint_deployment_udf_real(get_real_params):
     if "AWS_ACCESS_KEY" not in get_real_params \
             or not get_real_params["AWS_ACCESS_KEY"]:
         pytest.skip("AWS credentials are not set")
 
-    class Context:
-        def __init__(self,
-                     job_name: str,
-                     instance_type: str,
-                     instance_count: int,
-                     aws_s3_connection: str,
-                     aws_region: str):
-            self.job_name = job_name
-            self.instance_type = instance_type
-            self.instance_count = instance_count
-            self.aws_s3_connection = aws_s3_connection
-            self.aws_region = aws_region
-            self._emitted = []
-
-        def emit(self, *args):
-            self._emitted.append(args)
-
-        def get_emitted(self):
-            return self._emitted
-
     ctx = Context(
         JOB_NAME,
+        ENDPOINT_NAME,
         INSTANCE_TYPE,
         INSTANCE_COUNT,
         get_real_params["AWS_CONNECTION"],

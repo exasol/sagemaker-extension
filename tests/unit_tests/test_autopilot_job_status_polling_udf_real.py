@@ -23,26 +23,27 @@ class ExaEnvironment:
         return self._connections[name]
 
 
+class Context:
+    def __init__(self,
+                 job_name: str,
+                 aws_s3_connection: str,
+                 aws_region: str):
+        self.job_name = job_name
+        self.aws_s3_connection = aws_s3_connection
+        self.aws_region = aws_region
+        self._emitted = []
+
+    def emit(self, *args):
+        self._emitted.append(args)
+
+    def get_emitted(self):
+        return self._emitted
+
+
 def test_autopilot_training_status_udf_real(get_real_params):
     if "AWS_ACCESS_KEY" not in get_real_params \
             or not get_real_params["AWS_ACCESS_KEY"]:
         pytest.skip("AWS credentials are not set")
-
-    class Context:
-        def __init__(self,
-                     job_name: str,
-                     aws_s3_connection: str,
-                     aws_region: str):
-            self.job_name = job_name
-            self.aws_s3_connection = aws_s3_connection
-            self.aws_region = aws_region
-            self._emitted = []
-
-        def emit(self, *args):
-            self._emitted.append(args)
-
-        def get_emitted(self):
-            return self._emitted
 
     ctx = Context(
         JOB_NAME,

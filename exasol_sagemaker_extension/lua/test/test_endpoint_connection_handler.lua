@@ -1,6 +1,6 @@
 local luaunit = require("luaunit")
 local mockagne = require("mockagne")
-local endpoint_connection_handler = require("endpoint_connection_handler")
+local endpoint_connection_handler = require("src/endpoint_connection_handler")
 
 
 local endpoint_name = 'endpoint_name'

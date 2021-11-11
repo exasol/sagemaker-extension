@@ -25,7 +25,7 @@ def get_real_params():
         "AWS_REGION": "eu-central-1",
         "AWS_S3_URI": "s3://sagemaker-extension-bucket",
         "AWS_OUTPUT_PATH": "end2end_path",
-        "AWS_ROLE": "   ",
+        "AWS_ROLE": "",
         "AWS_KEY_ID": "",
         "AWS_ACCESS_KEY": "",
         "AWS_SESSION_TOKEN": ""

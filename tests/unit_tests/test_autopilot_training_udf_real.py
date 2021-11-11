@@ -25,46 +25,47 @@ class ExaEnvironment:
         return self._connections[name]
 
 
+class Context:
+    def __init__(self,
+                 model_name: str,
+                 aws_s3_connection: str,
+                 aws_region: str,
+                 role: str,
+                 s3_bucket_uri: str,
+                 s3_output_path: str,
+                 target_attribute_name: str,
+                 problem_type: str,
+                 objective: str,
+                 max_runtime_for_automl_job_in_seconds: int,
+                 max_candidates: int,
+                 max_runtime_per_training_job_in_seconds: int):
+        self.model_name = model_name
+        self.aws_s3_connection = aws_s3_connection
+        self.aws_region = aws_region
+        self.role = role
+        self.s3_bucket_uri = s3_bucket_uri
+        self.s3_output_path = s3_output_path
+        self.target_attribute_name = target_attribute_name
+        self.problem_type = problem_type
+        self.objective = objective
+        self.max_runtime_for_automl_job_in_seconds = \
+            max_runtime_for_automl_job_in_seconds
+        self.max_candidates = max_candidates
+        self.max_runtime_per_training_job_in_seconds = \
+            max_runtime_per_training_job_in_seconds
+        self._emitted = []
+
+    def emit(self, *args):
+        self._emitted.append(args)
+
+    def get_emitted(self):
+        return self._emitted
+
+
 def test_autopilot_training_udf_real(get_real_params):
     if "AWS_ACCESS_KEY" not in get_real_params \
             or not get_real_params["AWS_ACCESS_KEY"]:
         pytest.skip("AWS credentials are not set")
-
-    class Context:
-        def __init__(self,
-                     model_name: str,
-                     aws_s3_connection: str,
-                     aws_region: str,
-                     role: str,
-                     s3_bucket_uri: str,
-                     s3_output_path: str,
-                     target_attribute_name: str,
-                     problem_type: str,
-                     objective: str,
-                     max_runtime_for_automl_job_in_seconds: int,
-                     max_candidates: int,
-                     max_runtime_per_training_job_in_seconds: int):
-            self.model_name = model_name
-            self.aws_s3_connection = aws_s3_connection
-            self.aws_region = aws_region
-            self.role = role
-            self.s3_bucket_uri = s3_bucket_uri
-            self.s3_output_path = s3_output_path
-            self.target_attribute_name = target_attribute_name
-            self.problem_type = problem_type
-            self.objective = objective
-            self.max_runtime_for_automl_job_in_seconds = \
-                max_runtime_for_automl_job_in_seconds
-            self.max_candidates = max_candidates
-            self.max_runtime_per_training_job_in_seconds = \
-                max_runtime_per_training_job_in_seconds
-            self._emitted = []
-
-        def emit(self, *args):
-            self._emitted.append(args)
-
-        def get_emitted(self):
-            return self._emitted
 
     ctx = Context(
         MODEL_NAME,

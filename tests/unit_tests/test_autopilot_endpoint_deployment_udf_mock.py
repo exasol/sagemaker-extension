@@ -7,7 +7,8 @@ from exasol_udf_mock_python.mock_meta_data import MockMetaData
 from exasol_udf_mock_python.udf_mock_executor import UDFMockExecutor
 
 
-JOB_NAME = "test-model-name"
+JOB_NAME = "testModel"
+ENDPOINT_NAME = "testEndpoint"
 INSTANCE_TYPE = "ml.m5.large"
 INSTANCE_COUNT = 1
 
@@ -32,6 +33,7 @@ def create_mock_metadata():
         input_type="SET",
         input_columns=[
             Column("job_name", str, "VARCHAR(2000000)"),
+            Column("endpoint_name", str, "VARCHAR(2000000)"),
             Column("instance_type", str, "VARCHAR(2000000)"),
             Column("instance_count", int, "INTEGER"),
             Column("aws_s3_connection", str, "VARCHAR(2000000)"),
@@ -58,6 +60,7 @@ def test_autopilot_training_udf_mock(get_mock_params):
 
     input_data = (
         JOB_NAME,
+        ENDPOINT_NAME,
         INSTANCE_TYPE,
         INSTANCE_COUNT,
         get_mock_params["AWS_CONNECTION_NAME"],

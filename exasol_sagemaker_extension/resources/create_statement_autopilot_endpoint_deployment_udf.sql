@@ -1,5 +1,6 @@
 CREATE OR REPLACE PYTHON3_SME SET SCRIPT "SME_AUTOPILOT_ENDPOINT_DEPLOYMENT_UDF"(
     job_name VARCHAR(100),
+    endpoint_name VARCHAR(100),
     instance_type VARCHAR(20),
     instance_count INTEGER,
     aws_s3_connection VARCHAR(50),

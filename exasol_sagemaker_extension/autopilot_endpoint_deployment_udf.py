@@ -13,6 +13,7 @@ class AutopilotEndpointDeploymentUDF:
 
     def run(self, ctx):
         job_name = ctx.job_name
+        endpoint_name = ctx.endpoint_name
         instance_type = ctx.instance_type
         instance_count = ctx.instance_count
         aws_s3_connection = ctx.aws_s3_connection
@@ -25,6 +26,7 @@ class AutopilotEndpointDeploymentUDF:
 
         endpoint_name = self.deploy_method(
             job_name=job_name,
+            endpoint_name=endpoint_name,
             instance_type=instance_type,
             instance_count=instance_count
         )

@@ -1,5 +1,5 @@
 ---
--- @module endpoint_connectoin_handler
+-- @module endpoint_connection_handler
 --
 -- This module handles operations on EXA connection object
 --

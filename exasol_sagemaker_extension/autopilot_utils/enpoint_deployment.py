@@ -6,9 +6,10 @@ class AutopilotEndpointDeployment:
     This class responsible for deploying an endpoint for a given Autopilot job
     """
     @staticmethod
-    def deploy(
-            job_name: str, instance_type: str, instance_count: int):
-        unique_endpoint_name = job_name  # endpoint_name = job_name
+    def deploy(job_name: str, endpoint_name: str,
+               instance_type: str, instance_count: int):
+
+        unique_endpoint_name = endpoint_name
         automl = AutoML.attach(auto_ml_job_name=job_name)
         best_candidate = automl.describe_auto_ml_job(job_name)["BestCandidate"]
         automl.deploy(

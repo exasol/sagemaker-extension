@@ -7,6 +7,7 @@ local test_autopilot_endpoint_deployment = {
     endpoint_name = 'endpoint_name',
     query =  [[SELECT ::schema."SME_AUTOPILOT_ENDPOINT_DEPLOYMENT_UDF"(
 		:job_name,
+		:endpoint_name,
 		:instance_type,
 		:instance_count,
 		:aws_s3_connection,
@@ -15,6 +16,7 @@ local test_autopilot_endpoint_deployment = {
     params = {
 		schema='schema_name',
 		job_name='job_name',
+		endpoint_name='endpoint_name',
 		instance_type='instance_type',
 		instance_count='instance_count',
 		aws_s3_connection='aws_s3_connection',
@@ -48,6 +50,7 @@ function test_autopilot_endpoint_deployment.test_poll_autopilot_job_status()
     local result  = deploy_autopilot_endpoint(
             'schema_name',
             'job_name',
+            'endpoint_name',
             'instance_type',
             'instance_count',
             'aws_s3_connection','aws_region')
