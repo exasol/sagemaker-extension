@@ -20,7 +20,7 @@ _G.global_env = {
 --
 function M.train_autopilot(
         schema_name,
-        model_name,
+        job_name,
         aws_s3_connection,
         aws_region,
         role,
@@ -34,7 +34,7 @@ function M.train_autopilot(
         max_runtime_per_training_job_in_seconds)
 
     local query_training = [[SELECT ::schema."SME_AUTOPILOT_TRAINING_UDF"(
-        :model_name ,
+        :job_name ,
         :aws_s3_connection ,
         :aws_region ,
         :role ,
@@ -49,7 +49,7 @@ function M.train_autopilot(
         )]]
     local params = {
         schema = schema_name,
-        model_name = model_name,
+        job_name = job_name,
         aws_s3_connection = aws_s3_connection,
         aws_region = aws_region,
         role = role,

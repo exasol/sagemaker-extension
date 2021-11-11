@@ -56,7 +56,7 @@ end
 --
 -- @param exa					Exa context object
 -- @param job_name				Job name of the Autopilot training run
--- @param endpoint_name			The name of endpoint to be created and deployed
+-- @param endpoint_name			The name of endpoint to be created and deployed. It is also the name of the UDF to be created.
 -- @param instance_type			EC2 instance type to deploy this Model to
 -- @param instance_count		The initial number of instances to run in endpoint
 -- @param aws_s3_connection		The name of the connection object with the AWS credentials

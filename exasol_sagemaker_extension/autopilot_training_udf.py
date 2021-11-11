@@ -13,7 +13,7 @@ class AutopilotTrainingUDF:
         self.training_method = training_method
 
     def run(self, ctx):
-        model_name = ctx.model_name
+        job_name = ctx.job_name
         aws_s3_connection = ctx.aws_s3_connection
         aws_region = ctx.aws_region  # TODO
         role = ctx.role
@@ -37,7 +37,7 @@ class AutopilotTrainingUDF:
         os.environ["AWS_SECRET_ACCESS_KEY"] = aws_s3_conn_obj.password
 
         job_name = self.training_method(
-            model_name=model_name,
+            job_name=job_name,
             role=role,
             s3_bucket_uri=s3_bucket_uri,
             s3_output_path=s3_output_path,

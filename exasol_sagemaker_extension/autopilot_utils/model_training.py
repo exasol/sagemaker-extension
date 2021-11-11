@@ -9,7 +9,7 @@ class AutopilotTraining:
 
     @staticmethod
     def train(
-            model_name: str,
+            job_name: str,
             role: str,
             s3_bucket_uri: str,
             s3_output_path: str,
@@ -19,7 +19,7 @@ class AutopilotTraining:
             max_runtime_for_automl_job_in_seconds: int = None,
             max_candidates: int = None,
             max_runtime_per_training_job_in_seconds: int = None):
-        unique_model_name = model_name  # model_name = job_name
+        unique_model_name = job_name  # model_name = job_name
 
         s3_train_path = os.path.join(s3_bucket_uri, s3_output_path)
         automl_job = AutoML(
