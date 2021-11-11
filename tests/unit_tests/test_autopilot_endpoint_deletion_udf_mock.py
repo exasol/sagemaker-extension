@@ -7,21 +7,19 @@ from exasol_udf_mock_python.mock_meta_data import MockMetaData
 from exasol_udf_mock_python.udf_mock_executor import UDFMockExecutor
 
 
-JOB_STATUS = "InProgress"
-JOB_SECONDARY_STATUS = "Feature Engineering"
-JOB_NAME = "end2end-27Oct21-0722"
+ENDPOINT_NAME = "test_model_name"
 
 
 def udf_wrapper():
     from exasol_udf_mock_python.udf_context import UDFContext
-    from exasol_sagemaker_extension.autopilot_job_status_polling_udf \
-        import AutopilotJobStatusPollingUDF
+    from exasol_sagemaker_extension.autopilot_endpoint_deletion_udf import \
+        AutopilotEndpointDeletionUDF
 
-    def mocked_check_status_method(job_name: str):
-        return "InProgress", "Feature Engineering"
+    def mocked_delete_endpoint(endpoint_name: str):
+        return "deleted"
 
-    udf = AutopilotJobStatusPollingUDF(
-        exa, check_status_method=mocked_check_status_method)
+    udf = AutopilotEndpointDeletionUDF(
+        exa, delete_method=mocked_delete_endpoint)
 
     def run(ctx: UDFContext):
         udf.run(ctx)
@@ -32,20 +30,19 @@ def create_mock_metadata():
         script_code_wrapper_function=udf_wrapper,
         input_type="SET",
         input_columns=[
-            Column("job_name", str, "VARCHAR(2000000)"),
+            Column("endpoint_name", str, "VARCHAR(2000000)"),
             Column("aws_s3_connection", str, "VARCHAR(2000000)"),
             Column("aws_region", str, "VARCHAR(2000000)")
         ],
         output_type="EMIT",
         output_columns=[
-            Column("job_status", str, "VARCHAR(2000000)"),
-            Column("job_secondary_status", str, "VARCHAR(2000000)")
+            Column("endpoint_name", str, "VARCHAR(2000000)")
         ]
     )
     return meta
 
 
-def test_autopilot_training_status_udf_mock(get_mock_params):
+def test_autopilot_endpoint_deletion_udf_mock(get_mock_params):
     executor = UDFMockExecutor()
     meta = create_mock_metadata()
     aws_s3_connection = Connection(
@@ -57,7 +54,7 @@ def test_autopilot_training_status_udf_mock(get_mock_params):
         connections={get_mock_params["AWS_CONNECTION_NAME"]: aws_s3_connection})
 
     input_data = (
-        JOB_NAME,
+        ENDPOINT_NAME,
         get_mock_params["AWS_CONNECTION_NAME"],
         get_mock_params["AWS_REGION"],
     )
@@ -66,12 +63,6 @@ def test_autopilot_training_status_udf_mock(get_mock_params):
     for i, group in enumerate(result):
         result_row = group.rows
         assert len(result_row) == 1
-        job_status = result_row[0][0]
-        job_secondary_status = result_row[0][1]
-        assert job_status == \
-               JOB_STATUS
-        assert job_secondary_status == \
-               JOB_SECONDARY_STATUS
         assert os.environ["AWS_ACCESS_KEY_ID"] == \
                get_mock_params["AWS_KEY_ID"]
         assert os.environ["AWS_SECRET_ACCESS_KEY"] == \

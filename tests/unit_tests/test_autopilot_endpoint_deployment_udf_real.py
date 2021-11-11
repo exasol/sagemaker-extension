@@ -1,11 +1,13 @@
-import os
 import pytest
 from typing import Dict
-from exasol_sagemaker_extension.autopilot_training_udf import \
-    AutopilotTrainingUDF
+from exasol_sagemaker_extension.autopilot_endpoint_deployment_udf import \
+    AutopilotEndpointDeploymentUDF
 
 
 JOB_NAME = "end2endmodel"
+ENDPOINT_NAME = "end2endmodel-endpoint"
+INSTANCE_TYPE = "ml.m5.large"
+INSTANCE_COUNT = 1
 
 
 class Connection:
@@ -28,31 +30,17 @@ class ExaEnvironment:
 class Context:
     def __init__(self,
                  job_name: str,
+                 endpoint_name: str,
+                 instance_type: str,
+                 instance_count: int,
                  aws_s3_connection: str,
-                 aws_region: str,
-                 role: str,
-                 s3_bucket_uri: str,
-                 s3_output_path: str,
-                 target_attribute_name: str,
-                 problem_type: str,
-                 objective: str,
-                 max_runtime_for_automl_job_in_seconds: int,
-                 max_candidates: int,
-                 max_runtime_per_training_job_in_seconds: int):
+                 aws_region: str):
         self.job_name = job_name
+        self.endpoint_name = endpoint_name
+        self.instance_type = instance_type
+        self.instance_count = instance_count
         self.aws_s3_connection = aws_s3_connection
         self.aws_region = aws_region
-        self.role = role
-        self.s3_bucket_uri = s3_bucket_uri
-        self.s3_output_path = s3_output_path
-        self.target_attribute_name = target_attribute_name
-        self.problem_type = problem_type
-        self.objective = objective
-        self.max_runtime_for_automl_job_in_seconds = \
-            max_runtime_for_automl_job_in_seconds
-        self.max_candidates = max_candidates
-        self.max_runtime_per_training_job_in_seconds = \
-            max_runtime_per_training_job_in_seconds
         self._emitted = []
 
     def emit(self, *args):
@@ -62,24 +50,18 @@ class Context:
         return self._emitted
 
 
-def test_autopilot_training_udf_real(get_real_params):
+def test_autopilot_endpoint_deployment_udf_real(get_real_params):
     if "AWS_ACCESS_KEY" not in get_real_params \
             or not get_real_params["AWS_ACCESS_KEY"]:
         pytest.skip("AWS credentials are not set")
 
     ctx = Context(
         JOB_NAME,
+        ENDPOINT_NAME,
+        INSTANCE_TYPE,
+        INSTANCE_COUNT,
         get_real_params["AWS_CONNECTION"],
-        get_real_params["AWS_REGION"],
-        get_real_params["AWS_ROLE"],
-        get_real_params["AWS_S3_URI"],
-        get_real_params["AWS_OUTPUT_PATH"],
-        'IDX',
-        'BinaryClassification',
-        '{"MetricName": "Accuracy"}',
-        100,
-        5,
-        10
+        get_real_params["AWS_REGION"]
     )
 
     aws_s3_connection = Connection(
@@ -87,6 +69,6 @@ def test_autopilot_training_udf_real(get_real_params):
         user=get_real_params["AWS_KEY_ID"],
         password=get_real_params["AWS_ACCESS_KEY"])
     exa = ExaEnvironment({get_real_params["AWS_CONNECTION"]: aws_s3_connection})
-    autopilot_training_udf_obj = AutopilotTrainingUDF(exa)
-    autopilot_training_udf_obj.run(ctx)
+    autopilot_endpoint_deployment_obj = AutopilotEndpointDeploymentUDF(exa)
+    autopilot_endpoint_deployment_obj.run(ctx)
     assert ctx.get_emitted()

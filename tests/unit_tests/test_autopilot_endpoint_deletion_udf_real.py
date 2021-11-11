@@ -1,9 +1,10 @@
 import pytest
 from typing import Dict
-from exasol_sagemaker_extension.autopilot_job_status_polling_udf import \
-    AutopilotJobStatusPollingUDF
+from exasol_sagemaker_extension.autopilot_endpoint_deletion_udf import \
+    AutopilotEndpointDeletionUDF
 
-JOB_NAME = "end2end-27Oct21-0722"
+
+ENDPOINT_NAME = "end2endmodel-endpoint"
 
 
 class Connection:
@@ -25,10 +26,10 @@ class ExaEnvironment:
 
 class Context:
     def __init__(self,
-                 job_name: str,
+                 endpoint_name: str,
                  aws_s3_connection: str,
                  aws_region: str):
-        self.job_name = job_name
+        self.endpoint_name = endpoint_name
         self.aws_s3_connection = aws_s3_connection
         self.aws_region = aws_region
         self._emitted = []
@@ -40,13 +41,13 @@ class Context:
         return self._emitted
 
 
-def test_autopilot_training_status_udf_real(get_real_params):
+def test_autopilot_endpoint_deployment_udf_real(get_real_params):
     if "AWS_ACCESS_KEY" not in get_real_params \
             or not get_real_params["AWS_ACCESS_KEY"]:
         pytest.skip("AWS credentials are not set")
 
     ctx = Context(
-        JOB_NAME,
+        ENDPOINT_NAME,
         get_real_params["AWS_CONNECTION"],
         get_real_params["AWS_REGION"]
     )
@@ -56,6 +57,6 @@ def test_autopilot_training_status_udf_real(get_real_params):
         user=get_real_params["AWS_KEY_ID"],
         password=get_real_params["AWS_ACCESS_KEY"])
     exa = ExaEnvironment({get_real_params["AWS_CONNECTION"]: aws_s3_connection})
-    autopilot_training_status_udf_obj = AutopilotJobStatusPollingUDF(exa)
-    autopilot_training_status_udf_obj.run(ctx)
+    autopilot_endpoint_deletion_obj = AutopilotEndpointDeletionUDF(exa)
+    autopilot_endpoint_deletion_obj.run(ctx)
     assert ctx.get_emitted()

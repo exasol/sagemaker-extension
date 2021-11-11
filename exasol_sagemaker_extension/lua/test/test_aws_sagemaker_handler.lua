@@ -3,10 +3,10 @@ local mockagne = require("mockagne")
 local aws_sagemaker_handler = require("./src/aws_sagemaker_handler")
 
 
-test_aws_sagemaker_handler = {
+local test_aws_sagemaker_handler = {
     job_name = 'autopilot_job_name',
     query = [[SELECT ::schema."SME_AUTOPILOT_TRAINING_UDF"(
-        :model_name ,
+        :job_name ,
         :aws_s3_connection ,
         :aws_region ,
         :role ,
@@ -21,7 +21,7 @@ test_aws_sagemaker_handler = {
         )]],
     params = {
         schema = 'schema_name',
-        model_name = 'model_name',
+        job_name = 'job_name',
         aws_s3_connection = 'aws_s3_connection',
         aws_region = 'aws_region',
         role = 'role',
@@ -61,7 +61,7 @@ function test_aws_sagemaker_handler.test_train_autopilot_success()
             {{test_aws_sagemaker_handler.job_name}})
     local result = aws_sagemaker_handler.train_autopilot(
             'schema_name',
-            'model_name',
+            'job_name',
             'aws_s3_connection',
             'aws_region',
             'role',

@@ -7,7 +7,7 @@ from exasol_udf_mock_python.mock_meta_data import MockMetaData
 from exasol_udf_mock_python.udf_mock_executor import UDFMockExecutor
 
 
-MODEL_NAME = "test_model_name"
+JOB_NAME = "test_model_name"
 
 
 def udf_wrapper():
@@ -28,7 +28,7 @@ def create_mock_metadata():
         script_code_wrapper_function=udf_wrapper,
         input_type="SET",
         input_columns=[
-            Column("model_name", str, "VARCHAR(2000000)"),
+            Column("job_name", str, "VARCHAR(2000000)"),
             Column("aws_s3_connection", str, "VARCHAR(2000000)"),
             Column("aws_region", str, "VARCHAR(2000000)"),
             Column("role", str, "VARCHAR(2000000)"),
@@ -61,7 +61,7 @@ def test_autopilot_training_udf_mock(get_mock_params):
         connections={get_mock_params["AWS_CONNECTION_NAME"]: aws_s3_connection})
 
     input_data = (
-        MODEL_NAME,
+        JOB_NAME,
         get_mock_params["AWS_CONNECTION_NAME"],
         get_mock_params["AWS_REGION"],
         get_mock_params["AWS_SAGEMAKER_ROLE"],

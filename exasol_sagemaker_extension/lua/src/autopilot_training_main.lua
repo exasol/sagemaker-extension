@@ -12,7 +12,7 @@ _G.global_env = {
 }
 
 local required_args = {
-	model_name = true,
+	job_name = true,
 	input_schema_name = true,
 	input_table_or_view_name = true,
 	aws_credentials_connection_name = true,
@@ -139,7 +139,7 @@ function train_autopilot_caller(exa, args)
 	local aws_sagemaker_handler = require("aws_sagemaker_handler")
 	local job_name = aws_sagemaker_handler.train_autopilot(
 		schema_name,
-		args['model_name'],
+		args['job_name'],
 		args['aws_credentials_connection_name'],
 		args['aws_region'],
 		args['iam_sagemaker_role'],

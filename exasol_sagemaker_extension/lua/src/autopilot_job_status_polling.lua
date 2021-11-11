@@ -31,7 +31,6 @@ function poll_autopilot_job_status(schema_name, job_name, aws_s3_connection, aws
 		aws_s3_connection=aws_s3_connection,
 		aws_region=aws_region
 	}
-
 	local success, result = _G.global_env.pquery(query, params)
 	if not success then
 		local error_obj = exaerror.create("",

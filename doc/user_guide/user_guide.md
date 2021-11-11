@@ -84,7 +84,7 @@ python -m exasol_sagemaker_extension.deployment.deploy_cli \
 - Example usage of AWS Sagemaker Autopilot service in Exasol is as follows. `SME_TRAIN_WITH_SAGEMAKER_AUTOPILOT` UDF script takes the necessary parameters as json string and triggers the Autopilot training on the selected table with the specified parameters:
 ```buildoutcfg
 EXECUTE SCRIPT SME_TRAIN_WITH_SAGEMAKER_AUTOPILOT('{
-    "model_name"                                : "<model_name>",
+    "job_name"                                  : "<job_name>",
     "aws_credentials_connection_name"           : "<aws_credentials_connection_name>",
     "aws_region"                                : "<aws_region>",
     "iam_sagemaker_role"                        : "<iam_sagemaker_role>", 
@@ -102,7 +102,7 @@ EXECUTE SCRIPT SME_TRAIN_WITH_SAGEMAKER_AUTOPILOT('{
 ```
 
 - Parameters:
-  - ```model_name```: A unique model name that will be internally concantaned with the execution date time.
+  - ```job_name```: A unique job name. It can also be treated as model_name since only one job is created for each model.
   - ```aws_credentials_connection_name```: The name of an Exasol connection object with AWS credentials. 
   - ```aws_region```: The AWS region where the training should run.
   - ```iam_sagemaker_role```: The ARN of AWS IAM identity having  the Sagemaker execution privileges.

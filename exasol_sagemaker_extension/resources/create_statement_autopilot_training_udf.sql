@@ -1,5 +1,5 @@
 CREATE OR REPLACE PYTHON3_SME SET SCRIPT "SME_AUTOPILOT_TRAINING_UDF"(
-    model_name VARCHAR(23),
+    job_name VARCHAR(23),
     aws_s3_connection VARCHAR(50),
     aws_region VARCHAR(20),
     role VARCHAR(200),
@@ -11,7 +11,7 @@ CREATE OR REPLACE PYTHON3_SME SET SCRIPT "SME_AUTOPILOT_TRAINING_UDF"(
     max_runtime_for_automl_job_in_seconds INTEGER,
     max_candidates INTEGER,
     max_runtime_per_training_job_in_seconds INTEGER
-) EMITS (model_name VARCHAR(32)) AS
+) EMITS (job_name VARCHAR(32)) AS
 
 from exasol_sagemaker_extension.autopilot_training_udf import AutopilotTrainingUDF
 udf = AutopilotTrainingUDF(exa)
