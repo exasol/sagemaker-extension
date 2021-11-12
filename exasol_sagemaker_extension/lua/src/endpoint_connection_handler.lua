@@ -26,6 +26,7 @@ function M.update_model_connection_object(endpoint_name, status)
 	-- job_name = endpoint_name
 
 	local query = [[CREATE OR REPLACE CONNECTION ]] .. conn_name .. [[ ]] .. conn_to
+
 	local success, result = _G.global_env.pquery(query)
 	if not success then
 		local error_obj = exaerror.create("",

@@ -30,7 +30,9 @@ function M.insert_metadata_into_db(
 			max_candidates,
 			max_runtime_per_training_job_in_seconds,
 			session_id,
-			script_user
+			script_user,
+			col_names,
+			col_types
 )
 	local query_inserting = [[INSERT INTO ::schema."SME_METADATA_AUTOPILOT_JOBS" VALUES(
 			CURRENT_TIMESTAMP,
@@ -46,7 +48,9 @@ function M.insert_metadata_into_db(
 			:max_candidates,
 			:max_runtime_per_training_job_in_seconds,
 			:session_id,
-			:script_user
+			:script_user,
+			:col_names,
+			:col_types
         )]]
     local params = {
         schema = schema_name,
@@ -62,7 +66,9 @@ function M.insert_metadata_into_db(
 		max_candidates=max_candidates,
 		max_runtime_per_training_job_in_seconds=max_runtime_per_training_job_in_seconds,
 		session_id=session_id,
-		script_user=script_user
+		script_user=script_user,
+		col_names=col_names,
+		col_types=col_types
     }
 
 	local success, result = _G.global_env.pquery(query_inserting, params)
