@@ -3,13 +3,26 @@ local mockagne = require("mockagne")
 require("./src/autopilot_training_main")
 
 
-local test_train_autopilot_main = {}
+
+test_train_autopilot_main = {
+    query = [[SELECT COLUMN_NAME , COLUMN_TYPE FROM SYS.EXA_ALL_COLUMNS eac
+					WHERE COLUMN_SCHEMA = :schema_name AND COLUMN_TABLE = :table_name]],
+	params = {schema_name='schema_name', table_name='table_name'},
+    result = {{'COL1','INTEGER'},{'COL2','VARCHAR(100)'}},
+    col_names = 'COL1,COL2',
+    col_types = 'INTEGER,VARCHAR(100)'
+}
 
 
 local function mock_error_return_nil(exa_mock)
     mockagne.when(exa_mock.error()).thenAnswer(nil)
 end
 
+
+local function mock_pquery_select(exa_mock, query_str, query_params)
+    mockagne.when(exa_mock.pquery(query_str, query_params)).thenAnswer(
+            true, test_train_autopilot_main.result)
+end
 
 function  test_train_autopilot_main.setUp()
     exa_mock = mockagne.getMock()
@@ -48,5 +61,14 @@ function test_train_autopilot_main.test_parse_invalid_input_string()
 
 end
 
+
+function test_train_autopilot_main.test_get_table_columns()
+    mock_pquery_select(exa_mock, test_train_autopilot_main.query, test_train_autopilot_main.params)
+    local col_names, col_types = get_table_columns(
+            test_train_autopilot_main.params['schema_name'],
+            test_train_autopilot_main.params['table_name'])
+    luaunit.assertEquals(col_names, test_train_autopilot_main.col_names)
+    luaunit.assertEquals(col_types, test_train_autopilot_main.col_types)
+end
 
 os.exit(luaunit.LuaUnit.run())
