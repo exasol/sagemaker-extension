@@ -3,7 +3,7 @@ local mockagne = require("mockagne")
 require("src/autopilot_job_status_polling")
 
 
-local test_autopilot_job_status_polling = {
+test_autopilot_job_status_polling = {
     job_status = 'job_status',
     job_secondary_status = 'job_secondary_status',
     query = [[SELECT ::schema."SME_AUTOPILOT_JOB_STATUS_POLLING_UDF"(
