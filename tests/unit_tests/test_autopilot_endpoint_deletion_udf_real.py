@@ -4,7 +4,7 @@ from exasol_sagemaker_extension.autopilot_endpoint_deletion_udf import \
     AutopilotEndpointDeletionUDF
 
 
-ENDPOINT_NAME = "end2endmodel-endpoint"
+ENDPOINT_NAME = "bostonhousing2endpoint"
 
 
 class Connection:

@@ -5,7 +5,7 @@ from exasol_sagemaker_extension.autopilot_endpoint_deployment_udf import \
 
 
 JOB_NAME = "bostonhousing2"
-ENDPOINT_NAME = "bostonhousing2-endpoint"
+ENDPOINT_NAME = "bostonhousing2endpoint"
 INSTANCE_TYPE = "ml.m5.large"
 INSTANCE_COUNT = 1
 

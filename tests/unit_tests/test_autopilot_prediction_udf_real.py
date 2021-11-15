@@ -1,3 +1,4 @@
+import json
 import pytest
 import pandas as pd
 from typing import Dict
@@ -51,13 +52,27 @@ def test_autopilot_endpoint_deployment_udf_real(get_real_params):
             or not get_real_params["AWS_ACCESS_KEY"]:
         pytest.skip("AWS credentials are not set")
 
+    connection_data = {
+        "aws_s3_connection": "AWS_CONNECTION",
+        "aws_region": "eu-central-1",
+        "name": ENDPOINT_NAME,
+        "status": "deployed"
+    }
     ctx = Context()
+
+    aws_s3_connection = Connection(
+        address=get_real_params["AWS_S3_URI"],
+        user=get_real_params["AWS_KEY_ID"],
+        password=get_real_params["AWS_ACCESS_KEY"])
     model_connection = Connection(
         address="",
-        password='{"name": "%s", "status":"deployed"}' % ENDPOINT_NAME)
+        password=json.dumps(connection_data))
 
-    exa = ExaEnvironment({JOB_NAME: model_connection})
+    exa = ExaEnvironment({
+        get_real_params["AWS_CONNECTION"]: aws_s3_connection,
+        JOB_NAME: model_connection})
     autopilot_prediction_obj = AutopilotPredictionUDF(exa, JOB_NAME)
     autopilot_prediction_obj.run(ctx)
+    print(ctx.get_emitted())
     assert ctx.get_emitted()
 
