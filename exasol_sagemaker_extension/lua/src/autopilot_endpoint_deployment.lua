@@ -74,7 +74,10 @@ function main(
 			script_schema_name, job_name, endpoint_name, instance_type,
 			instance_count, aws_s3_connection, aws_region)
 
-	local exa_conn = require('endpoint_connection_handler')
-	exa_conn.update_model_connection_object(endpoint_name, 'deployed')
-	-- TODO: PredictionUDF will be created here in the next PR
+	local endpoint_conn = require('endpoint_connection_handler')
+	local model_conn_name = endpoint_conn.update_model_connection_object(
+			endpoint_name, 'deployed')
+
+	local install_prediction_udf = require('install_autopilot_prediction_udf')
+	install_prediction_udf.main(job_name, script_schema_name, endpoint_name, schema_name, model_conn_name)
 end

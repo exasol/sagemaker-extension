@@ -11,10 +11,15 @@ class AutopilotEndpointDeploymentLuaScriptCreateStatementGenerator(BaseCreateSta
     def __init__(self):
         self._lua_src_files = [
             constants.LUA_SRC_MODULE_SAGEMAKER_ENDPOINT_DEPLOYMENT_NAME,
-            constants.LUA_SRC_MODULE_ENDPOINT_CONNECTION_HANDLER_NAME]
+            constants.LUA_SRC_MODULE_ENDPOINT_CONNECTION_HANDLER_NAME,
+            constants.LUA_SRC_MODULE_INSTALL_AUTOPILOT_PREDICTION_UDF_NAME,
+            constants.LUA_SRC_MODULE_DB_METADATA_READER_NAME
+        ]
         self._modules = [
             "autopilot_endpoint_deployment.lua",
             "endpoint_connection_handler",
+            "install_autopilot_prediction_udf",
+            "db_metadata_reader",
             "exaerror",
             "message_expander"]
         self._create_statement_template_text = constants.\

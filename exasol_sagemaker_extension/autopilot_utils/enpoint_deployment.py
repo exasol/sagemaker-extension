@@ -11,7 +11,7 @@ class AutopilotEndpointDeployment:
 
         unique_endpoint_name = endpoint_name
         automl = AutoML.attach(auto_ml_job_name=job_name)
-        best_candidate = automl.describe_auto_ml_job(job_name)["BestCandidate"]
+        best_candidate = automl.best_candidate()
         automl.deploy(
             initial_instance_count=instance_count,
             instance_type=instance_type,

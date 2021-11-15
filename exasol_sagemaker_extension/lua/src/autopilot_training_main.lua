@@ -180,7 +180,7 @@ function get_table_columns(schema_name, table_name)
 		col_names[#col_names+1] = res[i][1]
 		col_types[#col_types+1] = res[i][2]
 	end
-	return table.concat(col_names, ','), table.concat(col_types, ',')
+	return table.concat(col_names, ';'), table.concat(col_types, ';')
 
 end
 
