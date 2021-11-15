@@ -3,7 +3,7 @@ local mockagne = require("mockagne")
 local endpoint_connection_handler = require("src/endpoint_connection_handler")
 
 
-local endpoint_name = 'endpoint_name'
+local endpoint_name = string.upper('endpoint_name')
 local status = 'deployed'
 local conn_name = [[SME_SAGEMAKER_AUTOPILOT_ENDPOINT_CONNECTION_]] .. endpoint_name
 local conn_to = [[TO '{"name":"]] .. endpoint_name .. [[", "status":"]] .. status .. [["}']]
@@ -13,7 +13,7 @@ test_endpoint_connection_handler = {
 }
 
 local function mock_pquery_create_conn(exa_mock, query_str, success, result)
-    mockagne.when(exa_mock.pquery(query_str, query_params)).thenAnswer(success, result)
+    mockagne.when(exa_mock.pquery(query_str)).thenAnswer(success, result)
 end
 
 local function mock_error_return_nil(exa_mock)
@@ -36,7 +36,7 @@ function test_endpoint_connection_handler.test_delete_autopilot_endpoint_success
             nil)
     local result = endpoint_connection_handler.update_model_connection_object(endpoint_name, status)
 
-    luaunit.assertEquals(result, nil)
+    luaunit.assertNotNil(result)
 
 end
 

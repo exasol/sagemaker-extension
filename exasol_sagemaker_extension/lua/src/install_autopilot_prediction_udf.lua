@@ -41,12 +41,12 @@ end
 --
 function M.install_udf(schema, endpoint_name, model_conn_name, input_params, output_params)
     local query_create  =
-	"CREATE OR REPLACE PYTHON3_SME SET SCRIPT " .. schema .. ".SME_ENDPOINT_PREDICTION_" .. endpoint_name .. "_UDF("
-	.. table.concat(input_params, ',')  .. ") EMITS (" .. table.concat(output_params, ',') .. ") AS\n"
-	..
-	"from exasol_sagemaker_extension.autopilot_prediction import AutopilotPredictionUDF\n"
-	..
-	"udf = AutopilotPredictionUDF(exa, '" .. model_conn_name .. "')\ndef run(ctx):\n\tudf.run(ctx)\n/"
+	"CREATE OR REPLACE PYTHON3_SME SET SCRIPT "
+		.. schema .. ".\"ENDPOINT_PREDICTION_" .. endpoint_name .. "_UDF\""
+		.. "(" .. table.concat(input_params, ',') .. ")"
+		.. "EMITS (" .. table.concat(output_params, ',') .. ") AS\n"
+	.. "from exasol_sagemaker_extension.autopilot_prediction import AutopilotPredictionUDF\n"
+	.. "udf = AutopilotPredictionUDF(exa, '" .. model_conn_name .. "')\ndef run(ctx):\n\tudf.run(ctx)\n/"
 
     local success, result = _G.global_env.pquery(query_create)
 	if not success then

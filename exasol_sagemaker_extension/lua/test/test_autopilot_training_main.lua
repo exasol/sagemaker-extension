@@ -9,8 +9,8 @@ test_train_autopilot_main = {
 					WHERE COLUMN_SCHEMA = :schema_name AND COLUMN_TABLE = :table_name]],
 	params = {schema_name='schema_name', table_name='table_name'},
     result = {{'COL1','INTEGER'},{'COL2','VARCHAR(100)'}},
-    col_names = 'COL1,COL2',
-    col_types = 'INTEGER,VARCHAR(100)'
+    col_names = 'COL1;COL2',
+    col_types = 'INTEGER;VARCHAR(100)'
 }
 
 
