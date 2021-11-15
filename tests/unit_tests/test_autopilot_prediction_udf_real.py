@@ -73,6 +73,6 @@ def test_autopilot_endpoint_deployment_udf_real(get_real_params):
         JOB_NAME: model_connection})
     autopilot_prediction_obj = AutopilotPredictionUDF(exa, JOB_NAME)
     autopilot_prediction_obj.run(ctx)
-    print(ctx.get_emitted())
+
     assert ctx.get_emitted()
 
