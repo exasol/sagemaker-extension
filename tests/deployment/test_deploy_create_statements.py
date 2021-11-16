@@ -27,7 +27,7 @@ def get_all_scripts(db_conn):
 
 
 def test_deploy_create_statements(
-        get_params, db_conn, upload_language_container):
+        get_params, db_conn, register_language_container):
     deployer = DeployCreateStatements(
         db_host=get_params["DB_CONNECTION_HOST"],
         db_port=get_params["DB_CONNECTION_PORT"],

@@ -32,7 +32,7 @@ def get_all_scripts(db_conn):
     return list(map(lambda x: x[0], all_scripts))
 
 
-def test_deploy_cli_main(get_params, db_conn, upload_language_container):
+def test_deploy_cli_main(get_params, db_conn, register_language_container):
     args_list = [
         "--host", get_params["DB_CONNECTION_HOST"],
         "--port", get_params["DB_CONNECTION_PORT"],

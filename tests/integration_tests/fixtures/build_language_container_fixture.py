@@ -71,12 +71,17 @@ def upload_language_container(language_container, get_params, db_conn):
     container_name = "exasol_sagemaker_extension_container.tar.gz"
     container_path = Path(language_container["container_path"])
 
-    alter_session = Path(language_container["alter_session"])
-    db_conn.execute(f"ALTER SYSTEM SET SCRIPT_LANGUAGES='{alter_session}'")
-
     with open(container_path, "rb") as container_file:
         bfsupload.upload_fileobj_to_bucketfs(
             bucket_config=bucket_config,
             bucket_file_path=f"{path_in_bucket}/{container_name}",
             fileobj=container_file)
 
+    alter_session = Path(language_container["alter_session"])
+    return alter_session
+
+
+@pytest.fixture(scope="session")
+def register_language_container(upload_language_container, db_conn):
+    alter_session = upload_language_container
+    db_conn.execute(f"ALTER SYSTEM SET SCRIPT_LANGUAGES='{alter_session}'")
