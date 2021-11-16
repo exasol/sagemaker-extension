@@ -108,6 +108,11 @@ function parse_arguments(json_str)
 
 	args['compression_type'] = 'gzip' -- default : 'gzip'
 
+	-- store following params as uppercase
+	args["input_schema_name"] = string.upper(args["input_schema_name"])
+	args["input_table_or_view_name"] = string.upper(args["input_table_or_view_name"])
+	args["target_attribute_name"] = string.upper(args["target_attribute_name"])
+
 	return args
 end
 
