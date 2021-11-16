@@ -50,6 +50,7 @@ end
 --
 function main(exa, endpoint_name, aws_s3_connection, aws_region)
 	local schema_name = exa.meta.script_schema
+	endpoint_name = string.upper(endpoint_name)
 	delete_autopilot_endpoint(schema_name, endpoint_name, aws_s3_connection, aws_region)
 
 	local exa_conn = require('endpoint_connection_handler')

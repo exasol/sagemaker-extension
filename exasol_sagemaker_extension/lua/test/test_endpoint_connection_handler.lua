@@ -19,7 +19,7 @@ local conn_name = [[SME_SAGEMAKER_AUTOPILOT_ENDPOINT_CONNECTION_]] .. endpoint_n
 local conn_to = json.encode(conn_data_dict)
 
 test_endpoint_connection_handler = {
-    query = [[CREATE OR REPLACE CONNECTION ]] .. conn_name .. [[ TO ]] .. conn_to
+    query = [[CREATE OR REPLACE CONNECTION ]] .. conn_name .. [[ TO ']] .. conn_to .. [[']]
 }
 
 local function mock_pquery_create_conn(exa_mock, query_str, success, result)
