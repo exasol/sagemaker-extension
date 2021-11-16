@@ -6,7 +6,7 @@ local endpoint_connection_handler = require("src/endpoint_connection_handler")
 
 local aws_s3_connection = 'aws_s3_connection'
 local aws_region = 'eu-central-1'
-local endpoint_name = string.upper('endpoint_name')
+local endpoint_name = 'endpoint_name'
 local status = 'deployed'
 local conn_data_dict = {
     aws_s3_connection=aws_s3_connection,
@@ -15,7 +15,7 @@ local conn_data_dict = {
     status=status,
 }
 
-local conn_name = [[SME_SAGEMAKER_AUTOPILOT_ENDPOINT_CONNECTION_]] .. endpoint_name
+local conn_name = [[SME_SAGEMAKER_AUTOPILOT_ENDPOINT_CONNECTION_]] .. string.upper(endpoint_name)
 local conn_to = json.encode(conn_data_dict)
 
 test_endpoint_connection_handler = {

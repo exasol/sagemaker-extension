@@ -68,7 +68,6 @@ end
 function main(
 		exa, job_name, endpoint_name, schema_name,
 		instance_type, instance_count, aws_s3_connection, aws_region)
-	endpoint_name = string.upper(endpoint_name)
 	local script_schema_name = exa.meta.script_schema
 
 	deploy_autopilot_endpoint(

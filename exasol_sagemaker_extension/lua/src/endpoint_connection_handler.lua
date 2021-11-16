@@ -31,7 +31,7 @@ function M.update_model_connection_object(aws_s3_connection, aws_region, endpoin
 		status=status,
 	}
 
-	local conn_name = [[SME_SAGEMAKER_AUTOPILOT_ENDPOINT_CONNECTION_]] .. endpoint_name
+	local conn_name = [[SME_SAGEMAKER_AUTOPILOT_ENDPOINT_CONNECTION_]] .. string.upper(endpoint_name)
 	local conn_to = json.encode(conn_data_dict)
 	local query = [[CREATE OR REPLACE CONNECTION ]] .. conn_name .. [[ TO ']] .. conn_to .. [[']]
 

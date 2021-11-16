@@ -47,9 +47,9 @@ class Context:
         return pd.DataFrame(data=data)
 
 
-def test_autopilot_endpoint_deployment_udf_real(get_real_params):
-    if "AWS_ACCESS_KEY" not in get_real_params \
-            or not get_real_params["AWS_ACCESS_KEY"]:
+def test_autopilot_endpoint_deployment_udf_real(get_real_aws_params):
+    if "AWS_ACCESS_KEY" not in get_real_aws_params \
+            or not get_real_aws_params["AWS_ACCESS_KEY"]:
         pytest.skip("AWS credentials are not set")
 
     connection_data = {
@@ -61,15 +61,14 @@ def test_autopilot_endpoint_deployment_udf_real(get_real_params):
     ctx = Context()
 
     aws_s3_connection = Connection(
-        address=get_real_params["AWS_S3_URI"],
-        user=get_real_params["AWS_KEY_ID"],
-        password=get_real_params["AWS_ACCESS_KEY"])
+        address=get_real_aws_params["AWS_S3_URI"],
+        user=get_real_aws_params["AWS_KEY_ID"],
+        password=get_real_aws_params["AWS_ACCESS_KEY"])
     model_connection = Connection(
-        address="",
-        password=json.dumps(connection_data))
+        address=json.dumps(connection_data))
 
     exa = ExaEnvironment({
-        get_real_params["AWS_CONNECTION"]: aws_s3_connection,
+        get_real_aws_params["AWS_CONNECTION"]: aws_s3_connection,
         JOB_NAME: model_connection})
     autopilot_prediction_obj = AutopilotPredictionUDF(exa, JOB_NAME)
     autopilot_prediction_obj.run(ctx)

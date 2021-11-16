@@ -62,18 +62,18 @@ class Context:
         return self._emitted
 
 
-def test_autopilot_training_udf_real(get_real_params):
-    if "AWS_ACCESS_KEY" not in get_real_params \
-            or not get_real_params["AWS_ACCESS_KEY"]:
+def test_autopilot_training_udf_real(get_real_aws_params):
+    if "AWS_ACCESS_KEY" not in get_real_aws_params \
+            or not get_real_aws_params["AWS_ACCESS_KEY"]:
         pytest.skip("AWS credentials are not set")
 
     ctx = Context(
         JOB_NAME,
-        get_real_params["AWS_CONNECTION"],
-        get_real_params["AWS_REGION"],
-        get_real_params["AWS_ROLE"],
-        get_real_params["AWS_S3_URI"],
-        get_real_params["AWS_OUTPUT_PATH"],
+        get_real_aws_params["AWS_CONNECTION"],
+        get_real_aws_params["AWS_REGION"],
+        get_real_aws_params["AWS_ROLE"],
+        get_real_aws_params["AWS_S3_URI"],
+        get_real_aws_params["AWS_OUTPUT_PATH"],
         'IDX',
         'BinaryClassification',
         '{"MetricName": "Accuracy"}',
@@ -83,10 +83,10 @@ def test_autopilot_training_udf_real(get_real_params):
     )
 
     aws_s3_connection = Connection(
-        address=get_real_params["AWS_S3_URI"],
-        user=get_real_params["AWS_KEY_ID"],
-        password=get_real_params["AWS_ACCESS_KEY"])
-    exa = ExaEnvironment({get_real_params["AWS_CONNECTION"]: aws_s3_connection})
+        address=get_real_aws_params["AWS_S3_URI"],
+        user=get_real_aws_params["AWS_KEY_ID"],
+        password=get_real_aws_params["AWS_ACCESS_KEY"])
+    exa = ExaEnvironment({get_real_aws_params["AWS_CONNECTION"]: aws_s3_connection})
     autopilot_training_udf_obj = AutopilotTrainingUDF(exa)
     autopilot_training_udf_obj.run(ctx)
     assert ctx.get_emitted()
