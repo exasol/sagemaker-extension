@@ -45,26 +45,25 @@ def create_mock_metadata():
     return meta
 
 
-def test_autopilot_endpoint_deletion_udf_mock(get_mock_params):
+def test_autopilot_endpoint_deletion_udf_mock(get_mock_aws_params):
     executor = UDFMockExecutor()
     meta = create_mock_metadata()
     aws_s3_connection = Connection(
-        address=get_mock_params["AWS_S3_URI"],
-        user=get_mock_params["AWS_KEY_ID"],
-        password=get_mock_params["AWS_ACCESS_KEY"])
+        address=get_mock_aws_params["AWS_S3_URI"],
+        user=get_mock_aws_params["AWS_KEY_ID"],
+        password=get_mock_aws_params["AWS_ACCESS_KEY"])
 
     connection_data = {
-        "aws_s3_connection": get_mock_params["AWS_CONNECTION_NAME"],
+        "aws_s3_connection": get_mock_aws_params["AWS_CONNECTION_NAME"],
         "aws_region": "eu-central-1",
-        "name": ENDPOINT_NAME,
+        "endpoint_name": ENDPOINT_NAME,
         "status": "deployed"
     }
     model_connection = Connection(
-        address="",
-        password=json.dumps(connection_data))
+        address=json.dumps(connection_data))
 
     exa = MockExaEnvironment(meta, connections={
-        get_mock_params["AWS_CONNECTION_NAME"]: aws_s3_connection,
+        get_mock_aws_params["AWS_CONNECTION_NAME"]: aws_s3_connection,
         'aws_s3_connection': model_connection
     })
 
@@ -77,8 +76,8 @@ def test_autopilot_endpoint_deletion_udf_mock(get_mock_params):
         assert set(np.mean(data_list, axis=1)) == \
                set(map(lambda x: x[-1], result_row))
         assert os.environ["AWS_ACCESS_KEY_ID"] == \
-               get_mock_params["AWS_KEY_ID"]
+               get_mock_aws_params["AWS_KEY_ID"]
         assert os.environ["AWS_SECRET_ACCESS_KEY"] == \
-               get_mock_params["AWS_ACCESS_KEY"]
+               get_mock_aws_params["AWS_ACCESS_KEY"]
         assert os.environ["AWS_DEFAULT_REGION"] == \
-               get_mock_params["AWS_REGION"]
+               get_mock_aws_params["AWS_REGION"]

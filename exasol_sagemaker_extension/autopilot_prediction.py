@@ -14,7 +14,7 @@ class AutopilotPredictionUDF:
 
     def run(self, ctx):
         model_connection = self.exa.get_connection(self.model_connection_name)
-        endpoint_info_json = json.loads(model_connection.password)
+        endpoint_info_json = json.loads(model_connection.address)
         aws_s3_conn_obj = self.exa.get_connection(
             endpoint_info_json['aws_s3_connection'])
 
@@ -24,7 +24,9 @@ class AutopilotPredictionUDF:
 
         if endpoint_info_json['status'] == 'deployed':
             data_df = ctx.get_dataframe()
-            pred = self.prediction_method(endpoint_info_json['name'], data_df)
+            pred = self.prediction_method(
+                endpoint_info_json['endpoint_name'].upper(), data_df)
+
             data_df["predictions"] = pred
             ctx.emit(data_df)
         else:

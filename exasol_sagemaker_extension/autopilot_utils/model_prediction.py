@@ -18,4 +18,4 @@ class AutopilotPrediction:
         prediction = predictor.predict(
             df.to_csv(sep=",", header=False, index=False))
 
-        return prediction[0]
+        return list(map(lambda x: x[0], prediction))

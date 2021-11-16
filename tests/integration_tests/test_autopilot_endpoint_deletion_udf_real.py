@@ -2,9 +2,7 @@ import pytest
 from typing import Dict
 from exasol_sagemaker_extension.autopilot_endpoint_deletion_udf import \
     AutopilotEndpointDeletionUDF
-
-
-ENDPOINT_NAME = "bostonhousing2endpoint"
+from tests.integration_tests.utils.parameters import aws_params, setup_params
 
 
 class Connection:
@@ -41,22 +39,21 @@ class Context:
         return self._emitted
 
 
-def test_autopilot_endpoint_deployment_udf_real(get_real_aws_params):
-    if "AWS_ACCESS_KEY" not in get_real_aws_params \
-            or not get_real_aws_params["AWS_ACCESS_KEY"]:
-        pytest.skip("AWS credentials are not set")
+@pytest.mark.skipif(not aws_params.aws_access_key,
+                    reason="AWS credentials are not set")
+def test_autopilot_endpoint_deployment_udf_real():
 
     ctx = Context(
-        ENDPOINT_NAME,
-        get_real_aws_params["AWS_CONNECTION"],
-        get_real_aws_params["AWS_REGION"]
+        setup_params.endpoint_name,
+        setup_params.aws_conn_name,
+        aws_params.aws_region
     )
 
     aws_s3_connection = Connection(
-        address=get_real_aws_params["AWS_S3_URI"],
-        user=get_real_aws_params["AWS_KEY_ID"],
-        password=get_real_aws_params["AWS_ACCESS_KEY"])
-    exa = ExaEnvironment({get_real_aws_params["AWS_CONNECTION"]: aws_s3_connection})
+        address=aws_params.aws_s3_uri,
+        user=aws_params.aws_key_id,
+        password=aws_params.aws_access_key)
+    exa = ExaEnvironment({setup_params.aws_conn_name: aws_s3_connection})
     autopilot_endpoint_deletion_obj = AutopilotEndpointDeletionUDF(exa)
     autopilot_endpoint_deletion_obj.run(ctx)
     assert ctx.get_emitted()

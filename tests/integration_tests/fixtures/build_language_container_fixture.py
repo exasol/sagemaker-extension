@@ -1,12 +1,13 @@
 import pytest
 import subprocess
 from pathlib import Path
-
 import exasol_bucketfs_utils_python.upload as bfsupload
 from exasol_bucketfs_utils_python.bucket_config import BucketConfig
 from exasol_bucketfs_utils_python.bucketfs_config import BucketFSConfig
 from exasol_bucketfs_utils_python.bucketfs_connection_config import \
     BucketFSConnectionConfig
+
+from tests.integration_tests.utils.parameters import db_params
 
 
 def find_script(script_name: str):
@@ -51,9 +52,9 @@ def language_container():
 
 
 @pytest.fixture(scope="session")
-def upload_language_container(language_container, get_params, db_conn):
+def upload_language_container(language_container, db_conn):
     connection_config = BucketFSConnectionConfig(
-        host=get_params["DB_CONNECTION_HOST"],
+        host=db_params.host,
         port=6666,
         user="w",
         pwd="write",
