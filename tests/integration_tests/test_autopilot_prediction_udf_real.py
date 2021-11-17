@@ -60,7 +60,7 @@ class Context:
 
 @pytest.mark.skipif(not aws_params.aws_access_key,
                     reason="AWS credentials are not set")
-def test_autopilot_endpoint_deployment_udf_real():
+def test_autopilot_prediction_udf_real():
     connection_data = {
         "aws_s3_connection": setup_params.aws_conn_name,
         "aws_region": aws_params.aws_region,
