@@ -73,7 +73,6 @@ function parse_arguments(json_str)
 	local json = require('cjson')
 	local success, args =  pcall(json.decode, json_str)
 	if not success then
-		args = {}
 		local error_obj = exaerror.create("",
 				"Error while parsing input json string, it could not be converted to json object:"
 		):add_mitigations("Check syntax of the input string json is correct")
