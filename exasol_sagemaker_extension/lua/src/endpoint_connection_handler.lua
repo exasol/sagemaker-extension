@@ -37,7 +37,7 @@ function M.update_model_connection_object(aws_s3_connection, aws_region, endpoin
 
 	local success, result = _G.global_env.pquery(query)
 	if not success then
-		local error_obj = exaerror.create("",
+		local error_obj = exaerror.create("SME-E-9",
 				'Error occurred in creating model connection object: ' .. result.error_message)
 		_G.global_env.error(tostring(error_obj))
 	end
