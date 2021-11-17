@@ -47,8 +47,8 @@ def get_setup_params():
         target_col="output_col",
         data=[f"({i * 1.1}, {i * 1.2}, {i * 10})" for i in range(1, 1000)],
         aws_conn_name="aws_connection",
-        job_name="testjob5",
-        endpoint_name="testjob5endpoint"
+        job_name="testjob4",
+        endpoint_name="testjob4endpoint"
     )
 
 
