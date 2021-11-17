@@ -1,5 +1,13 @@
 from collections import namedtuple
 
+'''
+This module contains namedtuples that store the necessary parameters for the 
+real-case tests. Some tuples like as db_params could have also be used as 
+fixtures. However, to avoid the confusion of using some of  parameters as 
+fixtures and some as namedtuple, all the necessary params are stored in 
+namedtuple rather than fixture.
+'''
+
 
 def get_aws_params():
     AWSParams = namedtuple("AWSParams", [
