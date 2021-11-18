@@ -49,7 +49,7 @@ class Context:
     def get_emitted(self):
         return self._emitted
 
-    def get_dataframe(self):
+    def get_dataframe(self, num_rows='all'):
         data = [
             (1.1, 1.2),
             (2.2, 2.4),

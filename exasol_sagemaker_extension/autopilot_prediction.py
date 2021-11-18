@@ -1,5 +1,4 @@
 import os
-import ast
 import json
 from typing import Callable
 from exasol_sagemaker_extension.autopilot_utils.model_prediction import \
@@ -26,11 +25,11 @@ class AutopilotPredictionUDF:
             os.environ["AWS_SECRET_ACCESS_KEY"] = aws_s3_conn_obj.password
 
             data_df = ctx.get_dataframe(num_rows='all')
-            pred = self.prediction_method(
+            predictions = self.prediction_method(
                 endpoint_info_json['endpoint_name'], data_df)
 
             type = self.exa.meta.output_columns[-1].type
-            data_df["predictions"] = [type(ast.literal_eval(i)) for i in pred]
+            data_df["predictions"] = [type(float(pred)) for pred in predictions]
             ctx.emit(data_df)
         else:
             raise Exception("The status of endpoint ({endpoint}) is "
