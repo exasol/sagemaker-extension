@@ -34,7 +34,7 @@ function delete_autopilot_endpoint(schema_name, endpoint_name, aws_s3_connection
 
 	local success, result = _G.global_env.pquery(query, params)
 	if not success then
-		local error_obj = exaerror.create("SME-E-2",
+		local error_obj = exaerror.create("E-SME-2",
 				'Error occurred in deleting Sagemaker endpoint: ' .. result.error_message)
 		_G.global_env.error(tostring(error_obj))
 	end

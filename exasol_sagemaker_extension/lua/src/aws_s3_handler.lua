@@ -23,7 +23,7 @@ _G.global_env = {
 function M.get_node_count()
 	local success, result = _G.global_env.pquery([[SELECT NPROC()]])
 	if not success or #result < 1  then
-		local error_obj = exaerror.create("SME-F-1",
+		local error_obj = exaerror.create("F-SME-1",
 				"Error while retrieving the number of nodes from Exasol DB"
 		) :add_mitigations("Please create an error report")
 		_G.global_env.error(tostring(error_obj))
@@ -88,7 +88,7 @@ function M.export_to_s3(schema_name, table_name, aws_credentials_connection_name
 	-- execute
 	local success, result = _G.global_env.pquery(query_export, params)
 	if not success then
-		local error_obj = exaerror.create("SME-E-1",
+		local error_obj = exaerror.create("E-SME-1",
 				'Error occurred in exporting Exasol table to AWS S3: ' .. result.error_message
 		) :add_mitigations("Please check AWS connection")
 		_G.global_env.error(tostring(error_obj))

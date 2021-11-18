@@ -73,7 +73,7 @@ function M.insert_metadata_into_db(
 
 	local success, result = _G.global_env.pquery(query_inserting, params)
 	if not success then
-		local error_obj = exaerror.create("SME-E-8",
+		local error_obj = exaerror.create("E-SME-8",
 				'Error occurred in inserting metadata into database: ' .. result.error_message)
 		_G.global_env.error(tostring(error_obj))
 	end

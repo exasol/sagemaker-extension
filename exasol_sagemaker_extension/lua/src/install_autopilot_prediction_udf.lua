@@ -50,7 +50,7 @@ function M.install_udf(schema, endpoint_name, model_conn_name, input_params, out
 
     local success, result = _G.global_env.pquery(query_create)
 	if not success then
-		local error_obj = exaerror.create("SME-E-10",
+		local error_obj = exaerror.create("E-SME-10",
 				'Error occurred in installing prediction udf: ' .. result.error_message)
 		_G.global_env.error(tostring(error_obj))
 	end

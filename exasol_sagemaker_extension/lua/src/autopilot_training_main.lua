@@ -73,14 +73,14 @@ function parse_arguments(json_str)
 	local json = require('cjson')
 	local success, args =  pcall(json.decode, json_str)
 	if not success then
-		local error_obj = exaerror.create("SME-E-5",
+		local error_obj = exaerror.create("E-SME-5",
 				"Error while parsing input json string, it could not be converted to json object:"
 		):add_mitigations("Check syntax of the input string json is correct")
 		_G.global_env.error(tostring(error_obj))
 	end
 
 	if not contains_required_arguments(args) then
-		local error_obj = exaerror.create("SME-E-6", "Missing required arguments"
+		local error_obj = exaerror.create("E-SME-6", "Missing required arguments"
 		):add_mitigations('Following required arguments have to be specified: ' .. concat_required_args())
 		_G.global_env.error(tostring(error_obj))
 	end
@@ -174,7 +174,7 @@ function get_table_columns(schema_name, table_name)
 
 	local success, res = _G.global_env.pquery(query, params)
 	if not success then
-		local error_obj = exaerror.create("SME-F-2",
+		local error_obj = exaerror.create("F-SME-2",
 				"Error while getting columns information from SYS.EXA_ALL_COLUMNS: " ..  res.error_message)
 		_G.global_env.error(tostring(error_obj))
 	end

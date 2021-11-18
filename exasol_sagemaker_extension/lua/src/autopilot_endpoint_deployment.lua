@@ -45,7 +45,7 @@ function deploy_autopilot_endpoint(
 
 	local success, result = _G.global_env.pquery(query, params)
 	if not success then
-		local error_obj = exaerror.create("SME-E-3",
+		local error_obj = exaerror.create("E-SME-3",
 				'Error occurred in deploying Sagemaker endpoint: ' .. result.error_message)
 		_G.global_env.error(tostring(error_obj))
 	end
