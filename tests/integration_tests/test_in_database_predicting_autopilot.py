@@ -15,4 +15,6 @@ def test_predict_autopilot_udf(
                udf_name=prediction_udf_name)
 
     prediction = db_conn.execute(query_prediction).fetchall()
+
     print(prediction)
+    assert prediction

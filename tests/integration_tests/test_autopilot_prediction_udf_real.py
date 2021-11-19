@@ -92,4 +92,5 @@ def test_autopilot_prediction_udf_real():
 
     print(ctx.get_emitted())
     assert ctx.get_emitted()
+    assert ctx.get_emitted()[0][0].shape == (3, 3)
 

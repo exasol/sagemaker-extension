@@ -11,6 +11,7 @@ class AutopilotPredictionUDF:
         self.exa = exa
         self.model_connection_name = model_connection_name
         self.prediction_method = prediction_method
+        self.batch_size = 100
 
     def run(self, ctx):
         model_connection = self.exa.get_connection(self.model_connection_name)
@@ -24,7 +25,7 @@ class AutopilotPredictionUDF:
             os.environ["AWS_ACCESS_KEY_ID"] = aws_s3_conn_obj.user
             os.environ["AWS_SECRET_ACCESS_KEY"] = aws_s3_conn_obj.password
 
-            data_df = ctx.get_dataframe(num_rows='all')
+            data_df = ctx.get_dataframe(self.batch_size)
             predictions = self.prediction_method(
                 endpoint_info_json['endpoint_name'], data_df)
 
