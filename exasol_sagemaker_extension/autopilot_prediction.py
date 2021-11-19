@@ -25,13 +25,17 @@ class AutopilotPredictionUDF:
             os.environ["AWS_ACCESS_KEY_ID"] = aws_s3_conn_obj.user
             os.environ["AWS_SECRET_ACCESS_KEY"] = aws_s3_conn_obj.password
 
-            data_df = ctx.get_dataframe(self.batch_size)
-            predictions = self.prediction_method(
-                endpoint_info_json['endpoint_name'], data_df)
+            py_type = self.exa.meta.output_columns[-1].type
+            while True:
+                data_df = ctx.get_dataframe(self.batch_size)
+                if data_df is None:
+                    break
 
-            type = self.exa.meta.output_columns[-1].type
-            data_df["predictions"] = [type(float(pred)) for pred in predictions]
-            ctx.emit(data_df)
+                predictions = self.prediction_method(
+                    endpoint_info_json['endpoint_name'], data_df)
+                data_df["predictions"] = [
+                    py_type(float(pred)) for pred in predictions]
+                ctx.emit(data_df)
         else:
             raise Exception("The status of endpoint ({endpoint}) is "
                             "'{status}', not 'deployed'. Therefore, "
