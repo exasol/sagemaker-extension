@@ -70,7 +70,7 @@ function main(
 		instance_type, instance_count, aws_s3_connection, aws_region)
 	local script_schema_name = exa.meta.script_schema
 
-	deploy_autopilot_endpoint(
+	local endpoint_problem_type = deploy_autopilot_endpoint(
 			script_schema_name, job_name, endpoint_name, instance_type,
 			instance_count, aws_s3_connection, aws_region)
 
@@ -79,5 +79,6 @@ function main(
 			aws_s3_connection, aws_region, endpoint_name, 'deployed')
 
 	local install_prediction_udf = require('install_autopilot_prediction_udf')
-	install_prediction_udf.main(job_name, script_schema_name, endpoint_name, schema_name, model_conn_name)
+	install_prediction_udf.main(job_name, endpoint_problem_type,
+			script_schema_name, endpoint_name, schema_name, model_conn_name)
 end

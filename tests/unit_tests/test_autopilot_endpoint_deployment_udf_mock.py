@@ -18,10 +18,18 @@ def udf_wrapper():
     from exasol_sagemaker_extension.autopilot_endpoint_deployment_udf import \
         AutopilotEndpointDeploymentUDF
 
-    def mocked_deploy_method(**kwargs):
-        return "test-model-name"
+    class MockedAutopilotEndpointDeployment():
+        def __init__(self, job_name):
+            pass
 
-    udf = AutopilotEndpointDeploymentUDF(exa, deploy_method=mocked_deploy_method)
+        def deploy(self, **kwargs):
+            return "test-model-name"
+
+        def get_endpoint_problem_type(self):
+            return "BinaryClassification"
+
+    udf = AutopilotEndpointDeploymentUDF(
+        exa, deployment_class=MockedAutopilotEndpointDeployment)
 
     def run(ctx: UDFContext):
         udf.run(ctx)
@@ -71,9 +79,9 @@ def test_autopilot_training_udf_mock(get_mock_aws_params):
     for i, group in enumerate(result):
         result_row = group.rows
         assert len(result_row) == 1
-        job_name = result_row[0][0]
-        assert job_name == \
-               get_mock_aws_params["AWS_AUTOML_JOB_NAME"]
+        problem_type = result_row[0][0]
+        assert problem_type == \
+               "BinaryClassification"
         assert os.environ["AWS_ACCESS_KEY_ID"] == \
                get_mock_aws_params["AWS_KEY_ID"]
         assert os.environ["AWS_SECRET_ACCESS_KEY"] == \

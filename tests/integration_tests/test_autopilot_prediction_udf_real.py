@@ -81,7 +81,7 @@ def test_autopilot_prediction_udf_real():
         Column("COL_2", float, "FLOAT")]
     meta = MetaData(
         input_columns=input_cols,
-        output_columns=input_cols + [Column("OUTPUT_COL", int, "INTEGER")])
+        output_columns=input_cols + [Column("OUTPUT_COL", float, "FLOAT")])
     exa = ExaEnvironment(
         connections={
             setup_params.aws_conn_name: aws_s3_connection,

@@ -5,7 +5,7 @@ CREATE OR REPLACE PYTHON3_SME SET SCRIPT "SME_AUTOPILOT_ENDPOINT_DEPLOYMENT_UDF"
     instance_count INTEGER,
     aws_s3_connection VARCHAR(50),
     aws_region VARCHAR(20)
-) EMITS (endpoint_name VARCHAR(32)) AS
+) EMITS (endpoint_problem_type VARCHAR(32)) AS
 
 from exasol_sagemaker_extension.autopilot_endpoint_deployment_udf import AutopilotEndpointDeploymentUDF
 udf = AutopilotEndpointDeploymentUDF(exa)

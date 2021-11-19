@@ -32,8 +32,9 @@ function test_install_autopilot_prediction_udf.test_split()
 end
 
 
-function test_install_autopilot_prediction_udf.test_parse_metadata()
+function test_install_autopilot_prediction_udf.test_get_udf_params()
 	local target_col = 'COL_5'
+	local endpoint_problem_type = 'Regression'
 	local input_params, output_params = {}, {}
 	local n_columns = 5
 	for i=1, n_columns do
@@ -46,12 +47,13 @@ function test_install_autopilot_prediction_udf.test_parse_metadata()
 			table.concat(output_params, ';')
 	}}
 
-	local res_input_params, res_output_params = install_autopilot_prediction_udf.parse_metadata(metadata_row)
+	local res_input_params, res_output_params =
+	install_autopilot_prediction_udf.get_udf_params(metadata_row, endpoint_problem_type)
 
 	luaunit.assertEquals(#res_input_params, n_columns-1)
 	luaunit.assertEquals(#res_output_params, n_columns)
 	luaunit.assertEquals(res_input_params[1], 'COL_1 CHAR(1)')
-	luaunit.assertEquals(res_output_params[#res_output_params], 'COL_5 CHAR(5)')
+	luaunit.assertEquals(res_output_params[#res_output_params], 'COL_5 DOUBLE')
 
 end
 
