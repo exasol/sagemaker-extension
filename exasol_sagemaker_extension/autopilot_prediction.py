@@ -1,16 +1,17 @@
 import os
 import json
-from typing import Callable
+from typing import Type
 from exasol_sagemaker_extension.autopilot_utils.model_prediction import \
     AutopilotPrediction
 
 
 class AutopilotPredictionUDF:
     def __init__(self, exa, model_connection_name,
-                 prediction_method: Callable = AutopilotPrediction.predict):
+                 prediction_class: Type[AutopilotPrediction] =
+                 AutopilotPrediction):
         self.exa = exa
         self.model_connection_name = model_connection_name
-        self.prediction_method = prediction_method
+        self.prediction_class = prediction_class
         self.batch_size = 100
 
     def run(self, ctx):
@@ -26,15 +27,14 @@ class AutopilotPredictionUDF:
             os.environ["AWS_SECRET_ACCESS_KEY"] = aws_s3_conn_obj.password
 
             py_type = self.exa.meta.output_columns[-1].type
+            prediction_class_obj = self.prediction_class(
+                endpoint_info_json['endpoint_name'])
             while True:
                 data_df = ctx.get_dataframe(self.batch_size)
                 if data_df is None:
                     break
-
-                predictions = self.prediction_method(
-                    endpoint_info_json['endpoint_name'], data_df)
-                data_df["predictions"] = [
-                    py_type(float(pred)) for pred in predictions]
+                predictions = prediction_class_obj.predict(data_df)
+                data_df["predictions"] = [py_type(pred) for pred in predictions]
                 ctx.emit(data_df)
         else:
             raise Exception("The status of endpoint ({endpoint}) is "

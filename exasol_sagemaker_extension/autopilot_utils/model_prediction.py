@@ -8,14 +8,13 @@ class AutopilotPrediction:
     """
     This class is responsible for making prediction from a given Autopilot job
     """
+    def __init__(self, endpoint_name: str):
+        self._predictor = Predictor(endpoint_name)
+        self._predictor.serializer = CSVSerializer()
+        self._predictor.deserializer = CSVDeserializer()
 
-    @staticmethod
-    def predict(endpoint_name: str, df: pd.DataFrame) -> list:
-        predictor = Predictor(endpoint_name)
-
-        predictor.serializer = CSVSerializer()
-        predictor.deserializer = CSVDeserializer()
-        prediction = predictor.predict(
+    def predict(self, df: pd.DataFrame) -> list:
+        prediction = self._predictor.predict(
             df.to_csv(sep=",", header=False, index=False))
 
         return list(map(lambda x: x[0], prediction))

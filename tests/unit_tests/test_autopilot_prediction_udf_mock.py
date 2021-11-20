@@ -18,11 +18,15 @@ def udf_wrapper():
     from exasol_sagemaker_extension.autopilot_prediction import \
         AutopilotPredictionUDF
 
-    def mocked_prediction_method(endpoint_name: str, data_df: pd.DataFrame):
-        return data_df.mean(axis=1)
+    class MockedAutopilotPrediction:
+        def __init__(self, endpoint_name):
+            pass
+
+        def predict(self, data_df: pd.DataFrame):
+            return data_df.mean(axis=1)
 
     udf = AutopilotPredictionUDF(
-        exa, "aws_s3_connection", prediction_method=mocked_prediction_method)
+        exa, "aws_s3_connection", prediction_class=MockedAutopilotPrediction)
 
     def run(ctx: UDFContext):
         udf.run(ctx)

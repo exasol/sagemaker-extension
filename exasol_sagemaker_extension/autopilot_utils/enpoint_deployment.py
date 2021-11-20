@@ -7,7 +7,6 @@ class AutopilotEndpointDeployment():
     """
 
     def __init__(self, job_name: str):
-        super().__init__(job_name)
         self._automl = AutoML.attach(auto_ml_job_name=job_name)
         self._automl_desc = self._automl.describe_auto_ml_job(job_name)
 
