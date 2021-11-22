@@ -16,6 +16,7 @@ within the scope of the project.
 - [Deployment](#deployment)
 - [Execution of Training](#execution-of-training)
 - [Polling Training Status](#polling-training-status)
+- [Prediction on AWS Sagemaker Endpoint](#prediction-on-aws-sageamker-endpoint)
 
 
 ## Getting Started
@@ -81,7 +82,10 @@ python -m exasol_sagemaker_extension.deployment.deploy_cli \
 
 ## Execution of Training
 ### Execute Autopilot Training
-- Example usage of AWS Sagemaker Autopilot service in Exasol is as follows. `SME_TRAIN_WITH_SAGEMAKER_AUTOPILOT` UDF script takes the necessary parameters as json string and triggers the Autopilot training on the selected table with the specified parameters:
+- Example usage of AWS Sagemaker Autopilot service in Exasol is as follows. 
+`SME_TRAIN_WITH_SAGEMAKER_AUTOPILOT` UDF script takes the necessary parameters 
+as json string and triggers the Autopilot training on the selected table with 
+the specified parameters:
 ```buildoutcfg
 EXECUTE SCRIPT SME_TRAIN_WITH_SAGEMAKER_AUTOPILOT('{
     "job_name"                                  : "<job_name>",
@@ -136,7 +140,8 @@ EXECUTE SCRIPT SME_TRAIN_WITH_SAGEMAKER_AUTOPILOT('{
 
 
 ## Polling Training Status
-- You can poll the status of a training Autopilot job with the `SME_POLL_SAGEMAKER_AUTOPILOT_JOB_STATUS` UDF script. Example usage is given below:
+- You can poll the status of a training Autopilot job with the 
+`SME_POLL_SAGEMAKER_AUTOPILOT_JOB_STATUS` UDF script. Example usage is given below:
 ```buildoutcfg
 EXECUTE SCRIPT SME_POLL_SAGEMAKER_AUTOPILOT_JOB_STATUS(
     job_name, 
@@ -156,4 +161,80 @@ EXECUTE SCRIPT SME_POLL_SAGEMAKER_AUTOPILOT_JOB_STATUS(
     - ```InProgress | Completed | Failed | Stopping | Stopped```
   - seconday job statuses : It provides detailed information about the state of the training job. Provided the states of training job: 
     - ```Starting | AnalyzingData | FeatureEngineering | ModelTuning | MaxCandidatesReached | Failed | Stopped | MaxAutoMLJobRuntimeReached | Stopping | CandidateDefinitionsGenerated | GeneratingExplainabilityReport | Completed | ExplainabilityError | DeployingModel | ModelDeploymentError.```
+
+
+## Prediction on AWS Sagemaker Endpoint
+
+In order to perform prediction on a trained Autopilot model, one of the methods 
+is  to deploy the model to the real-time AWS endpoint. This extension provides 
+Lua scripts for creating/deleting real-time endpoint and creates a model-specific 
+UDF script for making real-time predictions.
+
+### Creating Real-Time Endpoint
+- Use `SME_DEPLOY_SAGEMAKER_AUTOPILOT_ENDPOINT` lua script to create an endpoint 
+and deploy the best candidate model.  Example usage is given below:
+```buildoutcfg
+EXECUTE SCRIPT SME_DEPLOY_SAGEMAKER_AUTOPILOT_ENDPOINT(
+    job_name, 
+    endpoint_name,
+    schema_name,
+    instance_type,
+    instance_count,
+    aws_credentials_connection_name,
+    aws_region
+)
+```
+
+- Parameters
+  - ```job_name```: A unique Autopilot job name.
+  - ```endpoint_name```: A unique Endpoint name.
+  - ```schema_name```: The name of schema where the prediction udf gets created.
+  - ``` instance_type```: The EC2 instance type of the endpoint to deploy the Autopilot model to e.g., 'ml.m5.large'. For more information please check [Autopilot API reference guide](https://docs.aws.amazon.com/sagemaker/latest/dg/autopilot-reference.html).
+  - ```instance_count```: The initial number of instances to run in endpoint. For more information please check [Autopilot API reference guide](https://docs.aws.amazon.com/sagemaker/latest/dg/autopilot-reference.html).
+  - ```aws_credentials_connection_name```:   The name of an Exasol connection object with AWS credentials having Sagemaker execution permission.
+  - ```aws_region```: The AWS region where the deployment should run.
+
+
+### Making Real-Time Prediction
+- The Exasol Sagemaker Extension  provides a prediction UDF script for each model, 
+enabling you to perform real-time prediction on the created endpoint.
+
+- The format of the name of the  UDF script as follows: 
+`ENDPOINT_PREDICTION_<endpoint_name>_UDF` where `endpoint_name`  
+is the name of the deployed endpoint. You can see how it works in an example scenario below:
+  - Assume that the Autopilot model, which fits 2 columns (_COL1_, _COL2_) of 
+  a table called _TEST_TABLE_, is deployed to a real-time endpoint called _TEST_ENDPOINT_.
+  - Assume that the schema name is stated as _PRED_SCHEMA_ for which the prediction UDF 
+  script will be installed while creating the endpoint.
+    ```buildoutcfg
+    SELECT PRED_SCHEMA.ENDPOINT_PREDICTION_TEST_ENDPOINT_UDF(
+      t.COL1, 
+      t.COL2
+    ) from TEST_TABLE as t
+    ```
+  - The prediction results are presented as a _PREDICTIONS_ column, by being 
+  combined with the columns (_COL1_, _COL2_) used in model training. For example:
+
+    | COL1       | COL2       | PREDICTIONS |
+    | ---------- | ---------- | ----------- |
+    | val1       | val2       | pred1       |
+    | ...        | ...        | ...         |
+  
+
+### Deleting the Deployed Endpoint
+- It is important to delete the endpoint created, when you are finished with 
+the endpoint Otherwise, the endpoint will continue to be charged. You  can use 
+the following Lua script to delete the endpoint and associated resources.
+
+```buildoutcfg
+EXECUTE SCRIPT SME_DELETE_SAGEMAKER_AUTOPILOT_ENDPOINT(
+    endpoint_name, 
+    aws_credentials_connection_name,
+    aws_region
+```
+
+- Parameters
+  - ```endpoint_name```: The name of endpoint to be deleted.
+  - ```aws_credentials_connection_name```:   The name of an Exasol connection object with AWS credentials having Sagemaker execution permission.
+  - ```aws_region```: The AWS region where the deletion should run.
 
