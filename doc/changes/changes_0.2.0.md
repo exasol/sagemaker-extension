@@ -4,7 +4,7 @@ Code name: Add AWS Sagemaker Endpoint deployment and model prediction using api-
 
 ## Summary
 
-This release provides creating AWS Sagemaker endpoint and installing model specific UDF script enabling real-time prediction on the deployed endpoint. In addition, this release also includes deletion of the created endpoint and associated resources.
+This release provides creating an AWS Sagemaker endpoint and installing model specific UDF script enabling the user to include prediction via the deployed endpoint in its queries. In addition, this release also includes deletion of the created endpoint and associated resources.
 
 ### Features
 

@@ -82,8 +82,8 @@ python -m exasol_sagemaker_extension.deployment.deploy_cli \
 
 ## Execution of Training
 ### Execute Autopilot Training
-- Example usage of AWS Sagemaker Autopilot service in Exasol is as follows. 
-`SME_TRAIN_WITH_SAGEMAKER_AUTOPILOT` UDF script takes the necessary parameters 
+- Example usage of the AWS Sagemaker Autopilot service in Exasol is as follows. 
+The `SME_TRAIN_WITH_SAGEMAKER_AUTOPILOT` UDF script takes the necessary parameters 
 as json string and triggers the Autopilot training on the selected table with 
 the specified parameters:
 ```buildoutcfg
@@ -187,17 +187,17 @@ EXECUTE SCRIPT SME_DEPLOY_SAGEMAKER_AUTOPILOT_ENDPOINT(
 
 - Parameters
   - ```job_name```: A unique Autopilot job name.
-  - ```endpoint_name```: A unique Endpoint name.
-  - ```schema_name```: The name of schema where the prediction udf gets created.
+  - ```endpoint_name```: A unique Endpoint name and the name of the prediction UDF.
+  - ```schema_name```: The name of schema where the prediction UDF gets created.
   - ``` instance_type```: The EC2 instance type of the endpoint to deploy the Autopilot model to e.g., 'ml.m5.large'. For more information please check [Autopilot API reference guide](https://docs.aws.amazon.com/sagemaker/latest/dg/autopilot-reference.html).
-  - ```instance_count```: The initial number of instances to run in endpoint. For more information please check [Autopilot API reference guide](https://docs.aws.amazon.com/sagemaker/latest/dg/autopilot-reference.html).
+  - ```instance_count```: The initial number of instances to run the endpoint on. For more information please check [Autopilot API reference guide](https://docs.aws.amazon.com/sagemaker/latest/dg/autopilot-reference.html).
   - ```aws_credentials_connection_name```:   The name of an Exasol connection object with AWS credentials having Sagemaker execution permission.
   - ```aws_region```: The AWS region where the deployment should run.
 
 
-### Making Real-Time Prediction
-- The Exasol Sagemaker Extension  provides a prediction UDF script for each model, 
-enabling you to perform real-time prediction on the created endpoint.
+### Including Prediction into your Queries
+- The Exasol SageMaker Extension  provides a prediction UDF script for each model, 
+enabling you to perform prediction on the created endpoint.
 
 - The name of the prediction script is the same as the name of the endpoint 
 (`endpoint_name` ) specified when creating the endpoint. You can see how it works in an example scenario below:
