@@ -13,6 +13,8 @@ LUA_SRC_MODULE_AUTOPILOT_JOB_STATUS_POLLING_NAME = "autopilot_job_status_polling
 LUA_SRC_MODULE_SAGEMAKER_ENDPOINT_DEPLOYMENT_NAME = "autopilot_endpoint_deployment.lua"
 LUA_SRC_MODULE_SAGEMAKER_ENDPOINT_DELETION_NAME = "autopilot_endpoint_deletion.lua"
 LUA_SRC_MODULE_ENDPOINT_CONNECTION_HANDLER_NAME = "endpoint_connection_handler.lua"
+LUA_SRC_MODULE_INSTALL_AUTOPILOT_PREDICTION_UDF_NAME = "install_autopilot_prediction_udf.lua"
+LUA_SRC_MODULE_DB_METADATA_READER_NAME = "db_metadata_reader.lua"
 
 LUA_BUNDLED = "bundle_final.lua"
 

@@ -3,7 +3,7 @@ local mockagne = require("mockagne")
 require("src/autopilot_endpoint_deletion")
 
 
-local test_autopilot_endpoint_deletion = {
+test_autopilot_endpoint_deletion = {
     query = [[SELECT ::schema."SME_AUTOPILOT_ENDPOINT_DELETION_UDF"(
 		:endpoint_name,
 		:aws_s3_connection,
@@ -49,7 +49,6 @@ function test_autopilot_endpoint_deletion.test_delete_autopilot_endpoint_success
     luaunit.assertEquals(result, nil)
 
 end
-
 
 
 os.exit(luaunit.LuaUnit.run())

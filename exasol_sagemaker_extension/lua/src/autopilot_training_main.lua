@@ -73,15 +73,14 @@ function parse_arguments(json_str)
 	local json = require('cjson')
 	local success, args =  pcall(json.decode, json_str)
 	if not success then
-		args = {}
-		local error_obj = exaerror.create("",
+		local error_obj = exaerror.create("E-SME-5",
 				"Error while parsing input json string, it could not be converted to json object:"
 		):add_mitigations("Check syntax of the input string json is correct")
 		_G.global_env.error(tostring(error_obj))
 	end
 
 	if not contains_required_arguments(args) then
-		local error_obj = exaerror.create("", "Missing required arguments"
+		local error_obj = exaerror.create("E-SME-6", "Missing required arguments"
 		):add_mitigations('Following required arguments have to be specified: ' .. concat_required_args())
 		_G.global_env.error(tostring(error_obj))
 	end
@@ -107,6 +106,11 @@ function parse_arguments(json_str)
 	end
 
 	args['compression_type'] = 'gzip' -- default : 'gzip'
+
+	-- store following params as uppercase
+	args["input_schema_name"] = string.upper(args["input_schema_name"])
+	args["input_table_or_view_name"] = string.upper(args["input_table_or_view_name"])
+	args["target_attribute_name"] = string.upper(args["target_attribute_name"])
 
 	return args
 end
@@ -155,6 +159,34 @@ function train_autopilot_caller(exa, args)
 	return job_name
 end
 
+---
+-- This method returns names and types of columns as comma-separated strings respectively.
+--
+-- @param schema_name		The name of schema where the table is in.
+-- @param table_name		The name of table from which column information is retrieved.
+--
+-- return two strings including column names and types
+--
+function get_table_columns(schema_name, table_name)
+	local query = [[SELECT COLUMN_NAME , COLUMN_TYPE FROM SYS.EXA_ALL_COLUMNS eac
+					WHERE COLUMN_SCHEMA = :schema_name AND COLUMN_TABLE = :table_name]]
+	local params = {schema_name=schema_name, table_name=table_name}
+
+	local success, res = _G.global_env.pquery(query, params)
+	if not success then
+		local error_obj = exaerror.create("F-SME-2",
+				"Error while getting columns information from SYS.EXA_ALL_COLUMNS: " ..  res.error_message)
+		_G.global_env.error(tostring(error_obj))
+	end
+
+   	local col_names, col_types = {}, {}
+	for i=1, #res do
+		col_names[#col_names+1] = res[i][1]
+		col_types[#col_types+1] = res[i][2]
+	end
+	return table.concat(col_names, ';'), table.concat(col_types, ';')
+
+end
 
 ---
 -- This method saves the metdata of the job running for training in Autopilot to Database
@@ -165,6 +197,9 @@ end
 --
 function insert_metadata_into_db_caller(exa, args, job_name)
 	local schema_name = exa.meta.script_schema
+	local col_names, col_types = get_table_columns(
+			args['input_schema_name'], args['input_table_or_view_name'])
+
 	local db_metadata_writer = require("db_metadata_writer")
 	db_metadata_writer.insert_metadata_into_db(
 			schema_name,
@@ -180,7 +215,9 @@ function insert_metadata_into_db_caller(exa, args, job_name)
 			args['max_candidates'],
 			args['max_runtime_per_training_job_in_seconds'],
 			exa.meta.session_id,
-			exa.meta.current_user
+			exa.meta.current_user,
+			col_names,
+			col_types
 	)
 end
 
@@ -194,8 +231,6 @@ function main(json_str, exa)
 	export_to_s3_caller(args)
 	local job_name = train_autopilot_caller(exa, args)
 	insert_metadata_into_db_caller(exa, args, job_name)
-
-	-- TODO save table name into table
 
 end
 

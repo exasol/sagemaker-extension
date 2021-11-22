@@ -1,19 +1,29 @@
+local json = require('cjson')
 local luaunit = require("luaunit")
 local mockagne = require("mockagne")
 local endpoint_connection_handler = require("src/endpoint_connection_handler")
 
 
+local aws_s3_connection = 'aws_s3_connection'
+local aws_region = 'eu-central-1'
 local endpoint_name = 'endpoint_name'
 local status = 'deployed'
-local conn_name = [[SME_SAGEMAKER_AUTOPILOT_ENDPOINT_CONNECTION_]] .. endpoint_name
-local conn_to = [[TO '{"name":"]] .. endpoint_name .. [[", "status":"]] .. status .. [["}']]
-
-local test_endpoint_connection_handler = {
-    query = [[CREATE OR REPLACE CONNECTION ]] .. conn_name .. [[ ]] .. conn_to
+local conn_data_dict = {
+    aws_s3_connection=aws_s3_connection,
+    aws_region = aws_region,
+    endpoint_name=endpoint_name,
+    status=status,
 }
 
-local function mock_pquery_train(exa_mock, query_str, success, result)
-    mockagne.when(exa_mock.pquery(query_str, query_params)).thenAnswer(success, result)
+local conn_name = [[SME_SAGEMAKER_AUTOPILOT_ENDPOINT_CONNECTION_]] .. string.upper(endpoint_name)
+local conn_to = json.encode(conn_data_dict)
+
+test_endpoint_connection_handler = {
+    query = [[CREATE OR REPLACE CONNECTION ]] .. conn_name .. [[ TO ']] .. conn_to .. [[']]
+}
+
+local function mock_pquery_create_conn(exa_mock, query_str, success, result)
+    mockagne.when(exa_mock.pquery(query_str)).thenAnswer(success, result)
 end
 
 local function mock_error_return_nil(exa_mock)
@@ -28,17 +38,16 @@ function  test_endpoint_connection_handler.setUp()
 end
 
 
-function test_endpoint_connection_handler.test_delete_autopilot_endpoint_success()
-    mock_pquery_train(
+function test_endpoint_connection_handler.test_update_autopilot_endpoint_success()
+    mock_pquery_create_conn(
             exa_mock,
             test_endpoint_connection_handler.query,
-            test_endpoint_connection_handler.params,
             true,
             nil)
     local result = endpoint_connection_handler.update_model_connection_object(
-            test_endpoint_connection_handler.endpoint_name, test_endpoint_connection_handler.status)
+            aws_s3_connection, aws_region, endpoint_name, status)
 
-    luaunit.assertEquals(result, nil)
+    luaunit.assertNotNil(result)
 
 end
 

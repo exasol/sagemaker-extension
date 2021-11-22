@@ -12,5 +12,7 @@ CREATE TABLE IF NOT EXISTS "SME_METADATA_AUTOPILOT_JOBS" (
 	max_candidates INT,
 	max_runtime_per_training_job_in_seconds INT,
 	session_id DECIMAL(20,0) NOT NULL,
-	script_user VARCHAR(100) NOT NULL
+	script_user VARCHAR(100) NOT NULL,
+	column_names VARCHAR(2000000) NOT NULL,
+	column_types VARCHAR(2000000) NOT NULL
 )

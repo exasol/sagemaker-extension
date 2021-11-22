@@ -3,9 +3,7 @@ import pytest
 from typing import Dict
 from exasol_sagemaker_extension.autopilot_training_udf import \
     AutopilotTrainingUDF
-
-
-JOB_NAME = "end2endmodel"
+from tests.integration_tests.utils.parameters import aws_params, setup_params
 
 
 class Connection:
@@ -62,31 +60,29 @@ class Context:
         return self._emitted
 
 
-def test_autopilot_training_udf_real(get_real_params):
-    if "AWS_ACCESS_KEY" not in get_real_params \
-            or not get_real_params["AWS_ACCESS_KEY"]:
-        pytest.skip("AWS credentials are not set")
-
+@pytest.mark.skipif(not aws_params.aws_access_key,
+                    reason="AWS credentials are not set")
+def test_autopilot_training_udf_real():
     ctx = Context(
-        JOB_NAME,
-        get_real_params["AWS_CONNECTION"],
-        get_real_params["AWS_REGION"],
-        get_real_params["AWS_ROLE"],
-        get_real_params["AWS_S3_URI"],
-        get_real_params["AWS_OUTPUT_PATH"],
-        'IDX',
-        'BinaryClassification',
-        '{"MetricName": "Accuracy"}',
-        100,
-        5,
-        10
+        setup_params.job_name,
+        setup_params.aws_conn_name,
+        aws_params.aws_region,
+        aws_params.aws_role,
+        aws_params.aws_s3_uri,
+        aws_params.aws_output_path,
+        'OUTPUT_COL',
+        'Regression',
+        '{"MetricName": "MSE"}',
+        None,
+        2,
+        None
     )
 
     aws_s3_connection = Connection(
-        address=get_real_params["AWS_S3_URI"],
-        user=get_real_params["AWS_KEY_ID"],
-        password=get_real_params["AWS_ACCESS_KEY"])
-    exa = ExaEnvironment({get_real_params["AWS_CONNECTION"]: aws_s3_connection})
+        address=aws_params.aws_s3_uri,
+        user=aws_params.aws_key_id,
+        password=aws_params.aws_access_key)
+    exa = ExaEnvironment({setup_params.aws_conn_name: aws_s3_connection})
     autopilot_training_udf_obj = AutopilotTrainingUDF(exa)
     autopilot_training_udf_obj.run(ctx)
     assert ctx.get_emitted()

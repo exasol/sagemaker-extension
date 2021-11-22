@@ -1,15 +1,16 @@
 import os
-from typing import Callable
+from typing import Type
 from exasol_sagemaker_extension.autopilot_utils.enpoint_deployment import \
     AutopilotEndpointDeployment
 
 
 class AutopilotEndpointDeploymentUDF:
     def __init__(self, exa,
-                 deploy_method: Callable = AutopilotEndpointDeployment.deploy):
+                 deployment_class: Type[AutopilotEndpointDeployment] =
+                 AutopilotEndpointDeployment):
         self.exa = exa
         self.counter = 0
-        self.deploy_method = deploy_method
+        self.deployment_class = deployment_class
 
     def run(self, ctx):
         job_name = ctx.job_name
@@ -24,12 +25,14 @@ class AutopilotEndpointDeploymentUDF:
         os.environ["AWS_ACCESS_KEY_ID"] = aws_s3_conn_obj.user
         os.environ["AWS_SECRET_ACCESS_KEY"] = aws_s3_conn_obj.password
 
-        endpoint_name = self.deploy_method(
-            job_name=job_name,
+        deployment_class_obj = self.deployment_class(job_name=job_name)
+        deployment_class_obj.deploy(
             endpoint_name=endpoint_name,
             instance_type=instance_type,
             instance_count=instance_count
         )
 
-        ctx.emit(endpoint_name)
+        endpoint_problem_type = deployment_class_obj.get_endpoint_problem_type()
+
+        ctx.emit(endpoint_problem_type)
         self.counter += 1

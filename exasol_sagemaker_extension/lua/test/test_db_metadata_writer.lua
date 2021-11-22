@@ -2,8 +2,9 @@ local luaunit = require("luaunit")
 local mockagne = require("mockagne")
 local db_metadata_writer = require("./src/db_metadata_writer")
 
-local test_db_metadata_writer = {
-     query = [[INSERT INTO ::schema."SME_METADATA_AUTOPILOT_JOBS VALUES"(
+
+test_db_metadata_writer = {
+     query = [[INSERT INTO ::schema."SME_METADATA_AUTOPILOT_JOBS" VALUES(
 			CURRENT_TIMESTAMP,
 			:job_name,
 			:aws_credentials_connection_name,
@@ -17,7 +18,9 @@ local test_db_metadata_writer = {
 			:max_candidates,
 			:max_runtime_per_training_job_in_seconds,
 			:session_id,
-			:script_user
+			:script_user,
+			:col_names,
+			:col_types
         )]],
 
     params = {
@@ -34,7 +37,9 @@ local test_db_metadata_writer = {
 		max_candidates='max_candidates',
 		max_runtime_per_training_job_in_seconds='max_runtime_per_training_job_in_seconds',
 		session_id='session_id',
-		script_user='script_user'
+		script_user='script_user',
+		col_names='col_names',
+		col_types='col_types'
     }
 
 }
@@ -56,7 +61,7 @@ end
 
 
 function test_db_metadata_writer.test_insert_metadata_into_db_success()
-    mock_pquery_insert(exa_mock, test_db_metadata_writer.query, test_db_metadata_writer.params)
+	mock_pquery_insert(exa_mock, test_db_metadata_writer.query, test_db_metadata_writer.params)
     local result = db_metadata_writer.insert_metadata_into_db(
             'schema_name',
 			'job_name',
@@ -71,7 +76,9 @@ function test_db_metadata_writer.test_insert_metadata_into_db_success()
 			'max_candidates',
 			'max_runtime_per_training_job_in_seconds',
 			'session_id',
-			'script_user')
+			'script_user',
+			'col_names',
+			'col_types')
     luaunit.assertEquals(result, nil)
 end
 

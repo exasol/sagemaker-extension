@@ -34,7 +34,7 @@ function delete_autopilot_endpoint(schema_name, endpoint_name, aws_s3_connection
 
 	local success, result = _G.global_env.pquery(query, params)
 	if not success then
-		local error_obj = exaerror.create("",
+		local error_obj = exaerror.create("E-SME-2",
 				'Error occurred in deleting Sagemaker endpoint: ' .. result.error_message)
 		_G.global_env.error(tostring(error_obj))
 	end
@@ -45,13 +45,14 @@ end
 --
 -- @param exa					Exa context object
 -- @param endpoint_name			The name of the endpoint to be deleted
--- @param aws_s3_connection		the name of the connection object with the AWS credentials
--- @param aws_region			aws region
+-- @param aws_s3_connection		The name of the connection object with the AWS credentials
+-- @param aws_region			The name of aws region
 --
 function main(exa, endpoint_name, aws_s3_connection, aws_region)
 	local schema_name = exa.meta.script_schema
 	delete_autopilot_endpoint(schema_name, endpoint_name, aws_s3_connection, aws_region)
 
 	local exa_conn = require('endpoint_connection_handler')
-	exa_conn.update_model_connection_object(endpoint_name, 'deleted')
+	exa_conn.update_model_connection_object(
+			aws_s3_connection, aws_region, endpoint_name, 'deleted')
 end

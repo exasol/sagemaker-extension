@@ -4,7 +4,7 @@ from sagemaker.automl.automl import AutoML, AutoMLInput
 
 class AutopilotTraining:
     """
-    This class is responsible for training a specified Autompilot job
+    This class is responsible for training a specified Autopilot job
     """
 
     @staticmethod

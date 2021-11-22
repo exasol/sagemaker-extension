@@ -3,7 +3,7 @@ local mockagne = require("mockagne")
 local aws_sagemaker_handler = require("./src/aws_sagemaker_handler")
 
 
-local test_aws_sagemaker_handler = {
+test_aws_sagemaker_handler = {
     job_name = 'autopilot_job_name',
     query = [[SELECT ::schema."SME_AUTOPILOT_TRAINING_UDF"(
         :job_name ,

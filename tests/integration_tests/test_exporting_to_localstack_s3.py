@@ -93,13 +93,12 @@ def s3_client():
 
 
 @pytest.fixture(scope="session")
-def setup_database(db_conn, s3_client):
+def get_database_conn(db_conn, s3_client):
     open_schema(db_conn)
     create_aws_connection(db_conn)
     create_scripts(db_conn)
     create_table(db_conn, table_name=INPUT_DICT["input_table_or_view_name"])
     insert_into_table(db_conn, table_name=INPUT_DICT["input_table_or_view_name"])
-    create_s3_bucket(s3_client)
     return db_conn
 
 
@@ -135,8 +134,9 @@ def get_comparison_query(import_table_name):
                import_table_name=import_table_name)
 
 
-def test_export_table(setup_database, s3_client):
-    db_conn = setup_database
+def test_export_table(get_database_conn, s3_client):
+    db_conn = get_database_conn
+    create_s3_bucket(s3_client)
 
     # execute the created script and export table to s3
     query_export_to_s3 = get_export_to_s3_query()

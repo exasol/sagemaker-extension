@@ -1,6 +1,6 @@
 from exasol_sagemaker_extension.deployment.deploy_create_statements import \
     DeployCreateStatements
-
+from tests.integration_tests.utils.parameters import db_params
 
 DB_SCHEMA = "TEST_DEPLOY_SCHEMA"
 AUTOPILOT_TRAINING_LUA_SCRIPT_NAME = \
@@ -26,13 +26,12 @@ def get_all_scripts(db_conn):
     return list(map(lambda x: x[0], all_scripts))
 
 
-def test_deploy_create_statements(
-        get_params, db_conn, upload_language_container):
+def test_deploy_create_statements(db_conn, register_language_container):
     deployer = DeployCreateStatements(
-        db_host=get_params["DB_CONNECTION_HOST"],
-        db_port=get_params["DB_CONNECTION_PORT"],
-        db_user=get_params["DB_CONNECTION_USER"],
-        db_pass=get_params["DB_CONNECTION_PASS"],
+        db_host=db_params.host,
+        db_port=db_params.port,
+        db_user=db_params.user,
+        db_pass=db_params.password,
         schema=DB_SCHEMA,
         to_print=False
     )

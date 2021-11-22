@@ -45,21 +45,21 @@ def create_mock_metadata():
     return meta
 
 
-def test_autopilot_training_status_udf_mock(get_mock_params):
+def test_autopilot_training_status_udf_mock(get_mock_aws_params):
     executor = UDFMockExecutor()
     meta = create_mock_metadata()
     aws_s3_connection = Connection(
-        address=get_mock_params["AWS_S3_URI"],
-        user=get_mock_params["AWS_KEY_ID"],
-        password=get_mock_params["AWS_ACCESS_KEY"])
+        address=get_mock_aws_params["AWS_S3_URI"],
+        user=get_mock_aws_params["AWS_KEY_ID"],
+        password=get_mock_aws_params["AWS_ACCESS_KEY"])
     exa = MockExaEnvironment(
         meta,
-        connections={get_mock_params["AWS_CONNECTION_NAME"]: aws_s3_connection})
+        connections={get_mock_aws_params["AWS_CONNECTION_NAME"]: aws_s3_connection})
 
     input_data = (
         JOB_NAME,
-        get_mock_params["AWS_CONNECTION_NAME"],
-        get_mock_params["AWS_REGION"],
+        get_mock_aws_params["AWS_CONNECTION_NAME"],
+        get_mock_aws_params["AWS_REGION"],
     )
 
     result = executor.run([Group([input_data])], exa)
@@ -73,8 +73,8 @@ def test_autopilot_training_status_udf_mock(get_mock_params):
         assert job_secondary_status == \
                JOB_SECONDARY_STATUS
         assert os.environ["AWS_ACCESS_KEY_ID"] == \
-               get_mock_params["AWS_KEY_ID"]
+               get_mock_aws_params["AWS_KEY_ID"]
         assert os.environ["AWS_SECRET_ACCESS_KEY"] == \
-               get_mock_params["AWS_ACCESS_KEY"]
+               get_mock_aws_params["AWS_ACCESS_KEY"]
         assert os.environ["AWS_DEFAULT_REGION"] == \
-               get_mock_params["AWS_REGION"]
+               get_mock_aws_params["AWS_REGION"]

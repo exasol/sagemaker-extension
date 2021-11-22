@@ -65,7 +65,7 @@ function M.train_autopilot(
 
     local success, result = _G.global_env.pquery(query_training, params)
 	if not success then
-		local error_obj = exaerror.create("",
+		local error_obj = exaerror.create("E-SME-7",
 				'Error occurred in training with Sagemaker Autopilot: ' .. result.error_message)
 		_G.global_env.error(tostring(error_obj))
 	end

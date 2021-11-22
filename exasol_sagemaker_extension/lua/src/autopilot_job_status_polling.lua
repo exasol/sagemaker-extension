@@ -33,7 +33,7 @@ function poll_autopilot_job_status(schema_name, job_name, aws_s3_connection, aws
 	}
 	local success, result = _G.global_env.pquery(query, params)
 	if not success then
-		local error_obj = exaerror.create("",
+		local error_obj = exaerror.create("E-SME-4",
 				'Error occurred in polling Sagemaker Autopilot job status: ' .. result.error_message)
 		_G.global_env.error(tostring(error_obj))
 	end

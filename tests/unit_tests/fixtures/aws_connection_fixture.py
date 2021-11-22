@@ -1,9 +1,8 @@
-import os
 import pytest
 
 
 @pytest.fixture(scope="session")
-def get_mock_params():
+def get_mock_aws_params():
     mock_params = {
         "AWS_AUTOML_JOB_NAME": "test-model-name",
         "AWS_SAGEMAKER_ROLE": "aws_test_role",
@@ -17,18 +16,3 @@ def get_mock_params():
     }
     return mock_params
 
-
-@pytest.fixture(scope="session")
-def get_real_params():
-    real_params = {
-        "AWS_CONNECTION": "AWS_CONNECTION",
-        "AWS_REGION": "eu-central-1",
-        "AWS_S3_URI": "s3://sagemaker-extension-bucket",
-        "AWS_OUTPUT_PATH": "end2end_path",
-        "AWS_ROLE": "",
-        "AWS_KEY_ID": "",
-        "AWS_ACCESS_KEY": "",
-        "AWS_SESSION_TOKEN": ""
-    }
-    os.environ["AWS_SESSION_TOKEN"] = real_params["AWS_SESSION_TOKEN"]
-    return real_params
