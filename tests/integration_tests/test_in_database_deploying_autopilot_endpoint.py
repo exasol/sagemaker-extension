@@ -31,7 +31,6 @@ def test_deploy_sagemaker_autopilot_endpoint(
                     "WHERE SCRIPT_SCHEMA = '{schema}'".\
         format(schema=setup_params.schema_name.upper())
     all_scripts = db_conn.execute(query_scripts).fetchall()
-    prediction_udf_name = "_".join(
-        ("ENDPOINT_PREDICTION", setup_params.endpoint_name.upper(), "UDF"))
+    prediction_udf_name = setup_params.endpoint_name
     assert prediction_udf_name in list(map(lambda x: x[0], all_scripts))
 

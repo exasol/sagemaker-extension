@@ -199,15 +199,14 @@ EXECUTE SCRIPT SME_DEPLOY_SAGEMAKER_AUTOPILOT_ENDPOINT(
 - The Exasol Sagemaker Extension  provides a prediction UDF script for each model, 
 enabling you to perform real-time prediction on the created endpoint.
 
-- The format of the name of the  UDF script as follows: 
-`ENDPOINT_PREDICTION_<endpoint_name>_UDF` where `endpoint_name`  
-is the name of the deployed endpoint. You can see how it works in an example scenario below:
+- The name of the prediction script is the same as the name of the endpoint 
+(`endpoint_name` ) specified when creating the endpoint. You can see how it works in an example scenario below:
   - Assume that the Autopilot model, which fits 2 columns (_COL1_, _COL2_) of 
-  a table called _TEST_TABLE_, is deployed to a real-time endpoint called _TEST_ENDPOINT_.
+  a table called _TEST_TABLE_, is deployed to a real-time endpoint called _PREDICT_VIA_ENDPOINT_.
   - Assume that the schema name is stated as _PRED_SCHEMA_ for which the prediction UDF 
   script will be installed while creating the endpoint.
     ```buildoutcfg
-    SELECT PRED_SCHEMA.ENDPOINT_PREDICTION_TEST_ENDPOINT_UDF(
+    SELECT PRED_SCHEMA.PREDICT_VIA_ENDPOINT(
       t.COL1, 
       t.COL2
     ) from TEST_TABLE as t

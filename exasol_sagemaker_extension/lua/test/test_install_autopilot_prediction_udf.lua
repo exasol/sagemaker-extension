@@ -67,7 +67,7 @@ function test_install_autopilot_prediction_udf.test_install_udf()
 
 	local query =
 	"CREATE OR REPLACE PYTHON3_SME SET SCRIPT "
-		.. schema .. ".\"ENDPOINT_PREDICTION_" .. endpoint_name .. "_UDF\""
+		.. schema .. ".\"" .. endpoint_name .. "\""
 		.. "(" .. table.concat(input_params, ',') .. ")"
 		.. "EMITS (" .. table.concat(output_params, ',') .. ") AS\n"
 	.. "from exasol_sagemaker_extension.autopilot_prediction import AutopilotPredictionUDF\n"
