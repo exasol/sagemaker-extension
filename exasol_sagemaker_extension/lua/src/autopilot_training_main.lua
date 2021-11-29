@@ -5,6 +5,7 @@
 --
 
 local exaerror = require("exaerror")
+local validate_input = require("validate_input")
 
 _G.global_env = {
     pquery = pquery,
@@ -82,6 +83,13 @@ function parse_arguments(json_str)
 	if not contains_required_arguments(args) then
 		local error_obj = exaerror.create("E-SME-6", "Missing required arguments"
 		):add_mitigations('Following required arguments have to be specified: ' .. concat_required_args())
+		_G.global_env.error(tostring(error_obj))
+	end
+
+	if not validate_input.is_autopilot_job_name_valid(args['job_name']) then
+		local error_obj = exaerror.create("E-SME-11",
+				"Invalid job name " .. args['job_name']
+		):add_mitigations("The name of job should match the following pattern: ^[a-zA-Z0-9](*[a-zA-Z0-9]){0,31}")
 		_G.global_env.error(tostring(error_obj))
 	end
 
