@@ -20,7 +20,7 @@ install_requires = \
 
 setup_kwargs = {
     'name': 'exasol-sagemaker-extension',
-    'version': '0.2.0',
+    'version': '0.2.1',
     'description': 'Exasol SageMaker Integration',
     'long_description': '# SageMaker Extension\n\nThis project provides a Python library that trains data stored in Exasol using AWS SageMaker.\n\n\n## Table of Contents\n\n### Information for Users\n\n* [User Guide](doc/user_guide/user_guide.md)\n* [Changelog](doc/changes/changelog.md)\n\n### Information for Contributors\n\n\n* [System Requirement Specification](doc/system_requirements.md)\n* [Design](doc/design.md)\n* [Dependencies](doc/dependencies.md)',
     'author': 'Umit Buyuksahin',
