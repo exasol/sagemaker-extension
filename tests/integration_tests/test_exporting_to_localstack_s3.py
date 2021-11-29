@@ -15,7 +15,7 @@ AWS_S3_URI = f"https://{AWS_IP_ADDR}:4566"
 
 
 INPUT_DICT = {
-    "job_name": "todo_model",
+    "job_name": "todomodel",
     "input_schema_name": "INTEGRATION_TEST_SCHEMA",
     "input_table_or_view_name": "TEST_TABLE",
     "aws_credentials_connection_name": "S3_CONNECTION",
