@@ -89,7 +89,7 @@ function parse_arguments(json_str)
 	if not validate_input.is_autopilot_job_name_valid(args['job_name']) then
 		local error_obj = exaerror.create("E-SME-11",
 				"Invalid job name " .. args['job_name']
-		):add_mitigations("The name of job should match the following pattern: ^[a-zA-Z0-9](*[a-zA-Z0-9]){0,31}")
+		):add_mitigations("The name of job should match the following pattern: ^[a-zA-Z0-9]{0,31}")
 		_G.global_env.error(tostring(error_obj))
 	end
 

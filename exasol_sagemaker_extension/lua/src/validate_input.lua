@@ -30,7 +30,7 @@ end
 -- @param endpoint_name     The name of the Autopilot endpoint
 --
 function M.is_autopilot_endpoint_name_valid(endpoint_name)
-    if string.match(endpoint_name, "^(%a+%w*)$") then
+    if string.match(endpoint_name, "^(%w+)$") then
         return true
     end
     return false

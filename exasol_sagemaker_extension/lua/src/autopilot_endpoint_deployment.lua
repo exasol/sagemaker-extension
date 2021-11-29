@@ -74,7 +74,7 @@ function main(
 	if not validate_input.is_autopilot_endpoint_name_valid(endpoint_name) then
 		local error_obj = exaerror.create("E-SME-11",
 				"Invalid endpoint name " ..job_name
-		):add_mitigations("The name of endpoint should match the following pattern: ^(*[a-zA-Z0-9])")
+		):add_mitigations("The name of endpoint should match the following pattern: ^[a-zA-Z0-9]")
 		_G.global_env.error(tostring(error_obj))
 	end
 
