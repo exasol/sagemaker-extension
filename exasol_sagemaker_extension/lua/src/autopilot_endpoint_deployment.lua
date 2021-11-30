@@ -5,6 +5,7 @@
 --
 
 local exaerror = require("exaerror")
+local validate_input = require("validate_input")
 
 _G.global_env = {
     pquery = pquery,
@@ -69,6 +70,13 @@ function main(
 		exa, job_name, endpoint_name, schema_name,
 		instance_type, instance_count, aws_s3_connection, aws_region)
 	local script_schema_name = exa.meta.script_schema
+
+	if not validate_input.is_autopilot_endpoint_name_valid(endpoint_name) then
+		local error_obj = exaerror.create("E-SME-11",
+				"Invalid endpoint name " ..job_name
+		):add_mitigations("The name of endpoint should match the following pattern: ^[a-zA-Z0-9]{0,62}")
+		_G.global_env.error(tostring(error_obj))
+	end
 
 	local endpoint_problem_type = deploy_autopilot_endpoint(
 			script_schema_name, job_name, endpoint_name, instance_type,

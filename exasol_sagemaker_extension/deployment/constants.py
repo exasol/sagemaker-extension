@@ -15,6 +15,7 @@ LUA_SRC_MODULE_SAGEMAKER_ENDPOINT_DELETION_NAME = "autopilot_endpoint_deletion.l
 LUA_SRC_MODULE_ENDPOINT_CONNECTION_HANDLER_NAME = "endpoint_connection_handler.lua"
 LUA_SRC_MODULE_INSTALL_AUTOPILOT_PREDICTION_UDF_NAME = "install_autopilot_prediction_udf.lua"
 LUA_SRC_MODULE_DB_METADATA_READER_NAME = "db_metadata_reader.lua"
+LUA_SRC_MODULE_VALIDATE_INPUT = "validate_input.lua"
 
 LUA_BUNDLED = "bundle_final.lua"
 

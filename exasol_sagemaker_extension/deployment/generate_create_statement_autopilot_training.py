@@ -12,11 +12,13 @@ class AutopilotTrainingLuaScriptCreateStatementGenerator(BaseCreateStatementGene
     def __init__(self):
         self._lua_src_files = [
             constants.LUA_SRC_MODULE_AUTOPILOT_TRAINING_MAIN_NAME,
+            constants.LUA_SRC_MODULE_VALIDATE_INPUT,
             constants.LUA_SRC_MODULE_AWS_S3_HANDLER_NAME,
             constants.LUA_SRC_MODULE_DB_METADATA_WRITER_NAME,
             constants.LUA_SRC_MODULE_AWS_SAGEMAKER_HANDLER_NAME]
         self._modules = [
             "autopilot_training_main.lua",
+            "validate_input",
             "aws_s3_handler",
             "db_metadata_writer",
             "aws_sagemaker_handler",
