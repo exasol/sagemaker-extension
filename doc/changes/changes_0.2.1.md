@@ -1,4 +1,4 @@
-# SageMaker Extension 0.2.1, released 2021-11-29
+# SageMaker Extension 0.2.1, released 2021-11-30
 
 Code name: Add validation for AWS SageMaker's job_name and endpoint_name inputs.
 
