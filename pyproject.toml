@@ -43,17 +43,5 @@ build-backend = "poetry.core.masonry.api"
 
 
 [tool.poe.tasks]
-_lua-coverage-collect = {"shell" = """
-	cd ./exasol_sagemaker_extension/lua/src \
-	&& for script in ./*.lua; do lua -lluacov $script ; done \
-	&& luacov
-	"""}
-_lua-coverage-report = {"shell" = """
-	cd ./exasol_sagemaker_extension/lua/src \
-	&& grep -A100 -m1 -e 'Summary' luacov.report.out  | tail -n+3 \
-	&& rm luacov.*
-	"""}
+lua-tests = {"shell" = "bash ./scripts/lua_tests.sh"}
 
-lua-coverage = ["_lua-coverage-collect", "_lua-coverage-report"]
-lua-linting = {"shell" = "luacheck ./exasol_sagemaker_extension/lua/src --ignore 111 --ignore 113 --ignore 142"}
-lua-code-analysis = ["lua-coverage", "lua-linting"]
