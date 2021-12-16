@@ -55,5 +55,5 @@ _lua-coverage-report = {"shell" = """
 	"""}
 
 lua-coverage = ["_lua-coverage-collect", "_lua-coverage-report"]
-lua-linting = {"shell" = "luacheck ./exasol_sagemaker_extension/lua/src"}
+lua-linting = {"shell" = "luacheck ./exasol_sagemaker_extension/lua/src --ignore 111 --ignore 113 --ignore 142"}
 lua-code-analysis = ["lua-coverage", "lua-linting"]

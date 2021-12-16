@@ -39,7 +39,8 @@ function M.read_metadata(schema, job_name, columns)
 		end
 	end
 
-	local query_reading = [[SELECT ]] .. table.concat(columns_ids, ",") .. [[ FROM ::schema."SME_METADATA_AUTOPILOT_JOBS" WHERE JOB_NAME = :job_name]]
+	local query_reading = [[SELECT ]] .. table.concat(columns_ids, ",")
+			.. [[ FROM ::schema."SME_METADATA_AUTOPILOT_JOBS" WHERE JOB_NAME = :job_name]]
 	local success, result = _G.global_env.pquery(query_reading, params)
 	if not success then
 		local error_obj = exaerror.create("F-SME-3",
