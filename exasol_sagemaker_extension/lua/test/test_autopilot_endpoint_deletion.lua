@@ -1,6 +1,6 @@
 local luaunit = require("luaunit")
 local mockagne = require("mockagne")
-require("src/autopilot_endpoint_deletion")
+require("autopilot_endpoint_deletion")
 
 
 test_autopilot_endpoint_deletion = {

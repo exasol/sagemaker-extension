@@ -1,5 +1,5 @@
 local luaunit = require("luaunit")
-local validate_input = require("./src/validate_input")
+local validate_input = require("validate_input")
 
 
 test_validate_input= {

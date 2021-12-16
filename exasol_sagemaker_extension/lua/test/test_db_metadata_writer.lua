@@ -1,6 +1,6 @@
 local luaunit = require("luaunit")
 local mockagne = require("mockagne")
-local db_metadata_writer = require("./src/db_metadata_writer")
+local db_metadata_writer = require("db_metadata_writer")
 
 
 test_db_metadata_writer = {

@@ -1,6 +1,6 @@
 local luaunit = require("luaunit")
 local mockagne = require("mockagne")
-local aws_s3_handler = require("./src/aws_s3_handler")
+local aws_s3_handler = require("aws_s3_handler")
 
 
 test_aws_s3_handler = {

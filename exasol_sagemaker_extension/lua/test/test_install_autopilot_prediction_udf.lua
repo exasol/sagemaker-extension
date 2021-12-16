@@ -1,7 +1,7 @@
 local luaunit = require("luaunit")
 local mockagne = require("mockagne")
 local install_autopilot_prediction_udf = require(
-		"./src/install_autopilot_prediction_udf")
+		"install_autopilot_prediction_udf")
 
 
 test_install_autopilot_prediction_udf = {}
