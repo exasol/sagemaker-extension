@@ -38,6 +38,11 @@ jobs:
           sudo luarocks install luaunit
           sudo luarocks install mockagne
           sudo luarocks install exaerror
+          sudo luarocks install luacheck
+          sudo luarocks install luacov
+
+      - name: Run Lua static code analysis
+        run: poetry run poe lua-code-analysis
 
       - name: Run Lua unit tests
         run: |
