@@ -27,7 +27,7 @@ local required_args = {
 	max_candidates = nil,
 	model_info_schema_name = nil,
 	model_info_table_name = nil,
-	objective = Nil,
+	objective = nil,
 	aws_tags = nil
 }
 
@@ -187,7 +187,7 @@ function get_table_columns(schema_name, table_name)
 		_G.global_env.error(tostring(error_obj))
 	end
 
-   	local col_names, col_types = {}, {}
+	local col_names, col_types = {}, {}
 	for i=1, #res do
 		col_names[#col_names+1] = res[i][1]
 		col_types[#col_types+1] = res[i][2]

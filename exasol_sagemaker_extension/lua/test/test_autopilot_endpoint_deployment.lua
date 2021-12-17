@@ -1,6 +1,6 @@
 local luaunit = require("luaunit")
 local mockagne = require("mockagne")
-require("src/autopilot_endpoint_deployment")
+require("autopilot_endpoint_deployment")
 
 
 test_autopilot_endpoint_deployment = {

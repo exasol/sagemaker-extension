@@ -1,6 +1,6 @@
 local luaunit = require("luaunit")
 local mockagne = require("mockagne")
-local aws_s3_handler = require("./src/aws_s3_handler")
+local aws_s3_handler = require("aws_s3_handler")
 
 
 test_aws_s3_handler = {
@@ -67,7 +67,7 @@ end
 
 function test_aws_s3_handler.test_prepare_export_query()
     local parallelism_factor = 1
-    for i = 1, 5 do
+    for _ = 1, 5 do
         local n_nodes = math.random(1, 20)
         local n_exporter = n_nodes * parallelism_factor
 

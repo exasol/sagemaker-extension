@@ -33,10 +33,11 @@ jobs:
           sudo luarocks install luaunit
           sudo luarocks install mockagne
           sudo luarocks install exaerror
+          sudo luarocks install luacheck
+          sudo luarocks install luacov
 
-      - name: Run Lua unit tests
-        run: |
-          ./scripts/run_lua_unittests.sh
+      - name: Run Lua unit tests and static code analyzer
+        run: poetry run poe lua-tests
 
       - name: Setup integration test environment
         run: ./scripts/setup_integration_test.sh

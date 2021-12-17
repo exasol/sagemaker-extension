@@ -1,6 +1,6 @@
 local luaunit = require("luaunit")
 local mockagne = require("mockagne")
-require("./src/autopilot_training_main")
+require("autopilot_training_main")
 
 
 
@@ -33,10 +33,10 @@ end
 
 function test_train_autopilot_main.test_parse_used_optional_arguments()
     local args_missing_json_str = [[{
-       	"job_name"						    : "jobname",
-       	"aws_credentials_connection_name"	: "S3_CONNECTION",
-       	"aws_region"						: "eu-central-1",
-       	"iam_sagemaker_role"				: "arn:aws:iam::1234:role",
+	    "job_name"							: "jobname",
+	    "aws_credentials_connection_name"	: "S3_CONNECTION",
+	    "aws_region"						: "eu-central-1",
+	    "iam_sagemaker_role"				: "arn:aws:iam::1234:role",
 	    "s3_bucket_uri"						: "s3://sme-bucket",
 	    "s3_output_path"					: "path",
 	    "input_schema_name"					: "TEST_SCHEMA",

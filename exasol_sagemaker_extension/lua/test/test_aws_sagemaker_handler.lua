@@ -1,6 +1,6 @@
 local luaunit = require("luaunit")
 local mockagne = require("mockagne")
-local aws_sagemaker_handler = require("./src/aws_sagemaker_handler")
+local aws_sagemaker_handler = require("aws_sagemaker_handler")
 
 
 test_aws_sagemaker_handler = {

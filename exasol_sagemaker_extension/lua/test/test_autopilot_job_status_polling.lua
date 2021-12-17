@@ -1,6 +1,6 @@
 local luaunit = require("luaunit")
 local mockagne = require("mockagne")
-require("src/autopilot_job_status_polling")
+require("autopilot_job_status_polling")
 
 
 test_autopilot_job_status_polling = {
