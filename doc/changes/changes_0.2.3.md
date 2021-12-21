@@ -8,6 +8,7 @@ Code name:
 ### Features
 
   - #47: Named the return column as predictions
+  - #37: Made the batch_size configurable in PredictionUDF
 
 
 
