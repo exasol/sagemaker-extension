@@ -103,12 +103,26 @@ function run_static_code_analysis {
     return "$?"
 }
 
+##
+#
+# Remove target directories including coverage reports
+#
+function remove_target_directories {
+  echo
+  echo "remove coverage output directories"
+  echo
+  rm -r "$target_dir"
+  return "$?"
+}
+
+
 create_target_directories
 run_tests \
 && collect_coverage_results \
 && move_coverage_results \
 && print_coverage_summary \
 && run_static_code_analysis \
+&& remove_target_directories \
 || exit "$exit_software"
 
 exit "$exit_ok"
