@@ -63,12 +63,13 @@ function M.get_udf_params(metadata_row, endpoint_problem_type)
 	local input_params = {}
 	local output_params = {}
 	local target_param = nil
+	local prediction_column_name = 'PREDICTIONS'
 	for i=1, #col_names_list do
 		if col_names_list[i] ~= target_column then
 			input_params[#input_params+1]=col_names_list[i] .. ' ' .. col_types_list[i]
 			output_params[#output_params+1]=col_names_list[i] .. ' ' .. col_types_list[i]
 		else
-			target_param = col_names_list[i] .. ' ' .. M.determine_sql_type(
+			target_param = prediction_column_name .. ' ' .. M.determine_sql_type(
 					endpoint_problem_type, col_types_list[i])
 		end
 	end
