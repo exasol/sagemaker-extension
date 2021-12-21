@@ -53,7 +53,8 @@ function test_install_autopilot_prediction_udf.test_get_udf_params()
 	luaunit.assertEquals(#res_input_params, n_columns-1)
 	luaunit.assertEquals(#res_output_params, n_columns)
 	luaunit.assertEquals(res_input_params[1], 'COL_1 CHAR(1)')
-	luaunit.assertEquals(res_output_params[#res_output_params], 'COL_5 DOUBLE')
+	luaunit.assertEquals(res_output_params[#res_output_params],
+			'PREDICTIONS DOUBLE')
 
 end
 
