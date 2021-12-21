@@ -42,7 +42,7 @@ class ExaEnvironment:
 class Context:
     def __init__(self):
         self._emitted = []
-        self._is_emitted_once = False
+        self._is_accessed_once = False
 
     def emit(self, *args):
         self._emitted.append(args)
@@ -56,7 +56,7 @@ class Context:
             (2.2, 2.4),
             (3.3, 3.6)
         ]
-        return_df = None if self._is_emitted_once else pd.DataFrame(data=data)
+        return_df = None if self._is_accessed_once else pd.DataFrame(data=data)
         self._is_emitted_once = True
         return return_df
 
