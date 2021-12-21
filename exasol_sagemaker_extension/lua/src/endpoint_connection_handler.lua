@@ -29,6 +29,7 @@ function M.update_model_connection_object(aws_s3_connection, aws_region, endpoin
 		aws_region = aws_region,
 		endpoint_name=endpoint_name,
 		status=status,
+		batch_size=100
 	}
 
 	local conn_name = [[SME_SAGEMAKER_AUTOPILOT_ENDPOINT_CONNECTION_]] .. string.upper(endpoint_name)
