@@ -57,7 +57,7 @@ class Context:
             (3.3, 3.6)
         ]
         return_df = None if self._is_accessed_once else pd.DataFrame(data=data)
-        self._is_emitted_once = True
+        self._is_accessed_once = True
         return return_df
 
 
