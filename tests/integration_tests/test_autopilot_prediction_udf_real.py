@@ -68,7 +68,8 @@ def test_autopilot_prediction_udf_real():
         "aws_s3_connection": setup_params.aws_conn_name,
         "aws_region": aws_params.aws_region,
         "endpoint_name": setup_params.endpoint_name,
-        "status": "deployed"
+        "status": "deployed",
+        "batch_size": setup_params.batch_size
     }
     ctx = Context()
 

@@ -61,7 +61,8 @@ def test_autopilot_endpoint_deletion_udf_mock(get_mock_aws_params):
         "aws_s3_connection": get_mock_aws_params["AWS_CONNECTION_NAME"],
         "aws_region": "eu-central-1",
         "endpoint_name": ENDPOINT_NAME,
-        "status": "deployed"
+        "status": "deployed",
+        "batch_size": 10
     }
     model_connection = Connection(
         address=json.dumps(connection_data))

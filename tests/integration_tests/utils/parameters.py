@@ -39,7 +39,7 @@ def get_db_params():
 def get_setup_params():
     SetupParams = namedtuple("SetupParams", [
         "schema_name", "table_name", "target_col", "data",
-        "aws_conn_name", "job_name", "endpoint_name"])
+        "aws_conn_name", "job_name", "endpoint_name", "batch_size"])
 
     return SetupParams(
         schema_name="test_in_db_schema",
@@ -48,7 +48,8 @@ def get_setup_params():
         data=[f"({i * 1.1}, {i * 1.2}, {i * 10})" for i in range(1, 1000)],
         aws_conn_name="aws_connection",
         job_name="testjob4",
-        endpoint_name="testjob4endpoint"
+        endpoint_name="testjob4endpoint",
+        batch_size=10
     )
 
 

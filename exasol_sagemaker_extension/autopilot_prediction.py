@@ -12,11 +12,11 @@ class AutopilotPredictionUDF:
         self.exa = exa
         self.model_connection_name = model_connection_name
         self.prediction_class = prediction_class
-        self.batch_size = 100
 
     def run(self, ctx):
         model_connection = self.exa.get_connection(self.model_connection_name)
         endpoint_info_json = json.loads(model_connection.address)
+        batch_size = endpoint_info_json["batch_size"]
 
         if endpoint_info_json['status'] == 'deployed':
             aws_s3_conn_obj = self.exa.get_connection(
@@ -30,7 +30,7 @@ class AutopilotPredictionUDF:
             prediction_class_obj = self.prediction_class(
                 endpoint_info_json['endpoint_name'])
             while True:
-                data_df = ctx.get_dataframe(self.batch_size)
+                data_df = ctx.get_dataframe(batch_size)
                 if data_df is None:
                     break
                 predictions = prediction_class_obj.predict(data_df)
