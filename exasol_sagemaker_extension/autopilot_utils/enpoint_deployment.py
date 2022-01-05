@@ -15,15 +15,21 @@ class AutopilotEndpointDeployment():
                instance_type: str,
                instance_count: int):
 
-        best_candidate = self._automl.best_candidate()
-        self._automl .deploy(
-            initial_instance_count=instance_count,
-            instance_type=instance_type,
-            candidate=best_candidate,
-            wait=True,
-            endpoint_name=endpoint_name
-        )
+        # arguments of the autopilot deployment method
+        kwargs = {
+            "initial_instance_count": instance_count,
+            "instance_type": instance_type,
+            "candidate": self._automl.best_candidate(),
+            "wait": True,
+            "endpoint_name": endpoint_name
+        }
 
+        # add probabilities for classification problem types
+        if self.get_endpoint_problem_type() != "Regression":
+            kwargs["inference_response_keys"] = \
+                ["predicted_label", "probability"]
+
+        self._automl.deploy(**kwargs)
         return endpoint_name
 
     def get_endpoint_problem_type(self):

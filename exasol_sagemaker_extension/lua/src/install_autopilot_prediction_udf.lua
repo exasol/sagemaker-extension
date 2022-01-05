@@ -64,6 +64,7 @@ function M.get_udf_params(metadata_row, endpoint_problem_type)
 	local output_params = {}
 	local target_param = nil
 	local prediction_column_name = 'PREDICTIONS'
+	local probability_column_name = 'PROBABILITIES'
 	for i=1, #col_names_list do
 		if col_names_list[i] ~= target_column then
 			input_params[#input_params+1]=col_names_list[i] .. ' ' .. col_types_list[i]
@@ -72,6 +73,11 @@ function M.get_udf_params(metadata_row, endpoint_problem_type)
 			target_param = prediction_column_name .. ' ' .. M.determine_sql_type(
 					endpoint_problem_type, col_types_list[i])
 		end
+	end
+
+	-- last two output columns must be  'PROBABILITIES' and  'PREDICTIONS', respectively
+	if endpoint_problem_type ~= 'Regression' then
+		output_params[#output_params+1] = probability_column_name .. ' ' .. 'DECIMAL(18,4)'
 	end
 	output_params[#output_params+1] = target_param
 
@@ -94,7 +100,7 @@ function M.install_udf(schema, endpoint_name, model_conn_name, input_params, out
 		.. schema .. ".\"" .. endpoint_name .. "\""
 		.. "(" .. table.concat(input_params, ',') .. ")"
 		.. "EMITS (" .. table.concat(output_params, ',') .. ") AS\n"
-	.. "from exasol_sagemaker_extension.autopilot_prediction import AutopilotPredictionUDF\n"
+	.. "from exasol_sagemaker_extension.autopilot_prediction_udf import AutopilotPredictionUDF\n"
 	.. "udf = AutopilotPredictionUDF(exa, '" .. model_conn_name .. "')\ndef run(ctx):\n\tudf.run(ctx)\n/"
 
     local success, result = _G.global_env.pquery(query_create)
