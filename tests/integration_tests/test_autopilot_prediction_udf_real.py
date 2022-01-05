@@ -2,7 +2,7 @@ import json
 import pytest
 import pandas as pd
 from typing import Dict
-from exasol_sagemaker_extension.autopilot_prediction import \
+from exasol_sagemaker_extension.autopilot_prediction_udf import \
     AutopilotPredictionUDF
 from tests.integration_tests.utils.parameters import aws_params, setup_params
 
