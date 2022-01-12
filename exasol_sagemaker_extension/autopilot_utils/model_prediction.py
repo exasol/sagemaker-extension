@@ -20,12 +20,11 @@ class AutopilotPrediction:
 
         # create dataframe from predictions
         prediction_df = pd.DataFrame(
-            list(map(lambda x: x[0], predictions)), columns=["predictions"])
+            [pred[0] for pred in predictions], columns=["predictions"])
 
         # add prediction probabilities for classification problems
         if len(predictions[0]) > 1:
-            prediction_df["probabilities"] = \
-                list(map(lambda x: x[1], predictions))
+            prediction_df["probabilities"] = [pred[1] for pred in predictions]
 
             # order columns, the last column must be "predictions"
             prediction_df = prediction_df[["probabilities", "predictions"]]

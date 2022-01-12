@@ -1,9 +1,12 @@
-# SageMaker Extension 0.3.0, released 2021-XX-XX
+# SageMaker Extension 0.3.0, released 2022-01-12
 
-Code name:  
+Code name: Add probabilities associated with the classification predictions
 
 ## Summary
 
+This release provides predicted probabilities associated with the outcomes of 
+classification problem types. Furthermore, this release makes batch_size, which 
+is used in batch predictions, configurable.
 
 ### Features
 
