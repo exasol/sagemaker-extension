@@ -5,23 +5,31 @@ from tests.integration_tests.utils.parameters import aws_params, \
 
 @pytest.mark.skipif(not aws_params.aws_access_key,
                     reason="AWS credentials are not set")
-def test_predict_autopilot_udf(
-         deploy_scripts, setup_database):
+def test_predict_autopilot_regression_udf(
+         register_language_container, deploy_scripts, setup_database):
 
-    problem_types_dict = {
-        'regression': {
-            'setup_params': reg_setup_params,
-            'query': """SELECT "{schema}"."{udf_name}"(1,1)""",
-        },
-        'classification': {
-            'setup_params': cls_setup_params,
-            'query': """SELECT "{schema}"."{udf_name}"(3,4)"""
-        }
+    params_dict = {
+        'setup_params': reg_setup_params,
+        'query': """SELECT "{schema}"."{udf_name}"(1,1)"""
     }
+    _run_test(
+        params_dict['setup_params'],
+        params_dict['query'],
+        setup_database)
 
-    for _, params in problem_types_dict.items():
-        _run_test(
-            params['setup_params'], params['query'], setup_database)
+
+@pytest.mark.skipif(not aws_params.aws_access_key,
+                    reason="AWS credentials are not set")
+def test_predict_autopilot_classification_udf(
+        register_language_container, deploy_scripts, setup_database):
+    params_dict = {
+        'setup_params': cls_setup_params,
+        'query': """SELECT "{schema}"."{udf_name}"(3,4)"""
+    }
+    _run_test(
+        params_dict['setup_params'],
+        params_dict['query'],
+        setup_database)
 
 
 def _run_test(setup_params, query, db_conn):

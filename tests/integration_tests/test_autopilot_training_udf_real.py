@@ -1,4 +1,3 @@
-import os
 import pytest
 from typing import Dict
 from exasol_sagemaker_extension.autopilot_training_udf import \
@@ -63,24 +62,30 @@ class Context:
 
 @pytest.mark.skipif(not aws_params.aws_access_key,
                     reason="AWS credentials are not set")
-def test_autopilot_training_udf_real():
-    problem_types_dict = {
-        'regression': {
-            'setup_params': reg_setup_params,
-            'problem_params': {
-                "problem_type": "Regression",
-                "objective": '{"MetricName":"MSE"}'
-            }},
-        'classification': {
-            'setup_params': cls_setup_params,
-            'problem_params': {
-                "problem_type": "BinaryClassification",
-                "objective": '{"MetricName":"Accuracy"}'
-            }}
+def test_autopilot_regression_training_udf_real():
+    params_dict = {
+        'setup_params': reg_setup_params,
+        'problem_params': {
+            "problem_type": "Regression",
+            "objective": '{"MetricName":"MSE"}'}
     }
+    _run_test(
+        params_dict['setup_params'],
+        params_dict['problem_params'])
 
-    for _, params in problem_types_dict.items():
-        _run_test(params['setup_params'], params['problem_params'])
+
+@pytest.mark.skipif(not aws_params.aws_access_key,
+                    reason="AWS credentials are not set")
+def test_autopilot_classification_training_udf_real():
+    params_dict = {
+        'setup_params': cls_setup_params,
+        'problem_params': {
+            "problem_type": "BinaryClassification",
+            "objective": '{"MetricName":"Accuracy"}'}
+    }
+    _run_test(
+        params_dict['setup_params'],
+        params_dict['problem_params'])
 
 
 def _run_test(setup_params, problem_params):

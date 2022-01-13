@@ -47,7 +47,7 @@ def get_regression_setup_params():
         target_col="output_col",
         data=[f"({i * 1.1}, {i * 1.2}, {i * 10})" for i in range(1, 1000)],
         aws_output_path="test_reg_path",
-        job_name="regtestjob5",
+        job_name="regtestjob8",
         endpoint_name="regtestjobendpoint",
         batch_size=10
     )
@@ -64,7 +64,7 @@ def get_classification_setup_params():
         target_col="output_col",
         data=[f"({i * 1.1}, {i * 1.2}, {i % 2})" for i in range(1, 1000)],
         aws_output_path="test_cls_path",
-        job_name="clstestjob5",
+        job_name="clstestjob8",
         endpoint_name="clstestjobendpoint",
         batch_size=10
     )

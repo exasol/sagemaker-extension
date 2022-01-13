@@ -42,10 +42,14 @@ class Context:
 
 @pytest.mark.skipif(not aws_params.aws_access_key,
                     reason="AWS credentials are not set")
-def test_autopilot_training_status_udf_real():
+def test_poll_autopilot_regression_training_status_udf_real():
+    _run_test(reg_setup_params)
 
-    for setup_params in [reg_setup_params, cls_setup_params]:
-        _run_test(setup_params)
+
+@pytest.mark.skipif(not aws_params.aws_access_key,
+                    reason="AWS credentials are not set")
+def test_poll_autopilot_classification_training_status_udf_real():
+    _run_test(cls_setup_params)
 
 
 def _run_test(setup_params):

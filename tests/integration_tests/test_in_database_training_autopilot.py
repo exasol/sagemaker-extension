@@ -6,27 +6,36 @@ from tests.integration_tests.utils.parameters import aws_params, \
 
 @pytest.mark.skipif(not aws_params.aws_access_key,
                     reason="AWS credentials are not set")
-def test_train_with_sagemaker_autopilot(
+def test_train_with_sagemaker_autopilot_regression_job(
         register_language_container, deploy_scripts, setup_database):
 
-    problem_types_dict = {
-        'regression': {
-            'setup_params': reg_setup_params,
-            'problem_params': {
-                "problem_type" : "Regression",
-                "objective" : '{"MetricName":"MSE"}'
-            }},
-        'classification' : {
-            'setup_params': cls_setup_params,
-            'problem_params': {
-                "problem_type" : "BinaryClassification",
-                "objective" : '{"MetricName":"Accuracy"}'
-            }}
+    params_dict = {
+        'setup_params': reg_setup_params,
+        'problem_params': {
+            "problem_type": "Regression",
+            "objective": '{"MetricName":"MSE"}'}
     }
+    _run_test(
+        params_dict['setup_params'],
+        params_dict['problem_params'],
+        setup_database)
 
-    for _, params in problem_types_dict.items():
-        _run_test(
-            params['setup_params'], params['problem_params'], setup_database)
+
+@pytest.mark.skipif(not aws_params.aws_access_key,
+                    reason="AWS credentials are not set")
+def test_train_with_sagemaker_autopilot_classification_job(
+        register_language_container, deploy_scripts, setup_database):
+
+    params_dict = {
+        'setup_params': cls_setup_params,
+        'problem_params': {
+            "problem_type": "BinaryClassification",
+            "objective": '{"MetricName":"F1"}'}
+    }
+    _run_test(
+        params_dict['setup_params'],
+        params_dict['problem_params'],
+        setup_database)
 
 
 def _run_test(setup_params, problem_params, db_conn):

@@ -5,11 +5,16 @@ from tests.integration_tests.utils.parameters import aws_params, \
 
 @pytest.mark.skipif(not aws_params.aws_access_key,
                     reason="AWS credentials are not set")
-def test_poll_sagemaker_autopilot_job_status(
+def test_poll_sagemaker_autopilot_regression_job_status(
         register_language_container, deploy_scripts, setup_database):
+    _run_test(reg_setup_params, setup_database)
 
-    for setup_params in [reg_setup_params, cls_setup_params]:
-        _run_test(setup_params, setup_database)
+
+@pytest.mark.skipif(not aws_params.aws_access_key,
+                    reason="AWS credentials are not set")
+def test_poll_sagemaker_autopilot_classification_job_status(
+        register_language_container, deploy_scripts, setup_database):
+    _run_test(cls_setup_params, setup_database)
 
 
 def _run_test(setup_params, db_conn):
