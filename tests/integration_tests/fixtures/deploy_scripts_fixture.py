@@ -1,6 +1,6 @@
 import pytest
 from exasol_sagemaker_extension.deployment import deploy_cli
-from tests.integration_tests.utils.parameters import db_params, setup_params
+from tests.integration_tests.utils.parameters import db_params, reg_setup_params
 
 
 @pytest.fixture(scope="session")
@@ -10,6 +10,6 @@ def deploy_scripts():
         "--port", db_params.port,
         "--user", db_params.user,
         "--pass", db_params.password,
-        "--schema", setup_params.schema_name
+        "--schema", reg_setup_params.schema_name
     ]
     deploy_cli.main(args_list)
