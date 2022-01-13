@@ -64,7 +64,7 @@ function M.get_udf_params(metadata_row, endpoint_problem_type)
 	local output_params = {}
 	local target_param = nil
 	local prediction_column_name = 'PREDICTIONS'
-	local probability_column_name = 'PROBABILITIES'
+	local probability_column_name = 'PROBABILITY'
 	for i=1, #col_names_list do
 		if col_names_list[i] ~= target_column then
 			input_params[#input_params+1]=col_names_list[i] .. ' ' .. col_types_list[i]
@@ -75,7 +75,7 @@ function M.get_udf_params(metadata_row, endpoint_problem_type)
 		end
 	end
 
-	-- last two output columns must be  'PROBABILITIES' and  'PREDICTIONS', respectively
+	-- last two output columns must be  'PROBABILITY' and  'PREDICTIONS', respectively
 	if endpoint_problem_type ~= 'Regression' then
 		output_params[#output_params+1] = probability_column_name .. ' ' .. 'DECIMAL(18,4)'
 	end

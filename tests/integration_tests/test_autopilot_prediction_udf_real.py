@@ -124,7 +124,7 @@ def test_classification_autopilot_prediction_udf_real():
         Column("COL_1", float, "FLOAT"),
         Column("COL_2", float, "FLOAT")]
     output_cols = [
-        Column("PROBABILITIES", float, "FLOAT"),
+        Column("PROBABILITY", float, "FLOAT"),
         Column("OUTPUT_COL", float, "FLOAT")]
     meta = MetaData(
         input_columns=input_cols,

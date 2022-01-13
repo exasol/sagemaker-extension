@@ -22,11 +22,11 @@ class AutopilotPrediction:
         prediction_df = pd.DataFrame(
             [pred[0] for pred in predictions], columns=["predictions"])
 
-        # add prediction probabilities for classification problems
+        # add prediction probability for classification problems
         if len(predictions[0]) > 1:
-            prediction_df["probabilities"] = [pred[1] for pred in predictions]
+            prediction_df["probability"] = [pred[1] for pred in predictions]
 
             # order columns, the last column must be "predictions"
-            prediction_df = prediction_df[["probabilities", "predictions"]]
+            prediction_df = prediction_df[["probability", "predictions"]]
 
         return prediction_df
