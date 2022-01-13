@@ -2,7 +2,8 @@ import pytest
 from typing import Dict
 from exasol_sagemaker_extension.autopilot_endpoint_deletion_udf import \
     AutopilotEndpointDeletionUDF
-from tests.integration_tests.utils.parameters import aws_params, setup_params
+from tests.integration_tests.utils.parameters import aws_params, \
+    reg_setup_params, cls_setup_params
 
 
 class Connection:
@@ -43,9 +44,14 @@ class Context:
                     reason="AWS credentials are not set")
 def test_autopilot_endpoint_deployment_udf_real():
 
+    for setup_params in [reg_setup_params, cls_setup_params]:
+        _run_test(setup_params)
+
+
+def _run_test(setup_params):
     ctx = Context(
         setup_params.endpoint_name,
-        setup_params.aws_conn_name,
+        aws_params.aws_conn_name,
         aws_params.aws_region
     )
 
@@ -53,7 +59,7 @@ def test_autopilot_endpoint_deployment_udf_real():
         address=aws_params.aws_s3_uri,
         user=aws_params.aws_key_id,
         password=aws_params.aws_access_key)
-    exa = ExaEnvironment({setup_params.aws_conn_name: aws_s3_connection})
+    exa = ExaEnvironment({aws_params.aws_conn_name: aws_s3_connection})
     autopilot_endpoint_deletion_obj = AutopilotEndpointDeletionUDF(exa)
     autopilot_endpoint_deletion_obj.run(ctx)
     assert ctx.get_emitted()
