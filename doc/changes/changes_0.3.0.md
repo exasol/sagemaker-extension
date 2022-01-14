@@ -1,4 +1,4 @@
-# SageMaker Extension 0.3.0, released 2022-01-12
+# SageMaker Extension 0.3.0, released 2022-01-14
 
 Code name: Add probabilities associated with the classification predictions
 
