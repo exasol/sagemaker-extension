@@ -2,7 +2,8 @@ import pytest
 from typing import Dict
 from exasol_sagemaker_extension.autopilot_job_status_polling_udf import \
     AutopilotJobStatusPollingUDF
-from tests.integration_tests.utils.parameters import aws_params, setup_params
+from tests.integration_tests.utils.parameters import aws_params, \
+    reg_setup_params, cls_setup_params
 
 
 class Connection:
@@ -41,10 +42,20 @@ class Context:
 
 @pytest.mark.skipif(not aws_params.aws_access_key,
                     reason="AWS credentials are not set")
-def test_autopilot_training_status_udf_real():
+def test_poll_autopilot_regression_training_status_udf_real():
+    _run_test(reg_setup_params)
+
+
+@pytest.mark.skipif(not aws_params.aws_access_key,
+                    reason="AWS credentials are not set")
+def test_poll_autopilot_classification_training_status_udf_real():
+    _run_test(cls_setup_params)
+
+
+def _run_test(setup_params):
     ctx = Context(
         setup_params.job_name,
-        setup_params.aws_conn_name,
+        aws_params.aws_conn_name,
         aws_params.aws_region
     )
 
@@ -52,7 +63,7 @@ def test_autopilot_training_status_udf_real():
         address=aws_params.aws_s3_uri,
         user=aws_params.aws_key_id,
         password=aws_params.aws_access_key)
-    exa = ExaEnvironment({setup_params.aws_conn_name: aws_s3_connection})
+    exa = ExaEnvironment({aws_params.aws_conn_name: aws_s3_connection})
     autopilot_training_status_udf_obj = AutopilotJobStatusPollingUDF(exa)
     autopilot_training_status_udf_obj.run(ctx)
 

@@ -1,5 +1,6 @@
 import os
 import json
+import pandas as pd
 from typing import Type
 from exasol_sagemaker_extension.autopilot_utils.model_prediction import \
     AutopilotPrediction
@@ -33,8 +34,10 @@ class AutopilotPredictionUDF:
                 data_df = ctx.get_dataframe(batch_size)
                 if data_df is None:
                     break
-                predictions = prediction_class_obj.predict(data_df)
-                data_df["predictions"] = [py_type(pred) for pred in predictions]
+                pred_df = prediction_class_obj.predict(data_df)
+                pred_df["predictions"] = \
+                    pred_df["predictions"].astype(py_type)
+                data_df = pd.concat([data_df, pred_df], axis=1, sort=False)
                 ctx.emit(data_df)
         else:
             raise Exception("The status of endpoint ({endpoint}) is "

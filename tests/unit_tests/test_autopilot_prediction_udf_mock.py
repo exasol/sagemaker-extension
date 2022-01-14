@@ -15,15 +15,16 @@ ENDPOINT_NAME = "test_model_name"
 def udf_wrapper():
     import pandas as pd
     from exasol_udf_mock_python.udf_context import UDFContext
-    from exasol_sagemaker_extension.autopilot_prediction import \
+    from exasol_sagemaker_extension.autopilot_prediction_udf import \
         AutopilotPredictionUDF
 
     class MockedAutopilotPrediction:
         def __init__(self, endpoint_name):
             pass
 
-        def predict(self, data_df: pd.DataFrame):
-            return data_df.mean(axis=1)
+        def predict(self, data_df: pd.DataFrame) -> pd.DataFrame:
+            df = pd.DataFrame(data_df.mean(axis=1), columns=["predictions"])
+            return df
 
     udf = AutopilotPredictionUDF(
         exa, "aws_s3_connection", prediction_class=MockedAutopilotPrediction)
