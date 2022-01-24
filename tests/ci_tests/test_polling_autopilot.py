@@ -1,10 +1,9 @@
-import os
-import json
 import pytest
 from datetime import datetime
+from tests.ci_tests.utils.autopilot_polling import AutopilotTestPolling
+from tests.ci_tests.utils.autopilot_training import AutopilotTestTraining
 from tests.ci_tests.utils.checkers import is_aws_credentials_not_set
-from tests.ci_tests.utils.parameters import reg_model_setup_params, aws_params, \
-    cls_model_setup_params
+from tests.ci_tests.utils.parameters import cls_model_setup_params
 
 curr_datetime = datetime.now().strftime("%y%m%d%H%M%S")
 
@@ -12,6 +11,18 @@ curr_datetime = datetime.now().strftime("%y%m%d%H%M%S")
 @pytest.mark.skipif("is_aws_credentials_not_set() == True",
                     reason="AWS credentials are not set")
 def test_poll_autopilot_job(setup_ci_test_environment):
-    # TODO 1: train new model
-    # TODO 2: poll the trained model
-    pass
+    model_name = ''.join((cls_model_setup_params.model_type, curr_datetime))
+    job_name = ''.join((model_name, 'job'))
+
+    # train
+    AutopilotTestTraining.train_autopilot_classification_job(
+        job_name, setup_ci_test_environment)
+
+    # poll
+    status = AutopilotTestPolling.poll_autopilot_job(
+        job_name,
+        cls_model_setup_params.schema_name,
+        setup_ci_test_environment)
+
+    assert len(status) == 1
+    assert len(status[0]) == 2
