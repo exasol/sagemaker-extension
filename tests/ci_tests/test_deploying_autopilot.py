@@ -36,16 +36,16 @@ def test_deploy_autopilot_endpoint(setup_ci_test_environment):
 
         time.sleep(POLLING_INTERVAL)
 
-    # deploy endpoint
-    AutopilotTestDeployment.deploy_endpoint(
-        job_name,
-        endpoint_name,
-        cls_model_setup_params,
-        setup_ci_test_environment
-    )
-
-    # assert and delete the created endpoint
     try:
+        # deploy an endpoint
+        AutopilotTestDeployment.deploy_endpoint(
+            job_name,
+            endpoint_name,
+            cls_model_setup_params,
+            setup_ci_test_environment
+        )
+
+        # assert and delete the endpoint
         all_scripts = DatabaseQueries.get_all_scripts(
             cls_model_setup_params, setup_ci_test_environment)
         assert endpoint_name in list(map(lambda x: x[0], all_scripts))

@@ -64,16 +64,16 @@ def _run_prediction_test(job_name, endpoint_name, model_setup_params, db_conn):
 
         time.sleep(POLLING_INTERVAL)
 
-    # deploy endpoint
-    AutopilotTestDeployment.deploy_endpoint(
-        job_name,
-        endpoint_name,
-        model_setup_params,
-        db_conn
-    )
-
-    # assert and delete the created endpoint
     try:
+        # deploy an endpoint
+        AutopilotTestDeployment.deploy_endpoint(
+            job_name,
+            endpoint_name,
+            model_setup_params,
+            db_conn
+        )
+
+        # assert and delete the endpoint
         predictions = AutopilotTestPrediction.predict(
             endpoint_name, model_setup_params.schema_name, db_conn)
         assert predictions
