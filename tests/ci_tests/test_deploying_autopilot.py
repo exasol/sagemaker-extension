@@ -1,22 +1,21 @@
 import time
 import pytest
 from datetime import datetime
-
 from tests.ci_tests.utils.autopilot_deletion import AutopilotTestDeletion
 from tests.ci_tests.utils.autopilot_deployment import AutopilotTestDeployment
 from tests.ci_tests.utils.autopilot_polling import AutopilotTestPolling
 from tests.ci_tests.utils.autopilot_training import AutopilotTestTraining
-from tests.ci_tests.utils.autopilot_utils import AutopilotTestUtils
+from tests.ci_tests.utils.queries import DatabaseQueries
 from tests.ci_tests.utils.checkers import is_aws_credentials_not_set
 from tests.ci_tests.utils.parameters import cls_model_setup_params
 
-POLLING_INTERVAL = 90  # seconds
+POLLING_INTERVAL = 120  # seconds
 curr_datetime = datetime.now().strftime("%y%m%d%H%M%S")
 
 
 @pytest.mark.skipif("is_aws_credentials_not_set() == True",
                     reason="AWS credentials are not set")
-def test_deploy_autopilot_job(setup_ci_test_environment):
+def test_deploy_autopilot_endpoint(setup_ci_test_environment):
     model_name = ''.join((cls_model_setup_params.model_type, curr_datetime))
     job_name = ''.join((model_name, 'job'))
     endpoint_name = ''.join((model_name, 'ep'))
@@ -47,7 +46,7 @@ def test_deploy_autopilot_job(setup_ci_test_environment):
 
     # assert and delete the created endpoint
     try:
-        all_scripts = AutopilotTestUtils.get_all_scripts(
+        all_scripts = DatabaseQueries.get_all_scripts(
             cls_model_setup_params, setup_ci_test_environment)
         assert endpoint_name in list(map(lambda x: x[0], all_scripts))
     except AssertionError as err:

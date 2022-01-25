@@ -50,6 +50,7 @@ def get_db_params():
         password="exasol"
     )
 
+
 aws_params = get_aws_params()
 db_params = get_db_params()
 
