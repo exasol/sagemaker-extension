@@ -26,10 +26,6 @@ def _make_prediction(job_name, endpoint_name, model_setup_params, db_conn):
     # poll until the training is completed
     timeout_time = time.time() + parameters.TIMEOUT
     while True:
-        if timeout_time <= time.time():
-            raise Exception("Timeout exception is raised, because the training "
-                            "takes too long to be completed.")
-
         status = AutopilotTestPolling.poll_autopilot_job(
             job_name,
             model_setup_params.schema_name,
@@ -38,6 +34,10 @@ def _make_prediction(job_name, endpoint_name, model_setup_params, db_conn):
 
         if _is_training_completed(status):
             break
+        if timeout_time <= time.time():
+            raise Exception("Timeout exception is raised, because the training "
+                            "takes too long to be completed.")
+
         time.sleep(parameters.POLLING_INTERVAL)
 
     # deploy an endpoint
