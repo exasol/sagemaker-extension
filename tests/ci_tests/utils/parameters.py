@@ -1,6 +1,10 @@
 from collections import namedtuple
 
 
+POLLING_INTERVAL = 3*60  # seconds
+TIMEOUT = 45*60  # seconds
+
+
 ModelSetupParams = namedtuple("ModelSetupParams", [
     "model_type", "schema_name", "table_name", "target_col",
     "data",  "aws_output_path", "batch_size"])

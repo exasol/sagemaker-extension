@@ -70,9 +70,21 @@ def _create_aws_s3_bucket():
         print("'BucketAlreadyOwnedByYou' expectexception is handled")
 
 
+def _remove_aws_s3_bucket():
+    s3_client = boto3.client('s3')
+    s3_resource = boto3.resource('s3')
+
+    buckets = s3_client.list_buckets()
+    for bucket in buckets['Buckets']:
+        s3_bucket = s3_resource.Bucket(bucket['Name'])
+        s3_bucket.objects.all().delete()
+        s3_bucket.delete()
+
+
 @pytest.fixture(scope="session")
 def prepare_ci_test_environment(db_conn):
     _setup_database(db_conn)
     _create_aws_connection(db_conn)
     _create_aws_s3_bucket()
-    return db_conn
+    yield db_conn
+    _remove_aws_s3_bucket()
