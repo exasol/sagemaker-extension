@@ -1,8 +1,8 @@
 from collections import namedtuple
 
 
-POLLING_INTERVAL = 3*60  # seconds
-TIMEOUT = 45*60  # seconds
+POLLING_INTERVAL = 5*60  # seconds
+TIMEOUT = 90*60  # seconds
 
 
 ModelSetupParams = namedtuple("ModelSetupParams", [

@@ -5,7 +5,7 @@ from exasol_sagemaker_extension.autopilot_endpoint_deployment_udf import \
 from tests.integration_tests.utils.parameters import aws_params, \
     reg_setup_params, cls_setup_params
 
-INSTANCE_TYPE = "ml.m5.large"
+INSTANCE_TYPE = "ml.t3.medium"
 INSTANCE_COUNT = 1
 
 

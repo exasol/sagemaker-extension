@@ -9,7 +9,7 @@ from exasol_udf_mock_python.udf_mock_executor import UDFMockExecutor
 
 JOB_NAME = "testModel"
 ENDPOINT_NAME = "testEndpoint"
-INSTANCE_TYPE = "ml.m5.large"
+INSTANCE_TYPE = "ml.t3.medium"
 INSTANCE_COUNT = 1
 
 

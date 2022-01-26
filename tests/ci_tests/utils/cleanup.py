@@ -14,8 +14,7 @@ def cleanup(func):
             raise pytest.fail(exc)
         finally:
             print("Delete the created endpoint")
-            AutopilotTestDeletion.delete_endpoint(
-                endpoint_name, model_setup_params, db_conn)
+            AutopilotTestDeletion.delete_endpoint_via_api(endpoint_name)
 
     return wrapper
 
