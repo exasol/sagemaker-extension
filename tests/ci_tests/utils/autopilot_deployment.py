@@ -2,7 +2,7 @@ import os
 
 from tests.ci_tests.utils.parameters import aws_params
 
-INSTANCE_TYPE = "ml.t3.medium"
+INSTANCE_TYPE = "ml.c5.large"
 INSTANCE_COUNT = 1
 
 
