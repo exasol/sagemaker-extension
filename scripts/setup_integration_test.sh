@@ -26,9 +26,11 @@ function checkout_exasol_test_container {
 function spawn_exasol_environment {
   cnt_func=$((cnt_func+1))
   echo -e "${YEL} Step-$cnt_func: ${GRA} Spawn Exasol environment ${NC}"
-  ./integration-test-docker-environment/start-test-env spawn-test-environment \
+  pushd "integration-test-docker-environment"
+  ./start-test-env spawn-test-environment \
     --environment-name test --database-port-forward 9563 \
     --bucketfs-port-forward 6666 --db-mem-size 4GB
+  popd
 }
 
 function create_docker_network {
