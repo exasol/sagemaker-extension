@@ -18,11 +18,16 @@ class BaseCreateStatementGenerator:
     :param create_statement_template_text: Template of the create statement to
     which the bundled scripts will be inserted.
     """
-    def __init__(self, lua_src_files: List[str], modules: List[str],
-                 create_statement_template_text: str):
+    def __init__(
+            self,
+            lua_src_files: List[str],
+            modules: List[str],
+            create_statement_path: str,
+            create_statement_template_text: str):
         self._lua_copy_source_list = lua_src_files
         self._lua_modules = modules
         self._lua_modules_str = " ".join(modules)
+        self._create_statement_path = create_statement_path
         self._create_statement_template_text = create_statement_template_text
 
     def _copy_lua_source_files(self, tmp_dir: str):
@@ -84,3 +89,8 @@ class BaseCreateStatementGenerator:
 
         return stmt
 
+    def save_statement(self):
+        stmt = self.get_statement()
+        with open(self._create_statement_path, "w") as file:
+            file.write(stmt)
+            logger.debug(f"The create statement saved.")
