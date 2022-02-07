@@ -33,7 +33,9 @@ def test_deploy_create_statements(db_conn, register_language_container):
         db_user=db_params.user,
         db_pass=db_params.password,
         schema=DB_SCHEMA,
-        to_print=False
+        to_print=False,
+        develop=False,
+        regenerate_scripts=False
     )
 
     deployer.run()

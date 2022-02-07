@@ -20,7 +20,7 @@ AUTOPILOT_ENDPOINT_DELETION_UDF_NAME = \
     "SME_AUTOPILOT_ENDPOINT_DELETION_UDF"
 
 
-def get_all_schemas(db_conn, ):
+def get_all_schemas(db_conn):
     query_all_schemas = """SELECT SCHEMA_NAME FROM EXA_ALL_SCHEMAS"""
     all_schemas = db_conn.execute(query_all_schemas).fetchall()
     return list(map(lambda x: x[0], all_schemas))
