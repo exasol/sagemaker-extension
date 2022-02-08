@@ -1,6 +1,5 @@
 import logging
 import pyexasol
-from typing import Dict
 from exasol_sagemaker_extension.deployment import constants
 from exasol_sagemaker_extension.deployment.\
     generate_create_statement_autopilot_endpoint_deletion \
@@ -25,8 +24,7 @@ class DeployCreateStatements:
     """
 
     def __init__(self, db_host: str, db_port: str, db_user: str, db_pass: str,
-                 schema: str, to_print: bool, develop: bool,
-                 regenerate_scripts: bool):
+                 schema: str, to_print: bool, develop: bool):
         self._db_host = db_host
         self._db_port = db_port
         self._db_user = db_user
@@ -34,15 +32,12 @@ class DeployCreateStatements:
         self._schema = schema
         self._to_print = to_print
         self._develop = develop
-        self._regenerate_scripts = regenerate_scripts
-
-        if not self._regenerate_scripts:
-            self.__exasol_conn = pyexasol.connect(
-                dsn="{host}:{port}".format(
-                    host=self._db_host, port=self._db_port),
-                user=self._db_user,
-                password=self._db_pass,
-                compression=True)
+        self.__exasol_conn = pyexasol.connect(
+            dsn="{host}:{port}".format(
+                host=self._db_host, port=self._db_port),
+            user=self._db_user,
+            password=self._db_pass,
+            compression=True)
 
     @property
     def statement_maps(self):
@@ -85,17 +80,15 @@ class DeployCreateStatements:
         Run the deployment by retrieving the CREATE SCRIPTS sql statements
         """
         # generate scripts from scratch
-        if self._regenerate_scripts or self._develop:
-            self._create_statements()
+        if self._develop:
+            self.create_statements()
 
         # print or execute scripts
-        if self._to_print:
-            print("\n".join(self.statement_maps.values()))
-        elif not self._regenerate_scripts:
+        if not self._to_print:
             self._open_schema()
             self._execute_statements()
         else:
-            pass
+            print("\n".join(self.statement_maps.values()))
 
     def _open_schema(self):
         """
@@ -107,7 +100,16 @@ class DeployCreateStatements:
             self.__exasol_conn.execute(query.format(schema_name=self._schema))
         logger.debug(f"Schema {self._schema} is opened")
 
-    def _create_statements(self):
+    def _execute_statements(self):
+        """
+        Executes CREATE SCRIPT sql statements on Exasol db
+        """
+        for desc, stmt in self.statement_maps.items():
+            self.__exasol_conn.execute(stmt)
+            logger.debug(f"{desc} is executed")
+
+    @staticmethod
+    def create_statements():
         """
         Creates and saves CREATE SCRIPT sql statements
         """
@@ -122,11 +124,3 @@ class DeployCreateStatements:
             stmt_generator.save_statement()
             logger.debug(f"{stmt_generator.__class__.__name__} "
                          "is created and saved.")
-
-    def _execute_statements(self):
-        """
-        Executes CREATE SCRIPT sql statements on Exasol db
-        """
-        for desc, stmt in self.statement_maps.items():
-            self.__exasol_conn.execute(stmt)
-            logger.debug(f"{desc} is executed")

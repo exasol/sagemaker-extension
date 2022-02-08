@@ -13,7 +13,7 @@ popd
 
 SRC_PATH="$REPO_DIR/exasol_sagemaker_extension"
 pushd "$SRC_PATH/deployment"
-python "deploy_cli.py"  --host='' --port='' --user='' --pass='' --schema='' --regenerate_scripts
+python "regenerate_scripts.py"
 popd
 
 touch .commit
