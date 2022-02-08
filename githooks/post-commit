@@ -11,6 +11,6 @@ if [ -a .commit ]
   then
   rm .commit
   git add "$SRC_PATH/resources/"
-  git commit --amend -C HEAD --no-verify
+  git commit --amend -C HEAD --no-verify --allow-empty
 fi
 exit
