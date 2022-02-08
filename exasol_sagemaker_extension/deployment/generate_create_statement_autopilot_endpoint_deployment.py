@@ -24,7 +24,7 @@ class AutopilotEndpointDeploymentLuaScriptCreateStatementGenerator(BaseCreateSta
             "db_metadata_reader",
             "exaerror",
             "message_expander"]
-        self._create_statement_path = constants.\
+        self._create_statement_output_path = constants.\
             CREATE_STATEMENT_AUTOPILOT_ENDPOINT_DEPLOYMENT_LUA_SCRIPT_PATH
         self._create_statement_template_text = constants.\
             CREATE_STATEMENT_TEMPLATE_AUTOPILOT_ENDPOINT_DEPLOYMENT_LUA_SCRIPT_TEXT
@@ -32,5 +32,5 @@ class AutopilotEndpointDeploymentLuaScriptCreateStatementGenerator(BaseCreateSta
         super().__init__(
             lua_src_files=self._lua_src_files,
             modules=self._modules,
-            create_statement_path=self._create_statement_path,
+            create_statement_output_path=self._create_statement_output_path,
             create_statement_template_text=self._create_statement_template_text)
