@@ -10,7 +10,7 @@ SRC_PATH="$REPO_DIR/exasol_sagemaker_extension"
 if [ -a .commit ]
   then
   rm .commit
-  git add "$SRC_PATH/resources/"
+  git add "$SRC_PATH/resources/lua/outputs/"
   git commit --amend -C HEAD --no-verify --allow-empty
 fi
 exit
