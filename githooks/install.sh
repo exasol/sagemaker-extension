@@ -40,6 +40,5 @@ copy_hook() {
 }
 
 copy_hook pre-commit pre-commit
-copy_hook post-commit post-commit
 copy_hook pre-commit post-rewrite
 copy_hook pre-push pre-push

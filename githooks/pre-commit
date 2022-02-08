@@ -16,5 +16,7 @@ pushd "$SRC_PATH/deployment"
 python "regenerate_scripts.py"
 popd
 
+git add "$SRC_PATH/resources/lua/outputs/"
+
 touch .commit
 exit
