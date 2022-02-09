@@ -8,7 +8,12 @@ packages = \
 
 package_data = \
 {'': ['*'],
- 'exasol_sagemaker_extension': ['lua/src/*', 'lua/test/*', 'resources/*']}
+ 'exasol_sagemaker_extension': ['lua/src/*',
+                                'lua/test/*',
+                                'resources/lua/outputs/*',
+                                'resources/lua/templates/*',
+                                'resources/sql/*',
+                                'resources/udf/*']}
 
 install_requires = \
 ['boto>=2.49.0,<3.0.0',

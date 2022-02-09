@@ -5,8 +5,10 @@ from exasol_sagemaker_extension.deployment.generate_create_statement_base \
     import BaseCreateStatementGenerator
 
 UTILS_PATH = PosixPath("tests/integration_tests/utils")
-CREATE_STMT_PATH = os.path.join(
-    UTILS_PATH, "create_statement_template_s3_exporting_lua_script.sql")
+CREATE_STMT_PATH = UTILS_PATH.joinpath(
+    "create_statement_s3_exporting_lua_script.sql")
+CREATE_STMT_TEMPLATE_PATH = UTILS_PATH.joinpath(
+    "create_statement_template_s3_exporting_lua_script.sql")
 
 
 class S3ExportingLuaScriptCreateStatementGenerator(BaseCreateStatementGenerator):
@@ -27,10 +29,12 @@ class S3ExportingLuaScriptCreateStatementGenerator(BaseCreateStatementGenerator)
             "aws_s3_handler",
             "exaerror",
             "message_expander"]
-        with open(CREATE_STMT_PATH, "r") as file:
+        self._create_statement_output_path = CREATE_STMT_PATH
+        with open(CREATE_STMT_TEMPLATE_PATH, "r") as file:
             self._create_statement_template_text = file.read()
 
         super().__init__(
             lua_src_files=self._lua_src_files,
             modules=self._modules,
+            create_statement_output_path=self._create_statement_output_path,
             create_statement_template_text=self._create_statement_template_text)

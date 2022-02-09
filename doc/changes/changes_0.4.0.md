@@ -11,7 +11,11 @@ Code name:
   - #34: Run real tests sequentially
 
 
+### Bug Fixes
 
+  - #56: Remove Lua dependency on deployment
+
+    
 
 
 

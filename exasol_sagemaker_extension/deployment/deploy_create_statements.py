@@ -1,6 +1,5 @@
 import logging
 import pyexasol
-from typing import Dict
 from exasol_sagemaker_extension.deployment import constants
 from exasol_sagemaker_extension.deployment.\
     generate_create_statement_autopilot_endpoint_deletion \
@@ -24,96 +23,72 @@ class DeployCreateStatements:
     that generate scripts deploying the sagemaker-extension project.
     """
 
-    def __init__(self, db_host: str, db_port: str, db_user: str,
-                 db_pass: str, schema: str, to_print: bool):
+    def __init__(self, db_host: str, db_port: str, db_user: str, db_pass: str,
+                 schema: str, to_print: bool, develop: bool):
         self._db_host = db_host
         self._db_port = db_port
         self._db_user = db_user
         self._db_pass = db_pass
         self._schema = schema
         self._to_print = to_print
+        self._develop = develop
         self.__exasol_conn = pyexasol.connect(
-            dsn="{host}:{port}".format(host=self._db_host, port=self._db_port),
+            dsn="{host}:{port}".format(
+                host=self._db_host, port=self._db_port),
             user=self._db_user,
             password=self._db_pass,
             compression=True)
+
+    @property
+    def statement_maps(self):
+        stmt_udf_texts = {
+            "Create statement of autopilot training udf":
+                constants.CREATE_STATEMENT_AUTOPILOT_TRAINING_UDF_RESOURCE_TEXT,
+            "Create statement of autopilot job status polling udf":
+                constants.CREATE_STATEMENT_AUTOPILOT_JOB_STATUS_POLLING_UDF_RESOURCE_TEXT,
+            "Create statement of autopilot endpoint deployment udf":
+                constants.CREATE_STATEMENT_AUTOPILOT_ENDPOINT_DEPLOYMENT_UDF_RESOURCE_TEXT,
+            "Create statement of autopilot endpoint deletion udf":
+                constants.CREATE_STATEMENT_AUTOPILOT_ENDPOINT_DELETION_UDF_RESOURCE_TEXT,
+        }
+
+        stmt_lua_texts = {
+            "Create statement of autopilot training lua script":
+                constants.CREATE_STATEMENT_AUTOPILOT_TRAINING_LUA_SCRIPT_PATH.
+                    read_text(),
+            "Create statement of autopilot job status polling lua script":
+                constants.CREATE_STATEMENT_AUTOPILOT_JOB_STATUS_POLLING_LUA_SCRIPT_PATH.
+                    read_text(),
+            "Create statement of autopilot endpoint deployment lua script":
+                constants.CREATE_STATEMENT_AUTOPILOT_ENDPOINT_DEPLOYMENT_LUA_SCRIPT_PATH.
+                    read_text(),
+            "Create statement of autopilot endpoint deletion lua script":
+                constants.CREATE_STATEMENT_AUTOPILOT_ENDPOINT_DELETION_LUA_SCRIPT_PATH.
+                    read_text(),
+        }
+
+        stmt_create_table_texts = {
+            "Create statement of autopilot jobs metadata table":
+                constants.CREATE_STATEMENT_AUTOPILOT_JOBS_METADATA_TABLE_RESOURCE_TEXT,
+        }
+        logger.debug(f"Create statements are obtained")
+
+        return {**stmt_udf_texts, **stmt_lua_texts, **stmt_create_table_texts}
 
     def run(self):
         """
         Run the deployment by retrieving the CREATE SCRIPTS sql statements
         """
-        statement_maps = {
-            "Create statement of autopilot training lua script":
-                self._create_autopilot_training_lua_script_statement(),
-            "Create statement of autopilot training udf":
-                constants.CREATE_STATEMENT_AUTOPILOT_TRAINING_UDF_RESOURCE_TEXT,
-            "Create statement of autopilot jobs metadata table":
-                constants.CREATE_STATEMENT_AUTOPILOT_JOBS_METADATA_TABLE_RESOURCE_TEXT,
-            "Create statement of autopilot job status polling lua script":
-                self._create_autopilot_job_status_polling_lua_script_statement(),
-            "Create statement of autopilot job status polling udf":
-                constants.CREATE_STATEMENT_AUTOPILOT_JOB_STATUS_POLLING_UDF_RESOURCE_TEXT,
-            "Create statement of autopilot endpoint deployment lua script":
-                self._create_autopilot_endpoint_deployment_lua_script_statement(),
-            "Create statement of autopilot endpoint deployment udf":
-                constants.CREATE_STATEMENT_AUTOPILOT_ENDPOINT_DEPLOYMENT_UDF_RESOURCE_TEXT,
-            "Create statement of autopilot endpoint deletion lua script":
-                self._create_autopilot_endpoint_deletion_lua_script_statement(),
-            "Create statement of autopilot endpoint deletion udf":
-                constants.CREATE_STATEMENT_AUTOPILOT_ENDPOINT_DELETION_UDF_RESOURCE_TEXT,
-        }
-        logger.debug(f"Create statements are obtained")
+        # generate scripts from scratch
+        if self._develop:
+            self.create_statements()
 
+        # print or execute scripts
         if not self._to_print:
             self._open_schema()
-            self._execute_statements(statement_maps)
+            self._execute_statements()
         else:
-            print("\n".join(statement_maps.values()))
-
-
-    def _create_autopilot_endpoint_deletion_lua_script_statement(self):
-        """
-        Generate and return an endpoint deletion CREATE SCRIPT sql statement.
-
-        :return: The deletion CREATE SCRIPT sql statement
-        """
-        statement_generator = \
-            AutopilotEndpointDeletionLuaScriptCreateStatementGenerator()
-        statement_str = statement_generator.get_statement()
-        return statement_str
-
-    def _create_autopilot_endpoint_deployment_lua_script_statement(self):
-        """
-        Generate and return an endpoint deployment CREATE SCRIPT sql statement.
-
-        :return: The deployment CREATE SCRIPT sql statement
-        """
-        statement_generator = \
-            AutopilotEndpointDeploymentLuaScriptCreateStatementGenerator()
-        statement_str = statement_generator.get_statement()
-        return statement_str
-
-    def _create_autopilot_job_status_polling_lua_script_statement(self):
-        """
-        Generate and return job status polling CREATE SCRIPT sql statement.
-
-        :return: The polling CREATE SCRIPT sql statement
-        """
-        statement_generator = \
-            AutopilotJobStatusPollingLuaScriptCreateStatementGenerator()
-        statement_str = statement_generator.get_statement()
-        return statement_str
-
-    def _create_autopilot_training_lua_script_statement(self):
-        """
-        Generate and return exporting CREATE SCRIPT sql statement.
-
-        :return: The exporting CREATE SCRIPT sql statement
-        """
-        statement_generator = \
-            AutopilotTrainingLuaScriptCreateStatementGenerator()
-        statement_str = statement_generator.get_statement()
-        return statement_str
+            print("\n".join(self.statement_maps.values()))
 
     def _open_schema(self):
         """
@@ -125,10 +100,27 @@ class DeployCreateStatements:
             self.__exasol_conn.execute(query.format(schema_name=self._schema))
         logger.debug(f"Schema {self._schema} is opened")
 
-    def _execute_statements(self, statement_list: Dict[str, str]):
+    def _execute_statements(self):
         """
         Executes CREATE SCRIPT sql statements on Exasol db
         """
-        for desc, stmt in statement_list.items():
+        for desc, stmt in self.statement_maps.items():
             self.__exasol_conn.execute(stmt)
             logger.debug(f"{desc} is executed")
+
+    @staticmethod
+    def create_statements():
+        """
+        Creates and saves CREATE SCRIPT sql statements
+        """
+        generators = [
+            AutopilotTrainingLuaScriptCreateStatementGenerator,
+            AutopilotJobStatusPollingLuaScriptCreateStatementGenerator,
+            AutopilotEndpointDeploymentLuaScriptCreateStatementGenerator,
+            AutopilotEndpointDeletionLuaScriptCreateStatementGenerator
+        ]
+        for generator in generators:
+            stmt_generator = generator()
+            stmt_generator.save_statement()
+            logger.debug(f"{stmt_generator.__class__.__name__} "
+                         "is created and saved.")

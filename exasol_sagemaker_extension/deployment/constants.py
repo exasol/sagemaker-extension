@@ -1,8 +1,10 @@
 import importlib_resources
 
-
 # set deployment paths
 BASE_DIR = importlib_resources.files("exasol_sagemaker_extension")
+RESOURCE_UDF_DIR = (BASE_DIR / "resources" / "udf")
+RESOURCE_LUA_DIR = (BASE_DIR / "resources" / "lua")
+RESOURCE_SQL_DIR = (BASE_DIR / "resources" / "sql")
 LUA_SRC_DIR = (BASE_DIR / "lua" / "src")
 
 LUA_SRC_MODULE_AUTOPILOT_TRAINING_MAIN_NAME = "autopilot_training_main.lua"
@@ -19,49 +21,74 @@ LUA_SRC_MODULE_VALIDATE_INPUT = "validate_input.lua"
 
 LUA_BUNDLED = "bundle_final.lua"
 
+# training Lua & UDF scripts paths & texts
+CREATE_STATEMENT_AUTOPILOT_TRAINING_LUA_SCRIPT_PATH = \
+    RESOURCE_LUA_DIR.joinpath("outputs").joinpath(
+        "create_statement_autopilot_training_lua_script.sql")
+CREATE_STATEMENT_TEMPLATE_AUTOPILOT_TRAINING_LUA_SCRIPT_PATH = \
+    RESOURCE_LUA_DIR.joinpath("templates").joinpath(
+        "create_statement_template_autopilot_training_lua_script.sql")
+CREATE_STATEMENT_AUTOPILOT_TRAINING_UDF_RESOURCE_PATH = \
+    RESOURCE_UDF_DIR.joinpath(
+        "create_statement_autopilot_training_udf.sql")
+CREATE_STATEMENT_TEMPLATE_AUTOPILOT_TRAINING_LUA_SCRIPT_TEXT = \
+    CREATE_STATEMENT_TEMPLATE_AUTOPILOT_TRAINING_LUA_SCRIPT_PATH. \
+        read_text()
+CREATE_STATEMENT_AUTOPILOT_TRAINING_UDF_RESOURCE_TEXT = \
+    CREATE_STATEMENT_AUTOPILOT_TRAINING_UDF_RESOURCE_PATH. \
+        read_text()
 
-CREATE_STATEMENT_TEMPLATE_AUTOPILOT_TRAINING_LUA_SCRIPT_TEXT = BASE_DIR.\
-    joinpath("resources").\
-    joinpath("create_statement_template_autopilot_training_lua_script.sql").\
-    read_text()
-CREATE_STATEMENT_AUTOPILOT_TRAINING_UDF_RESOURCE_TEXT = BASE_DIR.\
-    joinpath("resources").\
-    joinpath("create_statement_autopilot_training_udf.sql").\
-    read_text()
-
+# polling Lua & UDF scripts paths & texts
+CREATE_STATEMENT_AUTOPILOT_JOB_STATUS_POLLING_LUA_SCRIPT_PATH = \
+    RESOURCE_LUA_DIR.joinpath("outputs").joinpath(
+        "create_statement_autopilot_job_status_polling_lua_script.sql")
+CREATE_STATEMENT_TEMPLATE_AUTOPILOT_JOB_STATUS_POLLING_LUA_SCRIPT_PATH = \
+    RESOURCE_LUA_DIR.joinpath("templates").joinpath(
+        "create_statement_template_autopilot_job_status_polling_lua_script.sql")
+CREATE_STATEMENT_AUTOPILOT_JOB_STATUS_POLLING_UDF_RESOURCE_PATH = \
+    RESOURCE_UDF_DIR.joinpath(
+        "create_statement_autopilot_job_status_polling_udf.sql")
 CREATE_STATEMENT_TEMPLATE_AUTOPILOT_JOB_STATUS_POLLING_LUA_SCRIPT_TEXT = \
-    BASE_DIR.\
-        joinpath("resources").\
-        joinpath("create_statement_template_autopilot_job_status_polling_lua_script.sql").\
+    CREATE_STATEMENT_TEMPLATE_AUTOPILOT_JOB_STATUS_POLLING_LUA_SCRIPT_PATH. \
         read_text()
-CREATE_STATEMENT_AUTOPILOT_JOB_STATUS_POLLING_UDF_RESOURCE_TEXT = BASE_DIR.\
-    joinpath("resources").\
-    joinpath("create_statement_autopilot_job_status_polling_udf.sql").\
-    read_text()
+CREATE_STATEMENT_AUTOPILOT_JOB_STATUS_POLLING_UDF_RESOURCE_TEXT = \
+    CREATE_STATEMENT_AUTOPILOT_JOB_STATUS_POLLING_UDF_RESOURCE_PATH. \
+        read_text()
 
+# deployment Lua & UDF scripts paths & texts
+CREATE_STATEMENT_AUTOPILOT_ENDPOINT_DEPLOYMENT_LUA_SCRIPT_PATH = \
+    RESOURCE_LUA_DIR.joinpath("outputs").joinpath(
+        "create_statement_autopilot_endpoint_deployment_lua_script.sql")
+CREATE_STATEMENT_TEMPLATE_AUTOPILOT_ENDPOINT_DEPLOYMENT_LUA_SCRIPT_PATH = \
+    RESOURCE_LUA_DIR.joinpath("templates").joinpath(
+        "create_statement_template_autopilot_endpoint_deployment_lua_script.sql")
+CREATE_STATEMENT_AUTOPILOT_ENDPOINT_DEPLOYMENT_UDF_RESOURCE_PATH = \
+    RESOURCE_UDF_DIR.joinpath(
+        "create_statement_autopilot_endpoint_deployment_udf.sql")
 CREATE_STATEMENT_TEMPLATE_AUTOPILOT_ENDPOINT_DEPLOYMENT_LUA_SCRIPT_TEXT = \
-    BASE_DIR.\
-        joinpath("resources").\
-        joinpath("create_statement_template_autopilot_endpoint_deployment_lua_script.sql").\
+    CREATE_STATEMENT_TEMPLATE_AUTOPILOT_ENDPOINT_DEPLOYMENT_LUA_SCRIPT_PATH. \
         read_text()
-CREATE_STATEMENT_AUTOPILOT_ENDPOINT_DEPLOYMENT_UDF_RESOURCE_TEXT = BASE_DIR.\
-    joinpath("resources").\
-    joinpath("create_statement_autopilot_endpoint_deployment_udf.sql").\
-    read_text()
+CREATE_STATEMENT_AUTOPILOT_ENDPOINT_DEPLOYMENT_UDF_RESOURCE_TEXT = \
+    CREATE_STATEMENT_AUTOPILOT_ENDPOINT_DEPLOYMENT_UDF_RESOURCE_PATH.\
+        read_text()
 
+# deletion Lua & UDF scripts paths & texts
+CREATE_STATEMENT_AUTOPILOT_ENDPOINT_DELETION_LUA_SCRIPT_PATH = \
+    RESOURCE_LUA_DIR.joinpath("outputs").joinpath(
+        "create_statement_autopilot_endpoint_deletion_lua_script.sql")
+CREATE_STATEMENT_TEMPLATE_AUTOPILOT_ENDPOINT_DELETION_LUA_SCRIPT_PATH = \
+    RESOURCE_LUA_DIR.joinpath("templates").joinpath(
+        "create_statement_template_autopilot_endpoint_deletion_lua_script.sql")
+CREATE_STATEMENT_AUTOPILOT_ENDPOINT_DELETION_UDF_RESOURCE_PATH = \
+    RESOURCE_UDF_DIR.joinpath(
+        "create_statement_autopilot_endpoint_deletion_udf.sql")
 CREATE_STATEMENT_TEMPLATE_AUTOPILOT_ENDPOINT_DELETION_LUA_SCRIPT_TEXT = \
-    BASE_DIR.\
-        joinpath("resources").\
-        joinpath("create_statement_template_autopilot_endpoint_deletion_lua_script.sql").\
+    CREATE_STATEMENT_TEMPLATE_AUTOPILOT_ENDPOINT_DELETION_LUA_SCRIPT_PATH.\
         read_text()
-CREATE_STATEMENT_AUTOPILOT_ENDPOINT_DELETION_UDF_RESOURCE_TEXT = BASE_DIR.\
-    joinpath("resources").\
-    joinpath("create_statement_autopilot_endpoint_deletion_udf.sql").\
-    read_text()
+CREATE_STATEMENT_AUTOPILOT_ENDPOINT_DELETION_UDF_RESOURCE_TEXT = \
+    CREATE_STATEMENT_AUTOPILOT_ENDPOINT_DELETION_UDF_RESOURCE_PATH.\
+        read_text()
 
-CREATE_STATEMENT_AUTOPILOT_JOBS_METADATA_TABLE_RESOURCE_TEXT = BASE_DIR.\
-    joinpath("resources").\
-    joinpath("create_statement_autopilot_jobs_metadata_table.sql").\
-    read_text()
-
-
+CREATE_STATEMENT_AUTOPILOT_JOBS_METADATA_TABLE_RESOURCE_TEXT = \
+    RESOURCE_SQL_DIR.joinpath(
+        "create_statement_autopilot_jobs_metadata_table.sql").read_text()

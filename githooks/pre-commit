@@ -9,3 +9,14 @@ pushd "$REPO_DIR"
 bash "$GITHOOKS_PATH/prohibit_commit_to_main.sh"
 bash "$GITHOOKS_PATH/update_setup_py.sh"
 popd
+
+
+SRC_PATH="$REPO_DIR/exasol_sagemaker_extension"
+pushd "$SRC_PATH/deployment"
+python "regenerate_scripts.py"
+popd
+
+git add "$SRC_PATH/resources/lua/outputs/"
+
+touch .commit
+exit

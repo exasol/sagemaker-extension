@@ -19,6 +19,8 @@ def main(args):
     parser.add_argument("--schema", help="schema name", required=True)
     parser.add_argument("--print", help="print out statements",
                         required=False, action="store_true")
+    parser.add_argument("--develop",  help="generate and execute the scripts",
+                        required=False, action="store_true")
 
     args = vars(parser.parse_args(args))
     deployment = DeployCreateStatements(
@@ -27,7 +29,9 @@ def main(args):
         db_user=args['user'],
         db_pass=args['pass'],
         schema=args['schema'],
-        to_print=args['print'])
+        to_print=args['print'],
+        develop=args['develop']
+    )
     deployment.run()
 
 
