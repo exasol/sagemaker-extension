@@ -34,7 +34,7 @@ def get_aws_params():
     AWSParams = namedtuple("AWSParams", [
         "aws_bucket", "aws_s3_uri", "aws_bucket_uri",  "aws_conn_name"])
 
-    aws_bucket_name = "sme-ci-bucket"
+    aws_bucket_name = "persistent-sme-ci-bucket"
     return AWSParams(
         aws_bucket=aws_bucket_name,
         aws_s3_uri=f"https://{aws_bucket_name}.s3.amazonaws.com",

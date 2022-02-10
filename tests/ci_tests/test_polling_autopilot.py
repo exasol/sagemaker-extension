@@ -5,12 +5,11 @@ from tests.ci_tests.utils.autopilot_training import AutopilotTestTraining
 from tests.ci_tests.utils.checkers import is_aws_credentials_not_set
 from tests.ci_tests.utils.parameters import cls_model_setup_params
 
-curr_datetime = datetime.now().strftime("%y%m%d%H%M%S")
-
 
 @pytest.mark.skipif("is_aws_credentials_not_set() == True",
                     reason="AWS credentials are not set")
 def test_poll_autopilot_job(setup_ci_test_environment):
+    curr_datetime = datetime.now().strftime("%y%m%d%H%M%S")
     model_name = ''.join((cls_model_setup_params.model_type, curr_datetime))
     job_name = ''.join((model_name, 'job'))
 

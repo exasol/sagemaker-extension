@@ -67,18 +67,14 @@ def _create_aws_s3_bucket():
                 'LocationConstraint': os.environ["AWS_REGION"]}
         )
     except s3_client.exceptions.BucketAlreadyOwnedByYou as ex:
-        print("'BucketAlreadyOwnedByYou' expectexception is handled")
+        print("'BucketAlreadyOwnedByYou' exception is handled")
 
 
 def _remove_aws_s3_bucket():
-    s3_client = boto3.client('s3')
-    s3_resource = boto3.resource('s3')
+    s3_client = boto3.resource('s3')
 
-    buckets = s3_client.list_buckets()
-    for bucket in buckets['Buckets']:
-        s3_bucket = s3_resource.Bucket(bucket['Name'])
-        s3_bucket.objects.all().delete()
-        s3_bucket.delete()
+    bucket = s3_client.Bucket(aws_params.aws_bucket)
+    bucket.objects.all().delete()
 
 
 @pytest.fixture(scope="session")
