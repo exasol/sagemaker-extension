@@ -37,8 +37,12 @@ jobs:
           sudo luarocks install luacheck
           sudo luarocks install luacov
 
-      - name: Setup integration test environment
-        run: ./scripts/setup_integration_test.sh
+      - name: Checkout test environment
+        run: git clone https://github.com/exasol/integration-test-docker-environment.git
+        working-directory: ..
+      - name: Spawn EXASOL environement
+        run: ./start-test-env spawn-test-environment --environment-name test --database-port-forward 9563 --bucketfs-port-forward 6666 --db-mem-size 4GB --nameserver 8.8.8.8
+        working-directory: ../integration-test-docker-environment
 
       - name: Poetry run pytest ci-tests
         run: poetry run pytest tests/ci_tests/
