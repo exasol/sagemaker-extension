@@ -20,6 +20,6 @@ class AutopilotTestDeployment:
                    instance_type=INSTANCE_TYPE,
                    instance_count=INSTANCE_COUNT,
                    aws_conn_name=aws_params.aws_conn_name,
-                   aws_region=os.environ["AWS_REGION"])
+                   aws_region=os.environ["AWS_DEFAULT_REGION"])
 
         db_conn.execute(query_deployment)

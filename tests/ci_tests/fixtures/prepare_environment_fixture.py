@@ -64,7 +64,7 @@ def _create_aws_s3_bucket():
         s3_client.create_bucket(
             Bucket=aws_params.aws_bucket,
             CreateBucketConfiguration={
-                'LocationConstraint': os.environ["AWS_REGION"]}
+                'LocationConstraint': os.environ["AWS_DEFAULT_REGION"]}
         )
     except s3_client.exceptions.BucketAlreadyOwnedByYou as ex:
         print("'BucketAlreadyOwnedByYou' exception is handled")
