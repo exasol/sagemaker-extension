@@ -53,5 +53,5 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_ROLE: ${{ secrets.AWS_ROLE }}
           AWS_DEFAULT_REGION: "eu-central-1"
-        run: poetry run pytest tests/ci_tests
+        run: poetry run pytest tests/ci_tests -s
 
