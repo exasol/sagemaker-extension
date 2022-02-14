@@ -9,6 +9,7 @@ jobs:
       matrix:
         python-version: [3.6]
     runs-on: ubuntu-latest
+    environment: aws
 
     steps:
       - uses: actions/checkout@v2
