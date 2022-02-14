@@ -279,7 +279,10 @@
             "Action": [
                 "iam:PassRole"
             ],
-            "Resource": "arn:aws:iam::*:role/*",
+            "Resource": [
+                "arn:aws:iam::*:role/*",
+                "arn:aws:iam::*:role/protected-*"
+            ],
             "Condition": {
                 "StringEquals": {
                     "iam:PassedToService": "sagemaker.amazonaws.com"
