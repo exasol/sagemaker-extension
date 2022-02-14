@@ -29,7 +29,7 @@ function spawn_exasol_environment {
   pushd "integration-test-docker-environment"
   ./start-test-env spawn-test-environment \
     --environment-name test --database-port-forward 9563 \
-    --bucketfs-port-forward 6666 --db-mem-size 4GB
+    --bucketfs-port-forward 6666 --db-mem-size 4GB --nameserver 8.8.8.8
   popd
 }
 
