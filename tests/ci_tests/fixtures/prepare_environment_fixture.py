@@ -59,7 +59,11 @@ def _create_aws_connection(conn):
 
 
 def _create_aws_s3_bucket():
-    s3_client = boto3.client('s3')
+    s3_client = boto3.client(
+        's3',
+        aws_access_key_id=os.environ["AWS_ACCESS_KEY_ID"],
+        aws_secret_access_key=os.environ["AWS_SECRET_ACCESS_KEY"],
+        region_name=os.environ["AWS_DEFAULT_REGION"])
     try:
         s3_client.create_bucket(
             Bucket=aws_params.aws_bucket,
@@ -71,7 +75,12 @@ def _create_aws_s3_bucket():
 
 
 def _remove_aws_s3_bucket():
-    s3_client = boto3.resource('s3')
+    s3_client = boto3.resource(
+        's3',
+        aws_access_key_id=os.environ["AWS_ACCESS_KEY_ID"],
+        aws_secret_access_key=os.environ["AWS_SECRET_ACCESS_KEY"],
+        region_name=os.environ["AWS_DEFAULT_REGION"]
+    )
 
     bucket = s3_client.Bucket(aws_params.aws_bucket)
     bucket.objects.all().delete()
