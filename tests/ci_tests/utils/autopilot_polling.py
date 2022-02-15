@@ -12,7 +12,7 @@ class AutopilotTestPolling:
             format(schema=schema_name,
                    job_name=job_name,
                    aws_conn_name=aws_params.aws_conn_name,
-                   aws_region=os.environ["AWS_REGION"])
+                   aws_region=os.environ["AWS_DEFAULT_REGION"])
 
         status = db_conn.execute(query_polling).fetchall()
         return status

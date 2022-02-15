@@ -10,8 +10,6 @@ from tests.ci_tests.utils.checkers import is_aws_credentials_not_set
 from tests.ci_tests.utils.parameters import cls_model_setup_params
 from tests.ci_tests.utils import parameters
 
-curr_datetime = datetime.now().strftime("%y%m%d%H%M%S")
-
 
 def _is_training_completed(status):
     return len(status) == 1 and \
@@ -56,6 +54,7 @@ def _deploy_endpoint(job_name, endpoint_name, model_setup_params, db_conn):
 @pytest.mark.skipif("is_aws_credentials_not_set() == True",
                     reason="AWS credentials are not set")
 def test_deploy_autopilot_endpoint(setup_ci_test_environment):
+    curr_datetime = datetime.now().strftime("%y%m%d%H%M%S")
     model_name = ''.join((cls_model_setup_params.model_type, curr_datetime))
     job_name = ''.join((model_name, 'job'))
     endpoint_name = ''.join((model_name, 'ep'))

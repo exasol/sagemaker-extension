@@ -36,7 +36,7 @@ class AutopilotTestTraining:
         params_dict = {
             "job_name"							: self._job_name,
             "aws_credentials_connection_name"	: aws_params.aws_conn_name,
-            "aws_region"						: os.environ["AWS_REGION"],
+            "aws_region"						: os.environ["AWS_DEFAULT_REGION"],
             "iam_sagemaker_role"				: os.environ["AWS_ROLE"],
             "s3_bucket_uri"						: aws_params.aws_bucket_uri,
             "s3_output_path"					: setup_params.aws_output_path,

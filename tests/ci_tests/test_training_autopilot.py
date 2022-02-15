@@ -7,13 +7,10 @@ from tests.ci_tests.utils.parameters import reg_model_setup_params, \
     cls_model_setup_params
 
 
-# generate unique model name
-curr_datetime = datetime.now().strftime("%y%m%d%H%M%S")
-
-
 @pytest.mark.skipif("is_aws_credentials_not_set() == True",
                     reason="AWS credentials are not set")
 def test_train_autopilot_regression_job(setup_ci_test_environment):
+    curr_datetime = datetime.now().strftime("%y%m%d%H%M%S")
     model_name = ''.join((reg_model_setup_params.model_type, curr_datetime))
     job_name = ''.join((model_name, 'job'))
 
@@ -28,6 +25,7 @@ def test_train_autopilot_regression_job(setup_ci_test_environment):
 @pytest.mark.skipif("is_aws_credentials_not_set() == True",
                     reason="AWS credentials are not set")
 def test_train_autopilot_classification_job(setup_ci_test_environment):
+    curr_datetime = datetime.now().strftime("%y%m%d%H%M%S")
     model_name = ''.join((cls_model_setup_params.model_type, curr_datetime))
     job_name = ''.join((model_name, 'job'))
 
