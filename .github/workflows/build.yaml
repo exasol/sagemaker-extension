@@ -46,12 +46,19 @@ jobs:
       - name: Poetry run pytest integration tests
         run: poetry run pytest tests
 
-      - name: Poetry run pytest AWS-tests
-        if: "contains(github.event.head_commit.message, '[ci]')"
+
+      - name: Fail, if AWS-tests are not activated
+        if: "!contains(github.event.head_commit.message, '[run aws tests]')"
+        run: |
+          echo "Failed, because AWS-tests are not activated"
+          exit 1
+      - name: Run AWS-tests if it is activated
+        if: "contains(github.event.head_commit.message, '[run aws tests]')"
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_ROLE: ${{ secrets.AWS_ROLE }}
           AWS_DEFAULT_REGION: "eu-central-1"
         run: poetry run pytest tests/ci_tests -s
+
 
