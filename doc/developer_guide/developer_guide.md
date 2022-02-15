@@ -81,6 +81,18 @@ To run all the tests in the project use:
 poetry run pytest tests
 ```
 
+In order for these tests to run in the integration of the codes, the commit 
+message  ust contain the following statement `[run aws tests]`. For example:
+```bash
+git commit -m "[run aws tests]"
+```
+
+Please note that, every commit that does not contain this statement does not run 
+the `ci-tests`;  as a result of that not  all the tests can be validated. In 
+order not to miss this situation, We deliberately get GitHub-workflows failed. 
+Only when all tests including `ci-tests` are validated, then the workflows will 
+be successful. 
+
 ### 3. Continuous Integration (CI) Tets
 The Continuous integration tests are gathered under the `tests/ci-tests` 
 directory. In order to use these tests in development machine, you must set AWS 
