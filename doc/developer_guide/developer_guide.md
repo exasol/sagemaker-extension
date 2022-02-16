@@ -57,6 +57,10 @@ Note that, these scripts are regenerated from scratch at each commit,
 by the help of the `regenerate_scripts.py` script executed in the `pre-commit` 
 hook script.
 
+Please run the `./githooks/install.sh` script which installs the Github hooks 
+after cloning the project. This makes the necessary githooks available in your 
+development environment.
+
 ## Running the Tests
 
 ### 1. Lua Tests
@@ -82,10 +86,10 @@ To run all the tests in the project use:
 poetry run pytest tests
 ```
 
-### 3. Continuous Integration (CI) Tets
-The Continuous integration tests are gathered under the `tests/ci-tests` 
-directory. In order to use these tests in development machine, you must set AWS 
-credentials in the os environment, since they use the real AWS services. 
+### 3. AWS Tets
+The AWS tests are gathered under the `tests/ci-tests` directory. These test use 
+the real AWS services. Therefore, you must set AWS credentials in the os 
+environment in order to use  these tests in development machine. 
 ```commandline
 export AWS_ACCESS_KEY_ID=<AWS_ACCESS_KEY_ID>
 export AWS_SECRET_ACCESS_KEY=<AWS_SECRET_ACCESS_KEY>
@@ -97,8 +101,7 @@ After that, you can run them as follows:
 poetry run pytest tests/ci_tests
 ```
 
-
-In order for these tests to run in the integration of the codes, the commit 
+In order for these tests to run in the Github Workflow, the commit 
 message must contain the following statement `[run aws tests]`. For example:
 ```bash
 git commit -m "[run aws tests]"
