@@ -31,7 +31,7 @@ python -m exasol_sagemaker_extension.deployment.deploy_cli \
     --develop
 ```
 #### 2.1. Use pre-prepared Lua scripts 
-This deployment uses all the necessary scripts of the project, which are already 
+This deployment uses all the necessary scripts of the project which are already 
 prepared in the project package. The `--develop` option is not used in this 
 deployment.
 
@@ -42,7 +42,7 @@ installed on the development  machine.
 
 
 In order to be able to install the Lua dependencies, [LuaRocks](https://luarocks.org/) 
-package manage is required. You can install luarocks as follows:
+package manager is required. You can install luarocks as follows:
 ```bash
 sudo apt-get install luarocks
 ```
@@ -54,12 +54,13 @@ luarocks install --only-deps *.rockspec
 ```
 
 Note that, these scripts are regenerated from scratch at each commit, 
-thanks to the `regenerate_scripts.py` script executed in the pre-commit script.
+by the help of the `regenerate_scripts.py` script executed in the `pre-commit` 
+hook script.
 
 ## Running the Tests
 
 ### 1. Lua Tests
-In order to run lua test you can execute the following command in the project:
+In order to run all Lua tests you can execute the following command in the project:
 ```bash
 poetry run poe lua-tests
 ```
@@ -81,18 +82,6 @@ To run all the tests in the project use:
 poetry run pytest tests
 ```
 
-In order for these tests to run in the integration of the codes, the commit 
-message  ust contain the following statement `[run aws tests]`. For example:
-```bash
-git commit -m "[run aws tests]"
-```
-
-Please note that, every commit that does not contain this statement does not run 
-the `ci-tests`;  as a result of that not  all the tests can be validated. In 
-order not to miss this situation, We deliberately get GitHub-workflows failed. 
-Only when all tests including `ci-tests` are validated, then the workflows will 
-be successful. 
-
 ### 3. Continuous Integration (CI) Tets
 The Continuous integration tests are gathered under the `tests/ci-tests` 
 directory. In order to use these tests in development machine, you must set AWS 
@@ -108,6 +97,18 @@ After that, you can run them as follows:
 poetry run pytest tests/ci_tests
 ```
 
+
+In order for these tests to run in the integration of the codes, the commit 
+message must contain the following statement `[run aws tests]`. For example:
+```bash
+git commit -m "[run aws tests]"
+```
+
+Please note that, every commit that does not contain this statement does not run 
+the `ci-tests`;  as a result of that not  all the tests can be validated. In 
+order not to miss this situation, we deliberately get GitHub-workflows failed. 
+Only when all tests including `ci-tests` are validated, then the workflows will 
+be successful. 
 
 ## Conclusion
 In the `.github/workflows` directory you can find the GitHub actions that 
