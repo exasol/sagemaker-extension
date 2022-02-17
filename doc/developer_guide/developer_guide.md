@@ -85,7 +85,7 @@ To run all the tests in the project use:
 poetry run pytest tests
 ```
 
-### 3. AWS Tets
+### 3. AWS Tests
 The AWS tests are gathered under the `tests/ci-tests` directory. These test use 
 the real AWS services. Therefore, you must set AWS credentials in the OS 
 environment in order to use  these tests in development machine. 
