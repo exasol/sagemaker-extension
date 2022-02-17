@@ -22,6 +22,10 @@ Code name:
   - #60: Added the developer guide
        
 
+
+### Refactoring
+
+  - #56: Used Click for the deployment cli script
     
 
 
