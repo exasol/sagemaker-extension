@@ -38,8 +38,7 @@ deployment.
 #### 2.2. Generate Lua scripts from scratch
 In this setup, Lua scripts are built and packaged from scratch. Therefore, this 
 deployment needs Lua interpreter Lua 5.1 or above and some Lua dependencies 
-installed on the development  machine.
-
+installed on the development machine.
 
 In order to be able to install the Lua dependencies, [LuaRocks](https://luarocks.org/) 
 package manager is required. You can install luarocks as follows:
@@ -69,7 +68,7 @@ In order to run all Lua tests you can execute the following command in the proje
 poetry run poe lua-tests
 ```
 This command runs the script `./scripts/lua_tests.sh` and not only tests all Lua 
-scripts but also perform static code analysis.
+scripts but also performs static code analysis.
 
 ### 2. Python Tests
 Python tests consist of unit tests and integration tests. In the integration 
@@ -88,7 +87,7 @@ poetry run pytest tests
 
 ### 3. AWS Tets
 The AWS tests are gathered under the `tests/ci-tests` directory. These test use 
-the real AWS services. Therefore, you must set AWS credentials in the os 
+the real AWS services. Therefore, you must set AWS credentials in the OS 
 environment in order to use  these tests in development machine. 
 ```commandline
 export AWS_ACCESS_KEY_ID=<AWS_ACCESS_KEY_ID>
@@ -108,7 +107,7 @@ git commit -m "[run aws tests]"
 ```
 
 Please note that, every commit that does not contain this statement does not run 
-the `ci-tests`;  as a result of that not  all the tests can be validated. In 
+the `ci-tests`; as a result of that not all the tests can be validated. In 
 order not to miss this situation, we deliberately get GitHub-workflows failed. 
 Only when all tests including `ci-tests` are validated, then the workflows will 
 be successful. 
