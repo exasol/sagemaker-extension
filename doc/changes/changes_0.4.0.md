@@ -9,11 +9,18 @@ Code name:
 ### Features
 
   - #34: Run real tests sequentially
+  - #9: Setup ci-isolation for integration test 
 
 
 ### Bug Fixes
 
-  - #56: Remove Lua dependency on deployment
+  - #56: Removed Lua dependency on deployment
+
+
+### Documentation
+
+  - #60: Added the developer guide
+       
 
     
 
