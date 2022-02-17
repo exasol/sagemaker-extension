@@ -17,6 +17,7 @@ package_data = \
 
 install_requires = \
 ['boto>=2.49.0,<3.0.0',
+ 'click>=8.0.3,<9.0.0',
  'importlib-resources>=5.2.0,<6.0.0',
  'localstack-client>=1.25,<2.0',
  'pandas>=1.1.3,<2.0.0',
