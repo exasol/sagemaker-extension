@@ -26,10 +26,4 @@ Furthermore, a developer guide is added, explaining how to build and test the pr
 ### Refactoring
 
   - #56: Used Click for the deployment cli script
-    
-
-
-
-
   
-    
