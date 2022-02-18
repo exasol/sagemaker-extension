@@ -18,5 +18,4 @@ popd
 
 git add "$SRC_PATH/resources/lua/outputs/"
 
-touch .commit
 exit

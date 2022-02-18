@@ -1,9 +1,13 @@
-# SageMaker Extension 0.4.0, released XXXX-XX-XX
+# SageMaker Extension 0.4.0, released 2022-02-18
 
-Code name: 
+Code name: Removed Lua dependencies on the deployment
 
 ## Summary
 
+This release removes Lua dependencies on the SageMaker-Extension deployment and 
+provides users a simpler installation. In addition, continuous integration tests 
+setup is completed, enabling us to have more reliable and maintainable releases. 
+Furthermore, a developer guide is added, explaining how to build and test the project.
 
 
 ### Features
