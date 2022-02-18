@@ -1,40 +1,37 @@
-import sys
+import click
 import logging
-import argparse
 from exasol_sagemaker_extension.deployment.deploy_create_statements \
     import DeployCreateStatements
 
 
-def main(args):
-    logging.basicConfig(
-        format='%(asctime)s - %(module)s  - %(message)s',
-        level=logging.DEBUG)
+@click.command()
+@click.option('--host', type=str, required=True, help="db host address")
+@click.option('--port', type=str, required=True, help="db host port")
+@click.option('--user', type=str, required=True, help="db user name")
+@click.option('--pass', 'pwd', required=True, help="db user password")
+@click.option('--schema', type=str, required=True, help="schema name")
+@click.option('--print', 'verbose', type=bool, required=False,
+              is_flag=True, help="print out statements")
+@click.option('--develop', type=bool, required=False,
+              is_flag=True, help="generate and execute the scripts")
+def main(host: str, port: str, user: str, pwd: str, schema: str,
+         verbose: bool = False, develop: bool = False):
 
-    parser = argparse.ArgumentParser(
-        description="deploy the Sagemaker Extension")
-    parser.add_argument("--host", help="db host address", required=True)
-    parser.add_argument("--port", help="db host port", required=True)
-    parser.add_argument("--user", help="db user name", required=True)
-    parser.add_argument("--pass", help="db user password", required=True)
-    parser.add_argument("--schema", help="schema name", required=True)
-    parser.add_argument("--print", help="print out statements",
-                        required=False, action="store_true")
-    parser.add_argument("--develop",  help="generate and execute the scripts",
-                        required=False, action="store_true")
+    logging.basicConfig(format='%(asctime)s - %(module)s  - %(message)s',
+                        level=logging.DEBUG)
 
-    args = vars(parser.parse_args(args))
     deployment = DeployCreateStatements(
-        db_host=args['host'],
-        db_port=args['port'],
-        db_user=args['user'],
-        db_pass=args['pass'],
-        schema=args['schema'],
-        to_print=args['print'],
-        develop=args['develop']
+        db_host=host,
+        db_port=port,
+        db_user=user,
+        db_pass=pwd,
+        schema=schema,
+        to_print=verbose,
+        develop=develop
     )
     deployment.run()
 
 
 if __name__ == "__main__":
-    main(sys.argv[1:])
+    main()
 

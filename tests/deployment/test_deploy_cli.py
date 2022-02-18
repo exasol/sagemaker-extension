@@ -1,3 +1,4 @@
+from click.testing import CliRunner
 from exasol_sagemaker_extension.deployment import deploy_cli
 from tests.integration_tests.utils.parameters import db_params
 
@@ -41,7 +42,9 @@ def test_deploy_cli_main(db_conn, register_language_container):
         "--pass", db_params.password,
         "--schema", DB_SCHEMA
     ]
-    deploy_cli.main(args_list)
+    runner = CliRunner()
+    result = runner.invoke(deploy_cli.main, args_list)
+    assert result.exit_code == 0
 
     all_schemas = get_all_schemas(db_conn)
     all_scripts = get_all_scripts(db_conn)
