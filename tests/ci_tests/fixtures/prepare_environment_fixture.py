@@ -1,6 +1,8 @@
 import os
 import boto3
 import pytest
+from click.testing import CliRunner
+
 from exasol_sagemaker_extension.deployment import deploy_cli
 from tests.ci_tests.utils.parameters import db_params, aws_params, \
     reg_model_setup_params, cls_model_setup_params
@@ -19,7 +21,8 @@ def __deploy_scripts(model_setup):
         "--pass", db_params.password,
         "--schema", model_setup.schema_name
     ]
-    deploy_cli.main(args_list)
+    runner = CliRunner()
+    runner.invoke(deploy_cli.main, args_list)
 
 
 def __create_tables(db_conn, model_setup):
