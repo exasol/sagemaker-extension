@@ -20,29 +20,28 @@ keywords = ['exasol', 'sagemaker']
 include = ["lua", "resources", "deployment"]
 
 [tool.poetry.dependencies]
-python = ">=3.6.2,<4.0"
-pandas = ">=1.1.3,<2.0.0"
+python = ">=3.8,<4.0"
+pandas = ">=1.4.2,<2.0.0"
 boto = "^2.49.0"
 sagemaker = "^2.59.1"
-pyexasol = "^0.20.0"
+pyexasol = "^0.24.0"
 localstack-client = "^1.25"
 importlib-resources = "^5.2.0"
 click = "^8.0.3"
 
 [tool.poetry.dev-dependencies]
-pytest = "^5.2" 
-pytest-cov = "^2.10.1"
+pytest = "^7.1"
+pytest-cov = "^3.0.0"
 Sphinx = "^4.1.2"
-coverage = "^5.5"
+coverage = "^6.3"
 exasol-udf-mock-python = { git = "https://github.com/exasol/udf-mock-python.git", branch = "master" }
 exasol-bucketfs-utils-python = { git = "https://github.com/exasol/bucketfs-utils-python.git", branch = "main" }
-poethepoet = "^0.10.0"
+poethepoet = "^0.13.1"
 boto3 = "^1.20.40"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
-
 
 [tool.poe.tasks]
 lua-tests = {"shell" = "bash ./scripts/lua_tests.sh"}

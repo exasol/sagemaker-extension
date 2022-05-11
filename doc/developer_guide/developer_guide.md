@@ -8,9 +8,9 @@ In this developer guide we explain how you can build and run this project.
 ## Building the Project
 
 ### 1. Build the Python Package
-This project needs python interpreter Python 3.6 or above installed on the 
+This project needs python interpreter Python 3.8 or above installed on the 
 development machine. In addition, in order to build python packages you need to 
-have >= [poetry](https://python-poetry.org/) 1.1.6 package manager. Then you can 
+have >= [poetry](https://python-poetry.org/) 1.1.11 package manager. Then you can 
 install and build as follows:
 ```bash
 poetry install

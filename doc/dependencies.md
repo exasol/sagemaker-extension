@@ -2,11 +2,11 @@
 
 ## Run Time Dependencies
 
-| Dependency                    | Purpose                          | License            |
-|-------------------------------|----------------------------------|--------------------|
-| [Python 3][python]            | Python version 3.6.1 and above   | PSF                |
+| Dependency                    | Purpose                                    | License            |
+|-------------------------------|--------------------------------------------|--------------------|
+| [Python 3][python]            | Python version 3.8 and above               | PSF                |
 | [AWS SageMaker][sagemaker]    | Allows to train ML models on AWS Sagemaker | Apache License 2.0 |
-| [AWS Boto] [boto]           | Makes use of AWS services for Python | Apache License 2.0 |
+| [AWS Boto] [boto]           | Makes use of AWS services for Python       | Apache License 2.0 |
 
 
 ## Test Dependencies
