@@ -41,7 +41,7 @@ def create_mock_metadata():
             Column("max_candidates", int, "INTEGER"),
             Column("max_runtime_per_training_job_in_seconds", int, "INTEGER"),
         ],
-        output_type="EMIT",
+        output_type="EMITS",
         output_columns=[
             Column("job_name", str, "VARCHAR(2000000)")
         ]

@@ -21,6 +21,7 @@ install_requires = \
  'importlib-resources>=5.2.0,<6.0.0',
  'localstack-client>=1.25,<2.0',
  'pandas>=1.4.2,<2.0.0',
+ 'protobuf>=3.1,<=3.20.0',
  'pyexasol>=0.24.0,<0.25.0',
  'sagemaker>=2.59.1,<3.0.0']
 
