@@ -21,6 +21,7 @@ install_requires = \
  'importlib-resources>=5.2.0,<6.0.0',
  'localstack-client>=1.25,<2.0',
  'pandas>=1.4.2,<2.0.0',
+ 'protobuf>=3.1,<=3.20.0',
  'pyexasol>=0.24.0,<0.25.0',
  'sagemaker>=2.59.1,<3.0.0']
 
@@ -31,8 +32,8 @@ setup_kwargs = {
     'long_description': '# SageMaker Extension\n\nThis project provides a Python library that trains data stored in Exasol using AWS SageMaker.\n\n\n## Table of Contents\n\n### Information for Users\n\n* [User Guide](doc/user_guide/user_guide.md)\n* [Tutorial](https://github.com/exasol/data-science-examples/blob/main/tutorials/machine-learning/sagemaker-extension/tutorial.md)\n* [Changelog](doc/changes/changelog.md)\n\n### Information for Contributors\n\n\n* [System Requirement Specification](doc/system_requirements.md)\n* [Design](doc/design.md)\n* [Dependencies](doc/dependencies.md)',
     'author': 'Umit Buyuksahin',
     'author_email': 'umit.buyuksahin@exasol.com',
-    'maintainer': None,
-    'maintainer_email': None,
+    'maintainer': 'None',
+    'maintainer_email': 'None',
     'url': 'https://github.com/exasol/sagemaker-extension',
     'packages': packages,
     'package_data': package_data,

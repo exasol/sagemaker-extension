@@ -42,7 +42,7 @@ def create_mock_metadata():
         script_code_wrapper_function=udf_wrapper,
         input_type="SET",
         input_columns=input_columns,
-        output_type="EMIT",
+        output_type="EMITS",
         output_columns=input_columns + [
             Column("OUT", float, "FLOAT")
         ]

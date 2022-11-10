@@ -23,6 +23,7 @@ include = ["lua", "resources", "deployment"]
 python = ">=3.8,<4.0"
 pandas = ">=1.4.2,<2.0.0"
 boto = "^2.49.0"
+protobuf = ">=3.1,<=3.20.0"
 sagemaker = "^2.59.1"
 pyexasol = "^0.24.0"
 localstack-client = "^1.25"
@@ -34,7 +35,7 @@ pytest = "^7.1"
 pytest-cov = "^3.0.0"
 Sphinx = "^4.1.2"
 coverage = "^6.3"
-exasol-udf-mock-python = { git = "https://github.com/exasol/udf-mock-python.git", branch = "master" }
+exasol-udf-mock-python = { git = "https://github.com/exasol/udf-mock-python.git", branch = "main" }
 exasol-bucketfs-utils-python = { git = "https://github.com/exasol/bucketfs-utils-python.git", branch = "main" }
 poethepoet = "^0.13.1"
 boto3 = "^1.20.40"

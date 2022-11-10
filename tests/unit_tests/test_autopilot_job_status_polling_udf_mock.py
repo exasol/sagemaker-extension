@@ -36,7 +36,7 @@ def create_mock_metadata():
             Column("aws_s3_connection", str, "VARCHAR(2000000)"),
             Column("aws_region", str, "VARCHAR(2000000)")
         ],
-        output_type="EMIT",
+        output_type="EMITS",
         output_columns=[
             Column("job_status", str, "VARCHAR(2000000)"),
             Column("job_secondary_status", str, "VARCHAR(2000000)")
