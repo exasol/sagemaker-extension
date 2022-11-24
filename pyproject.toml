@@ -36,7 +36,7 @@ pytest-cov = "^3.0.0"
 Sphinx = "^4.1.2"
 coverage = "^6.3"
 exasol-udf-mock-python = { git = "https://github.com/exasol/udf-mock-python.git", branch = "main" }
-exasol-bucketfs-utils-python = { git = "https://github.com/exasol/bucketfs-utils-python.git", branch = "main" }
+exasol-bucketfs = "^0.6.0"
 poethepoet = "^0.13.1"
 boto3 = "^1.20.40"
 
