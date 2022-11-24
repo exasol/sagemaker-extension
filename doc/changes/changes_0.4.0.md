@@ -27,4 +27,5 @@ Furthermore, a developer guide is added, explaining how to build and test the pr
 
   - #56: Used Click for the deployment cli script
   - #69: Updated exasol udf-mock import and poetry version
+  - #67: Removed unnecessary release droid files
   
