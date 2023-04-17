@@ -14,7 +14,7 @@ jobs:
         run: pipx install poetry
       - uses: actions/setup-python@v4
         with:
-          python-version: ${{ matrix.python-version }}
+          python-version: '3.8'
           cache: 'poetry'
       - name: Build language container
         run: ./build_language_container.sh
