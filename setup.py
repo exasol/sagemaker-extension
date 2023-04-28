@@ -23,7 +23,8 @@ install_requires = \
  'pandas>=1.4.2,<2.0.0',
  'protobuf>=3.1,<=3.20.0',
  'pyexasol>=0.24.0,<0.25.0',
- 'sagemaker>=2.59.1,<3.0.0']
+ 'sagemaker>=2.59.1,<3.0.0',
+ 'typeguard>=2.11.1,<3.0.0']
 
 setup_kwargs = {
     'name': 'exasol-sagemaker-extension',
