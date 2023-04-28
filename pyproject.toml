@@ -29,6 +29,7 @@ pyexasol = "^0.24.0"
 localstack-client = "^1.25"
 importlib-resources = "^5.2.0"
 click = "^8.0.3"
+typeguard = "^2.11.1"
 
 [tool.poetry.dev-dependencies]
 pytest = "^7.1"
