@@ -92,7 +92,6 @@ In order to run AWS tests, an IAM Role with sufficient permissions must be creat
 3. Add _AmazonSageMakerFullAccess_ and _AmazonS3FullAccess_ permissions.
 4. Name the role with "_protected-_" prefix and create the defined role.
 
-
 The AWS tests are gathered under the `tests/ci-tests` directory. These test use 
 the real AWS services. Therefore, you must set AWS credentials in the OS 
 environment in order to use  these tests in development machine. 
