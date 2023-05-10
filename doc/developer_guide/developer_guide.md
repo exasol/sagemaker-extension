@@ -86,6 +86,13 @@ poetry run pytest tests
 ```
 
 ### 3. AWS Tests
+In order to run AWS tests, an IAM Role with sufficient permissions must be created on the AWS root account. For this, the following steps should be followed:
+1. Create role  in IAM service
+2. Select AWS account as trusted entity type
+3. Add _AmazonSageMakerFullAccess_ and _AmazonS3FullAccess_ permissions.
+4. Name the role with "_protected-_" prefix and create the defined role.
+
+
 The AWS tests are gathered under the `tests/ci-tests` directory. These test use 
 the real AWS services. Therefore, you must set AWS credentials in the OS 
 environment in order to use  these tests in development machine. 
@@ -100,7 +107,7 @@ After that, you can run them as follows:
 poetry run pytest tests/ci_tests
 ```
 
-In order for these tests to run in the Github Workflow, the commit 
+In order for these tests to run in the GitHub Workflow, the commit 
 message must contain the following statement `[run aws tests]`. For example:
 ```bash
 git commit -m "[run aws tests]"
