@@ -17,16 +17,13 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-python@v2
-        with:
-          python-version: ${{ matrix.python-version }}
-      - uses: abatilo/actions-poetry@v2.1.4
-        with:
-          poetry-version: 1.2.0
-      - name: Install Poetry
-        run: poetry install
+
+      - name: Setup Python & Poetry Environment
+        uses: ./.github/actions/prepare_poetry_env
+
       - name: Build Poetry
         run: poetry build
+
       - name: Install project whl
         run: pip install dist/*.whl
 
