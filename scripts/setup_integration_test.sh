@@ -21,6 +21,7 @@ function checkout_exasol_test_container {
   cnt_func=$((cnt_func+1))
   echo -e "${YEL} Step-$cnt_func: ${GRA} Checkout Exasol test container ${NC}"
    git clone https://github.com/exasol/integration-test-docker-environment.git
+   git switch 1.6.0
 }
 
 function spawn_exasol_environment {
