@@ -3,6 +3,7 @@ package com.exasol.adapter.document.files.ciisolation;
 import com.exasol.ciisolation.aws.TaggedStack;
 import com.exasol.ciisolation.aws.ciuser.CiUserStack.CiUserStackProps;
 
+import software.amazon.awscdk.CfnOutput;
 import software.amazon.awscdk.services.iam.*;
 import software.constructs.Construct;
 
@@ -16,5 +17,6 @@ class SageMakerRoleStack extends TaggedStack {
                 .build();
         tagResource(role);
         role.addManagedPolicy(ManagedPolicy.fromAwsManagedPolicyName("AmazonSageMakerFullAccess"));
+        CfnOutput.Builder.create(this, "sagemakerRoleName").value(role.getRoleName()).build();
     }
 }
