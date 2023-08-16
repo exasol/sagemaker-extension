@@ -2,6 +2,7 @@ package com.exasol.adapter.document.files.ciisolation;
 
 import com.exasol.ciisolation.aws.PolicyReader;
 import com.exasol.ciisolation.aws.ciuser.CiUserStack;
+import com.exasol.ciisolation.aws.ciuser.CiUserStack.CiUserStackProps;
 
 import software.amazon.awscdk.App;
 
@@ -12,10 +13,12 @@ public class CiIsolationApp {
     public static void main(final String[] args) {
         final App app = new App();
         final PolicyReader policyReader = new PolicyReader();
-        new CiUserStack(app, CiUserStack.CiUserStackProps.builder().projectName("exasol-sagemaker-extension")
+        CiUserStackProps props = CiUserStack.CiUserStackProps.builder().projectName("exasol-sagemaker-extension")
                 .addRequiredPermissions(
                     policyReader.readPolicyFromResources("s3-access.json"),
-                    policyReader.readPolicyFromResources("sagemaker-access.json")).build());
+                    policyReader.readPolicyFromResources("sagemaker-access.json")).build();
+        new CiUserStack(app, props);
+        new SageMakerRoleStack(app, "protected-exasol-sagemaker-extension-role-stack", props);
         app.synth();
     }
 }
