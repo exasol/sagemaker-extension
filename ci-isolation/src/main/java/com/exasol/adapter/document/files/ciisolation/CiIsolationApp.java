@@ -18,7 +18,6 @@ public class CiIsolationApp {
                     policyReader.readPolicyFromResources("s3-access.json"),
                     policyReader.readPolicyFromResources("sagemaker-access.json")).build();
         new CiUserStack(app, props);
-        new SageMakerRoleStack(app, "protected-exasol-sagemaker-extension-role-stack", props);
         app.synth();
     }
 }

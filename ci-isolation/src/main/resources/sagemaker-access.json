@@ -81,7 +81,6 @@
                 "fsx:DescribeFileSystems",
                 "groundtruthlabeling:*",
                 "iam:ListRoles",
-                "iam:GetRole",
                 "kms:DescribeKey",
                 "kms:ListAliases",
                 "lambda:ListFunctions",
