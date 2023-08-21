@@ -1,4 +1,4 @@
-# SageMaker Extension 0.5.0, released 2022-08-21
+# SageMaker Extension 0.5.0, released 2023-08-21
 
 Code name: Enabled encryption for pyexasol
 
