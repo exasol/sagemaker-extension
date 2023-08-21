@@ -1,16 +1,18 @@
 import logging
+import ssl
+
 import pyexasol
 from exasol_sagemaker_extension.deployment import constants
-from exasol_sagemaker_extension.deployment.\
+from exasol_sagemaker_extension.deployment. \
     generate_create_statement_autopilot_endpoint_deletion \
     import AutopilotEndpointDeletionLuaScriptCreateStatementGenerator
-from exasol_sagemaker_extension.deployment.\
+from exasol_sagemaker_extension.deployment. \
     generate_create_statement_autopilot_job_status_polling import \
     AutopilotJobStatusPollingLuaScriptCreateStatementGenerator
 from exasol_sagemaker_extension.deployment. \
     generate_create_statement_autopilot_training \
     import AutopilotTrainingLuaScriptCreateStatementGenerator
-from exasol_sagemaker_extension.deployment.\
+from exasol_sagemaker_extension.deployment. \
     generate_create_statement_autopilot_endpoint_deployment \
     import AutopilotEndpointDeploymentLuaScriptCreateStatementGenerator
 
@@ -37,7 +39,12 @@ class DeployCreateStatements:
                 host=self._db_host, port=self._db_port),
             user=self._db_user,
             password=self._db_pass,
-            compression=True)
+            compression=True,
+            encryption=True,
+            websocket_sslopt={
+                "cert_reqs": ssl.CERT_NONE,
+            }
+        )
 
     @property
     def statement_maps(self):
@@ -55,16 +62,16 @@ class DeployCreateStatements:
         stmt_lua_texts = {
             "Create statement of autopilot training lua script":
                 constants.CREATE_STATEMENT_AUTOPILOT_TRAINING_LUA_SCRIPT_PATH.
-                    read_text(),
+                read_text(),
             "Create statement of autopilot job status polling lua script":
                 constants.CREATE_STATEMENT_AUTOPILOT_JOB_STATUS_POLLING_LUA_SCRIPT_PATH.
-                    read_text(),
+                read_text(),
             "Create statement of autopilot endpoint deployment lua script":
                 constants.CREATE_STATEMENT_AUTOPILOT_ENDPOINT_DEPLOYMENT_LUA_SCRIPT_PATH.
-                    read_text(),
+                read_text(),
             "Create statement of autopilot endpoint deletion lua script":
                 constants.CREATE_STATEMENT_AUTOPILOT_ENDPOINT_DELETION_LUA_SCRIPT_PATH.
-                    read_text(),
+                read_text(),
         }
 
         stmt_create_table_texts = {

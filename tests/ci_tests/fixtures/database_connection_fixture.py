@@ -1,3 +1,5 @@
+import ssl
+
 import pyexasol
 import pytest
 from tests.ci_tests.utils.parameters import db_params
@@ -10,6 +12,11 @@ def db_conn():
             host=db_params.host,
             port=db_params.port),
         user=db_params.user,
-        password=db_params.password)
+        password=db_params.password,
+        encryption=True,
+        websocket_sslopt={
+            "cert_reqs": ssl.CERT_NONE,
+        }
+    )
 
     return conn
