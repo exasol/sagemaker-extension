@@ -6,8 +6,8 @@ CREATE OR REPLACE PYTHON3_SME SET SCRIPT "SME_AUTOPILOT_TRAINING_UDF"(
     s3_bucket_uri VARCHAR(200),
     s3_output_path VARCHAR(200),
     target_attribute_name VARCHAR(200),
-    problem_type VARCHAR(20),
-    objective VARCHAR(20),
+    problem_type VARCHAR(100),
+    objective VARCHAR(100),
     max_runtime_for_automl_job_in_seconds INTEGER,
     max_candidates INTEGER,
     max_runtime_per_training_job_in_seconds INTEGER
