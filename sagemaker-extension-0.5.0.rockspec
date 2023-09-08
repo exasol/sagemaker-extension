@@ -1,5 +1,5 @@
 package = "sagemaker-extension"
-version = "0.4.0-1"
+version = "0.5.0"
 source = {
    url = "git://github.com/exasol/sagemaker-extension"
 }

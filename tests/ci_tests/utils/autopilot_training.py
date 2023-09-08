@@ -21,12 +21,12 @@ class AutopilotTestTraining:
             problem_params)
 
     @classmethod
-    def train_autopilot_classification_job(cls, job_name, db_conn):
+    def train_autopilot_classification_job(cls, job_name, db_conn, objective: str = '{"MetricName":"F1"}'):
         autopilot_classification_trainer = cls(job_name, db_conn)
 
         problem_params = {
             "problem_type": "BinaryClassification",
-            "objective": '{"MetricName":"F1"}'}
+            "objective": objective}
     
         autopilot_classification_trainer.__train(
             cls_model_setup_params,
@@ -52,3 +52,5 @@ class AutopilotTestTraining:
             "{schema}.SME_TRAIN_WITH_SAGEMAKER_AUTOPILOT('{params}')".format(
                 schema=setup_params.schema_name, params=json.dumps(params_dict))
         self._db_conn.execute(query_training)
+
+

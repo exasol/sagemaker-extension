@@ -88,6 +88,20 @@ def test_autopilot_classification_training_udf_real():
         params_dict['problem_params'])
 
 
+@pytest.mark.skipif(not aws_params.aws_access_key,
+                    reason="AWS credentials are not set")
+def test_autopilot_multi_classification_training_udf_real():
+    params_dict = {
+        'setup_params': cls_setup_params,
+        'problem_params': {
+            "problem_type": "MulticlassClassification",
+            "objective": '{"MetricName":"Accuracy"}'}
+    }
+    _run_test(
+        params_dict['setup_params'],
+        params_dict['problem_params'])
+
+
 def _run_test(setup_params, problem_params):
     ctx = Context(
         setup_params.job_name,

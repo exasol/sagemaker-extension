@@ -136,7 +136,7 @@ package.preload[ "exaerror" ] = function( ... ) local arg = _G.arg;
 -- @module M
 --
 local M = {
-    VERSION = "1.1.0",
+    VERSION = "1.2.0",
 }
 
 local msgexpander = require("message_expander")
@@ -306,11 +306,24 @@ end
 
 ---
 -- Raise the error.
+-- <p>
+-- Like in Lua's <code>error</code> function, you can optionally specify if and from which level down the stack trace
+-- is included in the error message.
+-- </p>
+-- <ul>
+-- <li>0: no stack trace</li>
+-- <li>1: stack trace starts at the point inside <code>exaerror</code> where the error is raised
+-- <li>2: stack trace starts at the calling function (default)</li>
+-- <li>3+: stack trace starts below the calling function</li>
+-- </ul>
+--
+-- @parameter level (optional) level from which down the stack trace will be displayed
 --
 -- @raise Lua error for the given error object
 --
-function M:raise()
-    error(tostring(self))
+function M:raise(level)
+    level = (level == nil) and 2 or level
+    error(tostring(self), level)
 end
 
 ---
@@ -332,7 +345,6 @@ function M.error(arg1, ...)
     else
         M.create(arg1, ...):raise()
     end
-
 end
 
 return M
@@ -581,12 +593,13 @@ local function is_closing_bracket(token)
     return token == "}"
 end
 
+-- We are intentionally not using the symbol itself here for compatibility reasons.
+-- See https://github.com/exasol/error-reporting-lua/issues/15 for details.
 local function is_pipe(token)
-
-    return token == "|"
+    return token == string.char(124)
 end
 
-local function is_u (token)
+local function is_u(token)
     return token == "u"
 end
 

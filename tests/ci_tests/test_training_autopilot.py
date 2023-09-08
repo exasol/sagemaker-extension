@@ -28,10 +28,11 @@ def test_train_autopilot_classification_job(setup_ci_test_environment):
     curr_datetime = datetime.now().strftime("%y%m%d%H%M%S")
     model_name = ''.join((cls_model_setup_params.model_type, curr_datetime))
     job_name = ''.join((model_name, 'job'))
+    objective = '{ "MetricName" : "F1" }'
 
     # train
     AutopilotTestTraining.train_autopilot_classification_job(
-        job_name, setup_ci_test_environment)
+        job_name, setup_ci_test_environment, objective)
 
     _assert_training_job(
         job_name, cls_model_setup_params, setup_ci_test_environment)
