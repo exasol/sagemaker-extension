@@ -18,8 +18,8 @@ def create_aws_connection(conn):
             "USER '{aws_key_id}' IDENTIFIED BY '{aws_access_key}'"\
         .format(aws_conn_name=aws_params.aws_conn_name,
                 aws_s3_uri=aws_params.aws_s3_uri,
-                aws_key_id=aws_params.aws_key_id,
-                aws_access_key=aws_params.aws_access_key)
+                aws_key_id=aws_params.aws_access_key_id,
+                aws_access_key=aws_params.aws_secret_access_key)
     conn.execute(query)
 
 

@@ -1,8 +1,9 @@
-import pytest
 from datetime import datetime
+
+import pytest
+
 from tests.ci_tests.utils.autopilot_polling import AutopilotTestPolling
 from tests.ci_tests.utils.autopilot_training import AutopilotTestTraining
-from tests.ci_tests.utils.checkers import is_aws_credentials_not_set
 from tests.ci_tests.utils.parameters import cls_model_setup_params
 
 

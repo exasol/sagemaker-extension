@@ -60,7 +60,7 @@ class Context:
         return self._emitted
 
 
-@pytest.mark.skipif(not aws_params.aws_access_key,
+@pytest.mark.skipif(not aws_params.aws_secret_access_key,
                     reason="AWS credentials are not set")
 def test_autopilot_regression_training_udf_real():
     params_dict = {
@@ -74,7 +74,7 @@ def test_autopilot_regression_training_udf_real():
         params_dict['problem_params'])
 
 
-@pytest.mark.skipif(not aws_params.aws_access_key,
+@pytest.mark.skipif(not aws_params.aws_secret_access_key,
                     reason="AWS credentials are not set")
 def test_autopilot_classification_training_udf_real():
     params_dict = {
@@ -88,7 +88,7 @@ def test_autopilot_classification_training_udf_real():
         params_dict['problem_params'])
 
 
-@pytest.mark.skipif(not aws_params.aws_access_key,
+@pytest.mark.skipif(not aws_params.aws_secret_access_key,
                     reason="AWS credentials are not set")
 def test_autopilot_multi_classification_training_udf_real():
     params_dict = {
@@ -120,8 +120,8 @@ def _run_test(setup_params, problem_params):
 
     aws_s3_connection = Connection(
         address=aws_params.aws_s3_uri,
-        user=aws_params.aws_key_id,
-        password=aws_params.aws_access_key)
+        user=aws_params.aws_access_key_id,
+        password=aws_params.aws_secret_access_key)
     exa = ExaEnvironment({aws_params.aws_conn_name: aws_s3_connection})
     autopilot_training_udf_obj = AutopilotTrainingUDF(exa)
     autopilot_training_udf_obj.run(ctx)

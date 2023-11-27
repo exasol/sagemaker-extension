@@ -1,12 +1,14 @@
 import time
-import pytest
 from datetime import datetime
+
+import pytest
+
+from tests.ci_tests.fixtures.prepare_environment_fixture import CITestEnvironment
 from tests.ci_tests.utils import parameters
 from tests.ci_tests.utils.autopilot_deployment import AutopilotTestDeployment
 from tests.ci_tests.utils.autopilot_polling import AutopilotTestPolling
 from tests.ci_tests.utils.autopilot_prediction import AutopilotTestPrediction
 from tests.ci_tests.utils.autopilot_training import AutopilotTestTraining
-from tests.ci_tests.utils.checkers import is_aws_credentials_not_set
 from tests.ci_tests.utils.cleanup import cleanup
 from tests.ci_tests.utils.parameters import cls_model_setup_params, \
     reg_model_setup_params
@@ -20,14 +22,14 @@ def _is_training_completed(status):
 
 
 @cleanup
-def _make_prediction(job_name, endpoint_name, model_setup_params, db_conn):
+def _make_prediction(job_name, endpoint_name, model_setup_params, ci_test_env: CITestEnvironment):
     # poll until the training is completed
     timeout_time = time.time() + parameters.TIMEOUT
     while True:
         status = AutopilotTestPolling.poll_autopilot_job(
             job_name,
             model_setup_params.schema_name,
-            db_conn)
+            ci_test_env)
         print(status)
 
         if _is_training_completed(status):
@@ -43,12 +45,12 @@ def _make_prediction(job_name, endpoint_name, model_setup_params, db_conn):
         job_name,
         endpoint_name,
         model_setup_params,
-        db_conn
+        ci_test_env
     )
 
     # assertion
     predictions = AutopilotTestPrediction.predict(
-        endpoint_name, model_setup_params.schema_name, db_conn)
+        endpoint_name, model_setup_params.schema_name, ci_test_env)
     assert predictions
 
 

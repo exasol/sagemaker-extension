@@ -1,6 +1,6 @@
 import os
 
-from tests.ci_tests.utils.parameters import aws_params
+from tests.ci_tests.fixtures.prepare_environment_fixture import CITestEnvironment
 
 INSTANCE_TYPE = "ml.c5.large"
 INSTANCE_COUNT = 1
@@ -8,7 +8,7 @@ INSTANCE_COUNT = 1
 
 class AutopilotTestDeployment:
     @staticmethod
-    def deploy_endpoint(job_name, endpoint_name, setup_params, db_conn):
+    def deploy_endpoint(job_name, endpoint_name, setup_params, ci_test_env: CITestEnvironment):
         query_deployment = "EXECUTE SCRIPT " \
                            "{schema}.SME_DEPLOY_SAGEMAKER_AUTOPILOT_ENDPOINT(" \
                            "'{job_name}', '{endpoint_name}', '{schema}', " \
@@ -19,7 +19,7 @@ class AutopilotTestDeployment:
                    endpoint_name=endpoint_name,
                    instance_type=INSTANCE_TYPE,
                    instance_count=INSTANCE_COUNT,
-                   aws_conn_name=aws_params.aws_conn_name,
+                   aws_conn_name=ci_test_env.connection_object_for_aws_credentials,
                    aws_region=os.environ["AWS_DEFAULT_REGION"])
 
-        db_conn.execute(query_deployment)
+        ci_test_env.db_conn.execute(query_deployment)

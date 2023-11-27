@@ -1,14 +1,16 @@
 import time
-import pytest
 from datetime import datetime
+
+import pytest
+
+from tests.ci_tests.fixtures.prepare_environment_fixture import CITestEnvironment
+from tests.ci_tests.utils import parameters
 from tests.ci_tests.utils.autopilot_deployment import AutopilotTestDeployment
 from tests.ci_tests.utils.autopilot_polling import AutopilotTestPolling
 from tests.ci_tests.utils.autopilot_training import AutopilotTestTraining
 from tests.ci_tests.utils.cleanup import cleanup
-from tests.ci_tests.utils.queries import DatabaseQueries
-from tests.ci_tests.utils.checkers import is_aws_credentials_not_set
 from tests.ci_tests.utils.parameters import cls_model_setup_params
-from tests.ci_tests.utils import parameters
+from tests.ci_tests.utils.queries import DatabaseQueries
 
 
 def _is_training_completed(status):
@@ -19,14 +21,14 @@ def _is_training_completed(status):
 
 
 @cleanup
-def _deploy_endpoint(job_name, endpoint_name, model_setup_params, db_conn):
+def _deploy_endpoint(job_name, endpoint_name, model_setup_params, ci_test_env: CITestEnvironment, ):
     # poll until the training is completed
     timeout_time = time.time() + parameters.TIMEOUT
     while True:
         status = AutopilotTestPolling.poll_autopilot_job(
             job_name,
             model_setup_params.schema_name,
-            db_conn)
+            ci_test_env)
         print(status)
 
         if _is_training_completed(status):
@@ -42,12 +44,12 @@ def _deploy_endpoint(job_name, endpoint_name, model_setup_params, db_conn):
         job_name,
         endpoint_name,
         model_setup_params,
-        db_conn
+        ci_test_env
     )
 
     # assertion
     all_scripts = DatabaseQueries.get_all_scripts(
-        model_setup_params, db_conn)
+        model_setup_params, ci_test_env.db_conn)
     assert endpoint_name in list(map(lambda x: x[0], all_scripts))
 
 

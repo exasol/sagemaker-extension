@@ -49,13 +49,13 @@ class Context:
         return self._emitted
 
 
-@pytest.mark.skipif(not aws_params.aws_access_key,
+@pytest.mark.skipif(not aws_params.aws_secret_access_key,
                     reason="AWS credentials are not set")
 def test_autopilot_regression_endpoint_deployment_udf_real():
     _run_test(reg_setup_params)
 
 
-@pytest.mark.skipif(not aws_params.aws_access_key,
+@pytest.mark.skipif(not aws_params.aws_secret_access_key,
                     reason="AWS credentials are not set")
 def test_autopilot_classification_endpoint_deployment_udf_real():
     _run_test(cls_setup_params)
@@ -73,8 +73,8 @@ def _run_test(setup_params):
 
     aws_s3_connection = Connection(
         address=aws_params.aws_s3_uri,
-        user=aws_params.aws_key_id,
-        password=aws_params.aws_access_key)
+        user=aws_params.aws_access_key_id,
+        password=aws_params.aws_secret_access_key)
     exa = ExaEnvironment({aws_params.aws_conn_name: aws_s3_connection})
     autopilot_endpoint_deployment_obj = AutopilotEndpointDeploymentUDF(exa)
     autopilot_endpoint_deployment_obj.run(ctx)

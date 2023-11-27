@@ -30,9 +30,9 @@ def language_container():
     completed_process = subprocess.run(
         [script_dir], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
     output = completed_process.stdout.decode("UTF-8")
+    print(output)
     completed_process.check_returncode()
 
-    print(output)
     lines = output.splitlines()
 
     alter_session_selector = "ALTER SYSTEM SET SCRIPT_LANGUAGES='"
