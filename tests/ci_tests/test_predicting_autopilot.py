@@ -1,14 +1,13 @@
 import time
 from datetime import datetime
 
-import pytest
-
 from tests.ci_tests.fixtures.prepare_environment_fixture import CITestEnvironment
 from tests.ci_tests.utils import parameters
 from tests.ci_tests.utils.autopilot_deployment import AutopilotTestDeployment
 from tests.ci_tests.utils.autopilot_polling import AutopilotTestPolling
 from tests.ci_tests.utils.autopilot_prediction import AutopilotTestPrediction
 from tests.ci_tests.utils.autopilot_training import AutopilotTestTraining
+from tests.ci_tests.utils.checkers import skip_if_aws_credentials_not_set
 from tests.ci_tests.utils.cleanup import cleanup
 from tests.ci_tests.utils.parameters import cls_model_setup_params, \
     reg_model_setup_params
@@ -54,8 +53,7 @@ def _make_prediction(job_name, endpoint_name, model_setup_params, ci_test_env: C
     assert predictions
 
 
-@pytest.mark.skipif("is_aws_credentials_not_set() == True",
-                    reason="AWS credentials are not set")
+@skip_if_aws_credentials_not_set
 def test_predict_autopilot_regression_job(setup_ci_test_environment):
     curr_datetime = datetime.now().strftime("%y%m%d%H%M%S")
     model_name = ''.join((reg_model_setup_params.model_type, curr_datetime))
@@ -74,8 +72,7 @@ def test_predict_autopilot_regression_job(setup_ci_test_environment):
         db_conn=setup_ci_test_environment)
 
 
-@pytest.mark.skipif("is_aws_credentials_not_set() == True",
-                    reason="AWS credentials are not set")
+@skip_if_aws_credentials_not_set
 def test_predict_autopilot_classification_job(setup_ci_test_environment):
     curr_datetime = datetime.now().strftime("%y%m%d%H%M%S")
     model_name = ''.join((cls_model_setup_params.model_type, curr_datetime))
