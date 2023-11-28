@@ -12,12 +12,12 @@ namedtuple rather than fixture.
 
 def get_aws_params():
     AWSParams = namedtuple("AWSParams", [
-        "aws_key_id", "aws_access_key", "aws_role",
+        "aws_access_key_id", "aws_secret_access_key", "aws_role",
         "aws_region", "aws_s3_uri",  "aws_conn_name"])
 
     return AWSParams(
-        aws_key_id="",
-        aws_access_key="",
+        aws_access_key_id="",
+        aws_secret_access_key="",
         aws_role="",
         aws_region="eu-central-1",
         aws_s3_uri="https://sagemaker-extension-bucket.s3.amazonaws.com",
