@@ -16,9 +16,9 @@ def get_aws_params():
         "aws_region", "aws_s3_uri",  "aws_conn_name"])
 
     return AWSParams(
-        aws_key_id=os.environ["AWS_ACCESS_KEY_ID"],
-        aws_access_key=os.environ["AWS_SECRET_ACCESS_KEY"],
-        aws_role="AWS ROLE NOT SET", # FIXME disabled, because failed when we removed Environment Variable in the ci_tests
+        aws_key_id="",
+        aws_access_key="",
+        aws_role="",
         aws_region="eu-central-1",
         aws_s3_uri="https://sagemaker-extension-bucket.s3.amazonaws.com",
         aws_conn_name="aws_connection",
