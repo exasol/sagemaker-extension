@@ -1,6 +1,7 @@
 import dataclasses
 import os
 from inspect import cleandoc
+from typing import Optional
 
 import boto3
 import pyexasol
@@ -185,7 +186,7 @@ class CITestEnvironment:
     aws_s3_bucket: str
     aws_sagemaker_role: str
     connection_object_for_aws_credentials: str
-    aws_region: str
+    aws_region: Optional[str] = None
 
     def __post_init__(self):
         self.aws_region = os.environ["AWS_DEFAULT_REGION"]
