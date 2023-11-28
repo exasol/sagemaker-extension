@@ -170,8 +170,7 @@ def _create_sagemaker_policy(iam_client) -> str:
             Description='This policy is used for the CI Tests of the exasol.sagemaker-extension',
 
         )
-        print(response)
-        return response["Policy"]["ARN"]  # FIXME got key error in this line
+        return response["Policy"]["Arn"]
     except iam_client.exceptions.EntityAlreadyExistsException as ex:
         print("'EntityAlreadyExistsException' exception is handled")
         sts_client = boto3.client('sts')
