@@ -171,7 +171,7 @@ def _create_sagemaker_policy(iam_client) -> str:
 
         )
         print(response)
-        return response["Policy"]["ARN"] # FIXME got key error in this line
+        return response["Policy"]["ARN"]  # FIXME got key error in this line
     except iam_client.exceptions.EntityAlreadyExistsException as ex:
         print("'EntityAlreadyExistsException' exception is handled")
         sts_client = boto3.client('sts')
@@ -186,7 +186,10 @@ class CITestEnvironment:
     aws_s3_bucket: str
     aws_sagemaker_role: str
     connection_object_for_aws_credentials: str
-    aws_region: str = os.environ["AWS_DEFAULT_REGION"]
+    aws_region: str
+
+    def __post_init__(self):
+        self.aws_region = os.environ["AWS_DEFAULT_REGION"]
 
     @property
     def aws_bucket_uri(self) -> str:
