@@ -1,3 +1,5 @@
+import time
+
 import pytest
 import subprocess
 from pathlib import Path
@@ -78,7 +80,8 @@ def upload_language_container(language_container, db_conn):
             bucket_file_path=f"{path_in_bucket}/{container_name}",
             fileobj=container_file)
 
-    alter_session = Path(language_container["alter_session"])
+    alter_session = language_container["alter_session"]
+    time.sleep(3 * 60)
     return alter_session
 
 

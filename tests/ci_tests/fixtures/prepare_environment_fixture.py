@@ -68,7 +68,6 @@ def connection_object_for_aws_credentials(db_conn, aws_s3_bucket):
                 aws_secret_access_key=os.environ["AWS_SECRET_ACCESS_KEY"],
                 aws_s3_uri=aws_s3_uri)
     db_conn.execute(query)
-    print(query)
     yield aws_conn_name
     db_conn.execute(f"DROP CONNECTION {aws_conn_name};")
 
