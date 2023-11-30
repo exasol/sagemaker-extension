@@ -50,13 +50,3 @@ jobs:
           AWS_ROLE: ${{ secrets.AWS_ROLE }}
           AWS_DEFAULT_REGION: "eu-central-1"
         run: poetry run pytest tests/ci_tests -s
-      - name: Archive DockerDB logs
-        if: success() || failure()
-        run:  docker cp db_container_test:/exa/logs docker_db_logs
-      - name: Archive DockerDB logs
-        if: success() || failure()
-        uses: actions/upload-artifact@v1
-        with:
-          name: docker_db_logs
-          path: docker_db_logs
-
