@@ -60,7 +60,7 @@ def connection_object_for_aws_credentials(db_conn, aws_s3_bucket):
     aws_conn_name = "test_aws_credentials_connection_name"
     aws_region = os.environ["AWS_DEFAULT_REGION"]
     aws_s3_uri = f"https://{aws_s3_bucket}.s3.{aws_region}.amazonaws.com"
-    query = "CREATE OR REPLACE  CONNECTION {aws_conn_name} " \
+    query = "CREATE OR REPLACE CONNECTION {aws_conn_name} " \
             "TO '{aws_s3_uri}' " \
             "USER '{aws_access_key_id}' IDENTIFIED BY '{aws_secret_access_key}'" \
         .format(aws_conn_name=aws_conn_name,
@@ -82,7 +82,7 @@ def _create_aws_s3_bucket():
                 'LocationConstraint': os.environ["AWS_DEFAULT_REGION"]}
         )
     except s3_client.exceptions.BucketAlreadyOwnedByYou as ex:
-        print("'BucketAlreadyOwnedByYou' exception is handled")
+        print("Bucket already exists")
     return bucket_name
 
 
@@ -114,7 +114,7 @@ def aws_sagemaker_role() -> str:
 
 
 def _attach_policy_to_role(iam_client, policy_arn, role_name):
-    response = iam_client.attach_role_policy(
+    iam_client.attach_role_policy(
         PolicyArn=policy_arn,
         RoleName=role_name,
     )
@@ -143,7 +143,7 @@ def _create_sagemaker_role(iam_client):
             Description='This role is used for the CI Tests of the exasol.sagemaker-extension',
         )
     except iam_client.exceptions.EntityAlreadyExistsException as ex:
-        print("'EntityAlreadyExistsException' exception is handled")
+        print(f"Role '{role_name}' already exists")
     return role_name
 
 
