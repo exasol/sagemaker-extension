@@ -81,7 +81,7 @@ def upload_language_container(language_container, db_conn):
             fileobj=container_file)
 
     alter_session = language_container["alter_session"]
-    time.sleep(3 * 60)
+    time.sleep(3 * 60) # Wait for SLC extraction in BucketFS
     return alter_session
 
 
