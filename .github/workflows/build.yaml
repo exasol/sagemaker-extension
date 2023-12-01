@@ -8,7 +8,7 @@ jobs:
       fail-fast: false
       matrix:
         python-version: [3.8]
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     environment: aws
 
     steps:
@@ -50,5 +50,3 @@ jobs:
           AWS_ROLE: ${{ secrets.AWS_ROLE }}
           AWS_DEFAULT_REGION: "eu-central-1"
         run: poetry run pytest tests/ci_tests -s
-
-

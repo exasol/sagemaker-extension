@@ -1,3 +1,5 @@
+import time
+
 import pytest
 import subprocess
 from pathlib import Path
@@ -30,9 +32,9 @@ def language_container():
     completed_process = subprocess.run(
         [script_dir], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
     output = completed_process.stdout.decode("UTF-8")
+    print(output)
     completed_process.check_returncode()
 
-    print(output)
     lines = output.splitlines()
 
     alter_session_selector = "ALTER SYSTEM SET SCRIPT_LANGUAGES='"
@@ -78,7 +80,8 @@ def upload_language_container(language_container, db_conn):
             bucket_file_path=f"{path_in_bucket}/{container_name}",
             fileobj=container_file)
 
-    alter_session = Path(language_container["alter_session"])
+    alter_session = language_container["alter_session"]
+    time.sleep(3 * 60) # Wait for SLC extraction in BucketFS
     return alter_session
 
 

@@ -1,13 +1,11 @@
 from collections import namedtuple
 
-
-POLLING_INTERVAL = 5*60  # seconds
-TIMEOUT = 90*60  # seconds
-
+POLLING_INTERVAL = 5 * 60  # seconds
+TIMEOUT = 90 * 60  # seconds
 
 ModelSetupParams = namedtuple("ModelSetupParams", [
     "model_type", "schema_name", "table_name", "target_col",
-    "data",  "aws_output_path", "batch_size"])
+    "data", "aws_output_path", "batch_size"])
 
 reg_model_setup_params = ModelSetupParams(
     model_type='reg',
@@ -30,19 +28,6 @@ cls_model_setup_params = ModelSetupParams(
 )
 
 
-def get_aws_params():
-    AWSParams = namedtuple("AWSParams", [
-        "aws_bucket", "aws_s3_uri", "aws_bucket_uri",  "aws_conn_name"])
-
-    aws_bucket_name = "persistent-sme-ci-bucket"
-    return AWSParams(
-        aws_bucket=aws_bucket_name,
-        aws_s3_uri=f"https://{aws_bucket_name}.s3.amazonaws.com",
-        aws_bucket_uri=f"s3://{aws_bucket_name}",
-        aws_conn_name="aws_connection",
-    )
-
-
 def get_db_params():
     DBParams = namedtuple("DBParams", [
         "host", "port", "user", "password"])
@@ -55,7 +40,4 @@ def get_db_params():
     )
 
 
-aws_params = get_aws_params()
 db_params = get_db_params()
-
-

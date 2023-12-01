@@ -13,6 +13,7 @@
       "Action": [
         "iam:CreatePolicy",
         "iam:CreateRole",
+        "iam:GetRole",
         "iam:AttachRolePolicy",
         "iam:DeleteRole",
         "iam:DeletePolicy",

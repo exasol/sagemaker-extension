@@ -13,8 +13,8 @@ cnt_func=0
 function install_localstack {
   cnt_func=$((cnt_func+1))
   echo -e "${YEL} Step-$cnt_func: ${GRA} Install Localstack packages${NC}"
-  pip install localstack=='0.12.18'
-  pip install localstack-client=="1.25"
+  pip install localstack
+  pip install localstack-client
 }
 
 function checkout_exasol_test_container {

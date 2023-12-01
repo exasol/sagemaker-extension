@@ -62,7 +62,7 @@ class Context:
         return return_df
 
 
-@pytest.mark.skipif(not aws_params.aws_access_key,
+@pytest.mark.skipif(not aws_params.aws_secret_access_key,
                     reason="AWS credentials are not set")
 def test_regression_autopilot_prediction_udf_real():
     connection_data = {
@@ -76,8 +76,8 @@ def test_regression_autopilot_prediction_udf_real():
 
     aws_s3_connection = Connection(
         address=aws_params.aws_s3_uri,
-        user=aws_params.aws_key_id,
-        password=aws_params.aws_access_key)
+        user=aws_params.aws_access_key_id,
+        password=aws_params.aws_secret_access_key)
     model_connection = Connection(
         address=json.dumps(connection_data))
 
@@ -101,7 +101,7 @@ def test_regression_autopilot_prediction_udf_real():
     assert ctx.get_emitted()[0][0].shape == (3, 3)
 
 
-@pytest.mark.skipif(not aws_params.aws_access_key,
+@pytest.mark.skipif(not aws_params.aws_secret_access_key,
                     reason="AWS credentials are not set")
 def test_classification_autopilot_prediction_udf_real():
     connection_data = {
@@ -115,8 +115,8 @@ def test_classification_autopilot_prediction_udf_real():
 
     aws_s3_connection = Connection(
         address=aws_params.aws_s3_uri,
-        user=aws_params.aws_key_id,
-        password=aws_params.aws_access_key)
+        user=aws_params.aws_access_key_id,
+        password=aws_params.aws_secret_access_key)
     model_connection = Connection(
         address=json.dumps(connection_data))
 
