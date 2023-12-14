@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-
+set -euo pipefail
 ./build_language_container.sh
 
 mkdir .build_output/exported_container -p
