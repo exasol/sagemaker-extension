@@ -39,7 +39,7 @@ jobs:
         run: poetry run poe lua-tests
 
       - name: Release language container
-        run: ./release_language_container.sh $RELEASE_DIR
+        run: ./release_language_container.sh "$RELEASE_DIR"
 
       - name: Setup integration test environment
         run: ./scripts/setup_integration_test.sh
