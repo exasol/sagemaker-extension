@@ -20,8 +20,8 @@ n/a
   
 ### Documentation
 
-- #97: Improving the container deployment using the container deployer from [transformers-extension](https://github.com/exasol/transformers-extension/)  
-  
+n/a
+
 ### Refactoring
 
 - #97: Improving the container deployment using the container deployer from [transformers-extension](https://github.com/exasol/transformers-extension/)  
