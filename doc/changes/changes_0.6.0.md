@@ -24,4 +24,4 @@ n/a
   
 ### Refactoring
 
-n/a  
+- #97: Improving the container deployment using the container deployer from [transformers-extension](https://github.com/exasol/transformers-extension/)  
