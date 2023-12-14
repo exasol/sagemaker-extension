@@ -40,32 +40,132 @@ within the scope of the project.
 ```buildoutcfg
 pip install exasol_sagemaker_extension.whl
 ```
-### Install The Pre-built Container 
-- Upload the pre-built container into BucketFS. In order to do that you can use 
-either a [http(s) client](https://docs.exasol.com/database_concepts/bucketfs/file_access.htm) 
-or the [bucketfs-client](https://github.com/exasol/bucketfs-client). 
-The following example uploads a container to BucketFS through curl command, a http(s) client:
-```buildoutcfg
-curl -vX PUT -T \ 
-    "<CONTAINER_FILE>" 
-    "http://w:<BUCKETFS_WRITE_PASS>@$bucketfs_host:<BUCKETFS_PASS>/<BUCKETFS_NAME>/<PATH_IN_BUCKET><CONTAINER_FILE>"
+### The Pre-built Language Container
+
+This extension requires the installation of the language container for this 
+extension to run. It can be installed in two ways: Quick and Customized 
+installations
+
+#### Quick Installation
+The language container is downloaded and installed by executing the 
+deployment script below with the desired version. Make sure the version matches with your installed version of the 
+Sagemaker Extension Package. See [the latest release](https://github.com/exasol/sagemaker-extension/releases) on Github.
+
+  ```buildoutcfg
+  python -m exasol_sagemaker_extension.deploy language-container \
+      --dsn <DB_HOST:DB_PORT> \
+      --db-user <DB_USER> \
+      --db-pass <DB_PASSWORD> \
+      --bucketfs-name <BUCKETFS_NAME> \
+      --bucketfs-host <BUCKETFS_HOST> \
+      --bucketfs-port <BUCKETFS_PORT> \
+      --bucketfs-user <BUCKETFS_USER> \
+      --bucketfs-password <BUCKETFS_PASSWORD> \
+      --bucketfs-use-https <USE_HTTPS_BOOL> \
+      --bucket <BUCKETFS_NAME> \
+      --path-in-bucket <PATH_IN_BUCKET> \
+      --language-alias PYTHON3_SME \ 
+      --version <RELEASE_VERSION> \
+      --ssl-cert-path <ssl-cert-path> \
+      --use-ssl-cert-validation
+  ```
+The `--ssl-cert-path` is optional if your certificate is not in the OS truststore. 
+The option `--use-ssl-cert-validation`is the default, you can disable it with `--no-use-ssl-cert-validation`.
+Use caution if you want to turn certificate validation off as it potentially lowers the security of your 
+Database connection.
+
+By default, the above command will upload and activate the language container at the System level.
+The latter requires you to have the System Privileges, as it will attempt to change DB system settings.
+If such privileges cannot be granted the activation can be skipped by using the `--no-alter-system` option.
+The command will then print two possible language activation SQL queries, which look like the following:
+```sql
+ALTER SESSION SET SCRIPT_LANGUAGES=...
+ALTER SYSTEM SET SCRIPT_LANGUAGES=...
 ```
-For more details please check [Adding New Packages to Existing Script Languages](https://docs.exasol.com/database_concepts/udf_scripts/adding_new_packages_script_languages.htm).
+These queries represent two alternative ways of activating a language container. The first one activates the
+container at the [Session level](https://docs.exasol.com/db/latest/sql/alter_session.htm). It doesn't require 
+System Privileges. However, it must be run every time a new session starts. The second one activates the container
+at the [System level](https://docs.exasol.com/db/latest/sql/alter_system.htm). It  needs to be run just once,
+but it does require System Privileges. It may be executed by a database administrator. Please note, that changes 
+made at the system level only become effective in new sessions, as described
+[here](https://docs.exasol.com/db/latest/sql/alter_system.htm#microcontent1).
 
-- Activate the uploaded container through adjusting session parameter `SCRIPT_LANGUAGES`. 
-The activating can be performed for either session-wide (`ALTER SESSION`) or 
-system-wide (`ALTER SYSTEM`). The following example query activates the container session-wide:
-```buildoutcfg
-ALTER SESSION SET SCRIPT_LANGUAGES=\
-<ALIAS>=localzmq+protobuf:///<BUCKETFS_NAME>/<BUCKET_NAME>/<PATH_IN_BUCKET><CONTAINER_NAME>/?\
-        lang=<LANGUAGE>#buckets/<BUCKETFS_NAME>/<BUCKET_NAME>/<PATH_IN_BUCKET><CONTAINER_NAME>/\
-        exaudf/exaudfclient_py3
-```
-where `ALIAS` is _PYTHON3_SME_, `LANGUAGE` is _python_ in the sagemaker-extension project.
+It is also possible to activate the language without repeatedly uploading the container. If the container
+has already been uploaded one can use the `--no-upload-container` option to skip this step.
 
-For more details please check [Adding New Packages to Existing Script Languages](https://docs.exasol.com/database_concepts/udf_scripts/adding_new_packages_script_languages.htm).
+By default, overriding language activation is not permitted. If a language with the same alias has already 
+been activated the command will result in an error. To override the activation, you can use the
+`--allow-override` option.
+
+#### Customized Installation
+In this installation, you can install the desired or customized language 
+container. In the following steps,  it is explained how to install the 
+language container file released in GitHub Releases section.
 
 
+##### Download Language Container
+   - Please download the language container archive (*.tar.gz) from the Releases section. 
+(see [the latest release](https://github.com/exasol/sagemaker-extension/releases/latest)).
+
+##### Install Language Container
+There are two ways to install the language container: (1) using a python script and (2) manual installation. See the next paragraphs for details.
+
+  1. *Installation with Python Script*
+
+     To install the language container, it is necessary to load the container 
+     into the BucketFS and activate it in the database. The following command 
+     performs this setup using the python script provided with this library:
+
+      ```buildoutcfg
+      python -m exasol_sagemaker_extension.deploy language-container
+          --dsn <DB_HOST:DB_PORT> \
+          --db-user <DB_USER> \
+          --db-pass <DB_PASSWORD> \
+          --bucketfs-name <BUCKETFS_NAME> \
+          --bucketfs-host <BUCKETFS_HOST> \
+          --bucketfs-port <BUCKETFS_PORT> \
+          --bucketfs-user <BUCKETFS_USER> \
+          --bucketfs-password <BUCKETFS_PASSWORD> \
+          --bucket <BUCKETFS_NAME> \
+          --path-in-bucket <PATH_IN_BUCKET> \
+          --language-alias PYTHON3_SME \ 
+          --container-file <path/to/language_container_name.tar.gz>       
+      ```
+     Please note, that all considerations described in the Quick Installation 
+     section are still applicable.
+
+
+  2. *Manual Installation*
+
+     In the manual installation, the pre-built container should be firstly 
+     uploaded into BucketFS. In order to do that, you can use 
+     either a [http(s) client](https://docs.exasol.com/database_concepts/bucketfs/file_access.htm) 
+     or the [bucketfs-client](https://github.com/exasol/bucketfs-client). 
+     The following command uploads a given container into BucketFS through curl 
+     command, an http(s) client: 
+      ```shell
+      curl -vX PUT -T \ 
+          "<CONTAINER_FILE>" 
+          "http://w:<BUCKETFS_WRITE_PASSWORD>@<BUCKETFS_HOST>:<BUCKETFS_PORT>/<BUCKETFS_NAME>/<PATH_IN_BUCKET><CONTAINER_FILE>"
+      ```
+
+      Please note that specifying the password on command line will make your shell record the password in the history. To avoid leaking your password please consider to set an environment variable. The following examples sets environment variable `BUCKETFS_WRITE_PASSWORD`:
+      ```shell 
+        read -sp "password: " BUCKETFS_WRITE_PASSWORD
+      ```
+
+      Secondly, the uploaded container should be activated through adjusting 
+      the session parameter `SCRIPT_LANGUAGES`. As it was mentioned before, the activation can be scoped
+      either session-wide (`ALTER SESSION`) or system-wide (`ALTER SYSTEM`). 
+      The following example query activates the container session-wide:
+
+      ```sql
+      ALTER SESSION SET SCRIPT_LANGUAGES=\
+      PYTHON3_SME=localzmq+protobuf:///<BUCKETFS_NAME>/<BUCKET_NAME>/<PATH_IN_BUCKET><CONTAINER_NAME>/?\
+              lang=python#buckets/<BUCKETFS_NAME>/<BUCKET_NAME>/<PATH_IN_BUCKET><CONTAINER_NAME>/\
+              exaudf/exaudfclient_py3
+      ```
+     
 
 ## Deployment
 - Deploy all necessary scripts installed in the previous step to the specified  ```SCHEMA``` in Exasol using the following python cli command: 
