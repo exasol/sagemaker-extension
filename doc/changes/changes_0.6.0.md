@@ -20,7 +20,7 @@ n/a
   
 ### Documentation
 
-- User manual is updated with instructions on how to use the language container deployment cli.
+- #97: Improving the container deployment using the container deployer from [transformers-extension](https://github.com/exasol/transformers-extension/)  
   
 ### Refactoring
 
