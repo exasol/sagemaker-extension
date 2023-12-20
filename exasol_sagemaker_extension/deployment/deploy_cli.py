@@ -20,7 +20,7 @@ def main(host: str, port: str, user: str, pwd: str, schema: str,
     logging.basicConfig(format='%(asctime)s - %(module)s  - %(message)s',
                         level=logging.DEBUG)
 
-    deployment = DeployCreateStatements(
+    DeployCreateStatements.create_and_run(
         db_host=host,
         db_port=port,
         db_user=user,
@@ -29,7 +29,6 @@ def main(host: str, port: str, user: str, pwd: str, schema: str,
         to_print=verbose,
         develop=develop
     )
-    deployment.run()
 
 
 if __name__ == "__main__":

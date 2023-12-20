@@ -25,26 +25,12 @@ class DeployCreateStatements:
     that generate scripts deploying the sagemaker-extension project.
     """
 
-    def __init__(self, db_host: str, db_port: str, db_user: str, db_pass: str,
+    def __init__(self, exasol_conn: pyexasol.ExaConnection,
                  schema: str, to_print: bool, develop: bool):
-        self._db_host = db_host
-        self._db_port = db_port
-        self._db_user = db_user
-        self._db_pass = db_pass
         self._schema = schema
         self._to_print = to_print
         self._develop = develop
-        self.__exasol_conn = pyexasol.connect(
-            dsn="{host}:{port}".format(
-                host=self._db_host, port=self._db_port),
-            user=self._db_user,
-            password=self._db_pass,
-            compression=True,
-            encryption=True,
-            websocket_sslopt={
-                "cert_reqs": ssl.CERT_NONE,
-            }
-        )
+        self.__exasol_conn = exasol_conn
 
     @property
     def statement_maps(self):
@@ -131,3 +117,42 @@ class DeployCreateStatements:
             stmt_generator.save_statement()
             logger.debug(f"{stmt_generator.__class__.__name__} "
                          "is created and saved.")
+
+    @classmethod
+    def create_and_run(cls,
+               db_host: str,
+               db_port: str,
+               db_user: str,
+               db_pass: str,
+               schema: str,
+               to_print: bool,
+               develop: bool):
+        """
+        Creates a database connection object based on the provided credentials
+        Creates an instance of the DeployCreateStatements passing the connection
+        object to it and calls its run method.
+
+        Parameters:
+            db_host     - database host address
+            db_port     - database port
+            db_user     - database username
+            db_pass     - the user password
+            schema      - schema where the scripts should be created
+            to_print    - if True the script creation SQL commands will be
+                          printed rather than executed
+            develop     - if True the scripts will be generated from scratch
+        """
+
+        exasol_conn = pyexasol.connect(
+            dsn=f"{db_host}:{db_port}",
+            user=db_user,
+            password=db_pass,
+            compression=True,
+            encryption=True,
+            websocket_sslopt={
+                "cert_reqs": ssl.CERT_NONE,
+            }
+        )
+
+        deployer = cls(exasol_conn, schema, to_print, develop)
+        deployer.run()

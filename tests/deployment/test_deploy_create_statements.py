@@ -27,7 +27,7 @@ def get_all_scripts(db_conn):
 
 
 def test_deploy_create_statements(db_conn, register_language_container):
-    deployer = DeployCreateStatements(
+    DeployCreateStatements.create_and_run(
         db_host=db_params.host,
         db_port=db_params.port,
         db_user=db_params.user,
@@ -36,8 +36,6 @@ def test_deploy_create_statements(db_conn, register_language_container):
         to_print=False,
         develop=False
     )
-
-    deployer.run()
 
     all_schemas = get_all_schemas(db_conn)
     all_scripts = get_all_scripts(db_conn)
