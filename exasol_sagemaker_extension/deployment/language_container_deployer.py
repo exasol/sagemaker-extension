@@ -15,6 +15,8 @@ from exasol_sagemaker_extension.utils.bucketfs_operations import create_bucketfs
 
 logger = logging.getLogger(__name__)
 
+LANGUAGE_ALIAS = 'PYTHON3_SME'
+
 
 def get_websocket_sslopt(use_ssl_cert_validation: bool = True,
                          ssl_trusted_ca: Optional[str] = None,
@@ -77,11 +79,12 @@ class LanguageContainerDeployer:
 
     def __init__(self,
                  pyexasol_connection: pyexasol.ExaConnection,
-                 language_alias: str,
                  bucketfs_location: BucketFSLocation) -> None:
 
         self._bucketfs_location = bucketfs_location
-        self._language_alias = language_alias
+        # At the moment the language alias has to be a fixed one,
+        # as its value is hardcoded in the scripts.
+        self._language_alias = LANGUAGE_ALIAS
         self._pyexasol_conn = pyexasol_connection
         logger.debug(f"Init {LanguageContainerDeployer.__name__}")
 
@@ -244,7 +247,7 @@ class LanguageContainerDeployer:
     def create(cls, bucketfs_name: str, bucketfs_host: str, bucketfs_port: int,
                bucketfs_use_https: bool, bucketfs_user: str,
                bucketfs_password: str, bucket: str, path_in_bucket: str,
-               dsn: str, db_user: str, db_password: str, language_alias: str,
+               dsn: str, db_user: str, db_password: str,
                use_ssl_cert_validation: bool = True, ssl_trusted_ca: Optional[str] = None,
                ssl_client_certificate: Optional[str] = None,
                ssl_private_key: Optional[str] = None) -> "LanguageContainerDeployer":
@@ -264,4 +267,4 @@ class LanguageContainerDeployer:
             bucketfs_name, bucketfs_host, bucketfs_port, bucketfs_use_https,
             bucketfs_user, bucketfs_password, bucket, path_in_bucket)
 
-        return cls(pyexasol_conn, language_alias, bucketfs_location)
+        return cls(pyexasol_conn, bucketfs_location)

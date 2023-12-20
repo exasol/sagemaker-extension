@@ -25,3 +25,4 @@ n/a
 ### Refactoring
 
 - #97: Improving the container deployment using the container deployer from [transformers-extension](https://github.com/exasol/transformers-extension/)  
+- #99: Making the scripts deployer accepting a pyexasol connection
