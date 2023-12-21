@@ -64,7 +64,6 @@ Sagemaker Extension Package. See [the latest release](https://github.com/exasol/
       --bucketfs-use-https <USE_HTTPS_BOOL> \
       --bucket <BUCKETFS_NAME> \
       --path-in-bucket <PATH_IN_BUCKET> \
-      --language-alias PYTHON3_SME \ 
       --version <RELEASE_VERSION> \
       --ssl-cert-path <ssl-cert-path> \
       --use-ssl-cert-validation
@@ -128,7 +127,6 @@ There are two ways to install the language container: (1) using a python script 
           --bucketfs-password <BUCKETFS_PASSWORD> \
           --bucket <BUCKETFS_NAME> \
           --path-in-bucket <PATH_IN_BUCKET> \
-          --language-alias PYTHON3_SME \ 
           --container-file <path/to/language_container_name.tar.gz>       
       ```
      Please note, that all considerations described in the Quick Installation 

@@ -101,7 +101,6 @@ slc_parameter_formatters = _ParameterFormatters()
 @click.option('--db-user', type=str, required=True)
 @click.option('--db-pass', prompt='db password', hide_input=True,
               default=lambda: os.environ.get(DB_PASSWORD_ENVIRONMENT_VARIABLE, ""))
-@click.option('--language-alias', type=str, default="PYTHON3_TE")
 @click.option('--ssl-cert-path', type=str, default="")
 @click.option('--ssl-client-cert-path', type=str, default="")
 @click.option('--ssl-client-private-key', type=str, default="")
@@ -122,7 +121,6 @@ def language_container_deployer_main(
         dsn: str,
         db_user: str,
         db_pass: str,
-        language_alias: str,
         ssl_cert_path: str,
         ssl_client_cert_path: str,
         ssl_client_private_key: str,
@@ -145,7 +143,6 @@ def language_container_deployer_main(
         dsn=dsn,
         db_user=db_user,
         db_password=db_pass,
-        language_alias=language_alias,
         ssl_trusted_ca=ssl_cert_path,
         ssl_client_certificate=ssl_client_cert_path,
         ssl_private_key=ssl_client_private_key,
