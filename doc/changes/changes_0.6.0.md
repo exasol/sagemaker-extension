@@ -1,4 +1,4 @@
-# SageMaker Extension 0.6.0, released 2023-12-14
+# SageMaker Extension 0.6.0, released 2023-12-21
 
 Code name: Added language container deployment
 
