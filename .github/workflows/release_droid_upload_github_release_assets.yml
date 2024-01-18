@@ -58,4 +58,4 @@ jobs:
         uses: shogo82148/actions-upload-release-asset@v1
         with:
           upload_url: ${{ github.event.inputs.upload_url }}
-          asset_path: $RELEASE_DIR/*
+          asset_path: ${{ env.RELEASE_DIR }}/*
