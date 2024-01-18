@@ -50,4 +50,3 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.poe.tasks]
 lua-tests = {"shell" = "bash ./scripts/lua_tests.sh"}
-
