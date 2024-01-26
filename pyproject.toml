@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "exasol-sagemaker-extension"
-version = "0.7.0"
+version = "0.8.0"
 description = "Exasol SageMaker Integration"
 
 license = "MIT"
@@ -41,6 +41,8 @@ exasol-bucketfs = "^0.6.0"
 poethepoet = "^0.13.1"
 localstack-client = "^1.25"
 boto3 = "^1.20.40"
+toml = "^0.10.2"
+gitpython = "^3.1.41"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
@@ -48,4 +50,3 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.poe.tasks]
 lua-tests = {"shell" = "bash ./scripts/lua_tests.sh"}
-
