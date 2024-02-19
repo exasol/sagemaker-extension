@@ -453,19 +453,19 @@ files = [
 
 [[package]]
 name = "exasol-bucketfs"
-version = "0.8.0"
+version = "0.9.0"
 description = "BucketFS utilities for the Python programming language"
 optional = false
 python-versions = ">=3.8,<4.0"
 files = [
-    {file = "exasol_bucketfs-0.8.0-py3-none-any.whl", hash = "sha256:3bdee82faded20f65b559ba154d2f17812c62af8d0642ff0dac8ab4d996ba0e0"},
-    {file = "exasol_bucketfs-0.8.0.tar.gz", hash = "sha256:924a757bc6608fe29a9bbe6ddd4240583410669f8958f9859df874f7e57b4bc9"},
+    {file = "exasol_bucketfs-0.9.0-py3-none-any.whl", hash = "sha256:7264ff60a87ecd709595babf90de99bf46e1e81b39041069c6008c4393eae8a8"},
+    {file = "exasol_bucketfs-0.9.0.tar.gz", hash = "sha256:209689248cd0212c92f97555adac0a0a1a741346e33abf277341a3f9b3c80335"},
 ]
 
 [package.dependencies]
 joblib = ">=1.0.1"
 requests = ">=2.24.0"
-typeguard = ">=2.11.1,<3.0.0"
+typeguard = "4.0.0"
 
 [[package]]
 name = "exasol-udf-mock-python"
@@ -1671,18 +1671,33 @@ files = [
 
 [[package]]
 name = "typeguard"
-version = "2.13.3"
+version = "4.0.0"
 description = "Run-time type checker for Python"
 optional = false
-python-versions = ">=3.5.3"
+python-versions = ">=3.7.4"
 files = [
-    {file = "typeguard-2.13.3-py3-none-any.whl", hash = "sha256:5e3e3be01e887e7eafae5af63d1f36c849aaa94e3a0112097312aabfa16284f1"},
-    {file = "typeguard-2.13.3.tar.gz", hash = "sha256:00edaa8da3a133674796cf5ea87d9f4b4c367d77476e185e80251cc13dfbb8c4"},
+    {file = "typeguard-4.0.0-py3-none-any.whl", hash = "sha256:c4a40af0ba8a41077221271b46d0a6d8d46045443e4d887887c69254ca861952"},
+    {file = "typeguard-4.0.0.tar.gz", hash = "sha256:194fb3dbcb06ea9caf7088f3befee014de57961689f9c859ac5239b1ef61d987"},
 ]
 
+[package.dependencies]
+importlib-metadata = {version = ">=3.6", markers = "python_version < \"3.10\""}
+typing-extensions = {version = ">=4.4.0", markers = "python_version < \"3.11\""}
+
 [package.extras]
-doc = ["sphinx-autodoc-typehints (>=1.2.0)", "sphinx-rtd-theme"]
-test = ["mypy", "pytest", "typing-extensions"]
+doc = ["packaging", "sphinx-autodoc-typehints (>=1.2.0)", "sphinx-rtd-theme"]
+test = ["mypy (>=1.2.0)", "pytest (>=7)"]
+
+[[package]]
+name = "typing-extensions"
+version = "4.9.0"
+description = "Backported and Experimental Type Hints for Python 3.8+"
+optional = false
+python-versions = ">=3.8"
+files = [
+    {file = "typing_extensions-4.9.0-py3-none-any.whl", hash = "sha256:af72aea155e91adfc61c3ae9e0e342dbc0cba726d6cba4b6c72c1f34e47291cd"},
+    {file = "typing_extensions-4.9.0.tar.gz", hash = "sha256:23478f88c37f27d76ac8aee6c905017a143b0b1b886c3c9f66bc2fd94f9f5783"},
+]
 
 [[package]]
 name = "urllib3"
@@ -1734,4 +1749,4 @@ testing = ["big-O", "jaraco.functools", "jaraco.itertools", "more-itertools", "p
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.8,<4.0"
-content-hash = "b3a53a759c80a4d36f31ad5a677e9d457be3d630e4e5e86a46c2182cde7c492c"
+content-hash = "b1c6d9246d88224c67a0b38612befcf650e051f80107c4ea1a8447c158dba53f"
