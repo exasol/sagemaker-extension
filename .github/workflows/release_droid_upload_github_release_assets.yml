@@ -59,3 +59,9 @@ jobs:
         with:
           upload_url: ${{ github.event.inputs.upload_url }}
           asset_path: ${{ env.RELEASE_DIR }}/*
+
+      - name: PyPi Release
+        env:
+          POETRY_HTTP_BASIC_PYPI_USERNAME: "__token__"
+          POETRY_HTTP_BASIC_PYPI_PASSWORD: "${{ secrets.PYPI_TOKEN }}"
+        run: poetry publish
