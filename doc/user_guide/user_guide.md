@@ -11,7 +11,7 @@ within the scope of the project.
 
 ## Table of Contents
 
-- [Getting Started](#getting-started)
+- [Prerequisites](#prerequisites)
 - [Installation](#installation)
 - [Deployment](#deployment)
 - [Execution of Training](#execution-of-training)
@@ -19,19 +19,9 @@ within the scope of the project.
 - [Prediction on AWS Sagemaker Endpoint](#prediction-on-aws-sageamker-endpoint)
 
 
-## Getting Started
+## Prerequisites
 - Exasol DB
   - The Exasol cluster must already be running with version 7.1 or later.
-- AWS connection from Exasol 
-  - An Exasol connection object must be created with AWS credentials that has 
-  AWS Sagemaker Execution permission. An example connection object is created 
-  as follows. For more information please check the [Create Connection in Exasol](https://docs.exasol.com/sql/create_connection.htm?Highlight=connection) document:  
-  ```buildoutcfg
-  CREATE OR REPLACE  CONNECTION <CONNECTION_NAME>
-      TO '<S3_BUCKET_ADDRESS>'
-      USER '<AWS_KEY_ID>'
-      IDENTIFIED BY '<AWS_ACCESS_KEY>'
-  ```  
 
 
 ## Installation
@@ -165,7 +155,7 @@ There are two ways to install the language container: (1) using a python script 
       ```
      
 
-## Deployment
+### Scripts Deployment
 - Deploy all necessary scripts installed in the previous step to the specified  ```SCHEMA``` in Exasol using the following python cli command: 
 ```buildoutcfg
 python -m exasol_sagemaker_extension.deployment.deploy_cli \
@@ -175,6 +165,19 @@ python -m exasol_sagemaker_extension.deployment.deploy_cli \
     --pass <PASS> \
     --schema <SCHEMA>
 ```
+
+
+### AWS Connection Object
+  - Create an Exasol connection object with AWS credentials that has 
+AWS Sagemaker Execution permission. The connection will encapsulate the address of the AWS S3 bucket where the exported data will be stored. 
+For more information please check the [Create Connection in Exasol](https://docs.exasol.com/sql/create_connection.htm?Highlight=connection) document.
+Below is a template of the query that will create the required connection object. 
+  ```buildoutcfg
+  CREATE OR REPLACE  CONNECTION <CONNECTION_NAME>
+      TO 'https://<S3_BUCKET_NAME>.s3.<AWS_REGION>.amazonaws.com'
+      USER '<AWS_ACCESS_KEY_ID>'
+      IDENTIFIED BY '<AWS_SECRET_ACCESS_KEY>'
+  ```  
 
 
 
@@ -205,10 +208,10 @@ EXECUTE SCRIPT SME_TRAIN_WITH_SAGEMAKER_AUTOPILOT('{
 
 - Parameters:
   - ```job_name```: A unique job name. It can also be treated as model_name since only one job is created for each model.
-  - ```aws_credentials_connection_name```: The name of an Exasol connection object with AWS credentials. 
+  - ```aws_credentials_connection_name```: The name of an [Exasol connection object](#aws-connection-object) with AWS credentials. 
   - ```aws_region```: The AWS region where the training should run.
   - ```iam_sagemaker_role```: The ARN of AWS IAM identity having  the Sagemaker execution privileges.
-  - ```s3_bucket_uri```: The URI to an AWS S3 Bucket to which the table gets exported for training. 
+  - ```s3_bucket_uri```: The URI to an AWS S3 Bucket to which the table gets exported for training. This should have the form 's3://<S3_BUCKET_NAME>'.
   - ```s3_output_path``` : The path in the AWS S3 Bucket to which the table gets exported for training. 
   - ```input_schema_name```: The schema name including the exported table for training.
   - ```input_table_or_view_name```: The name of exported table or view for training.
@@ -250,7 +253,7 @@ EXECUTE SCRIPT SME_POLL_SAGEMAKER_AUTOPILOT_JOB_STATUS(
 
 - Parameters:
   - ```job_name```: A unique Autopilot job name.
-  - ```aws_credentials_connection_name```:   The name of an Exasol connection object with AWS credentials having Sagemaker execution permission.
+  - ```aws_credentials_connection_name```:   The name of an [Exasol connection object](#aws-connection-object) with AWS credentials.
   - ```aws_region```: The AWS region where the training should run.
 
 
@@ -289,7 +292,7 @@ EXECUTE SCRIPT SME_DEPLOY_SAGEMAKER_AUTOPILOT_ENDPOINT(
   - ```schema_name```: The name of schema where the prediction UDF gets created.
   - ``` instance_type```: The EC2 instance type of the endpoint to deploy the Autopilot model to e.g., 'ml.m5.large'. For more information please check [Autopilot API reference guide](https://docs.aws.amazon.com/sagemaker/latest/dg/autopilot-reference.html).
   - ```instance_count```: The initial number of instances to run the endpoint on. For more information please check [Autopilot API reference guide](https://docs.aws.amazon.com/sagemaker/latest/dg/autopilot-reference.html).
-  - ```aws_credentials_connection_name```:   The name of an Exasol connection object with AWS credentials having Sagemaker execution permission.
+  - ```aws_credentials_connection_name```:   The name of an [Exasol connection object](#aws-connection-object) with AWS credentials.
   - ```aws_region```: The AWS region where the deployment should run.
 
 
@@ -332,6 +335,6 @@ EXECUTE SCRIPT SME_DELETE_SAGEMAKER_AUTOPILOT_ENDPOINT(
 
 - Parameters
   - ```endpoint_name```: The name of endpoint to be deleted.
-  - ```aws_credentials_connection_name```:   The name of an Exasol connection object with AWS credentials having Sagemaker execution permission.
+  - ```aws_credentials_connection_name```:   The name of an [Exasol connection object](#aws-connection-object) with AWS credentials.
   - ```aws_region```: The AWS region where the deletion should run.
 
