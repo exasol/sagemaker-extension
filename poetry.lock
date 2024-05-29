@@ -1298,8 +1298,8 @@ requests = "<2.32.0"
 [package.source]
 type = "git"
 url = "https://github.com/exasol/python-extension-common"
-reference = "bug/delete-testpaths"
-resolved_reference = "e05b620666eb1a5e52c251d6a000e4ca9209d620"
+reference = "main"
+resolved_reference = "c92243bc39daa638bb153bfca0e229d96e1e81e4"
 
 [[package]]
 name = "pytz"
@@ -1925,4 +1925,4 @@ testing = ["big-O", "jaraco.functools", "jaraco.itertools", "jaraco.test", "more
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.8,<4.0"
-content-hash = "95177e5f0d5c3ab5ee1d5d77c0c2f3de7b4b8b07ae910c0a8e0b8e7771b3036c"
+content-hash = "9e9e2c4928024f7cc701b6ed1bf9b32c9403b615da8d1daf3bb8dbbf797c97f0"

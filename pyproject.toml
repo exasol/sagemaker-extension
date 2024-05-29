@@ -31,7 +31,7 @@ exasol-bucketfs = ">=0.9.0,<1.0.0"
 importlib-resources = "^5.2.0"
 click = "^8.0.3"
 # TODO: replace with released version on release
-python-extension-common = {git = "https://github.com/exasol/python-extension-common", branch = "bug/delete-testpaths"}
+python-extension-common = {git = "https://github.com/exasol/python-extension-common", branch = "main"}
 
 [tool.poetry.dev-dependencies]
 pytest = "^7.1"
