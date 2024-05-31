@@ -1,7 +1,7 @@
 import logging
 import click
 from exasol_sagemaker_extension.deployment.deploy_cli import main as scripts_deployer_main
-from exasol_sagemaker_extension.deployment.language_container_deployer_cli \
+from exasol.python_extension_common.deployment.language_container_deployer_cli \
     import language_container_deployer_main, slc_parameter_formatters, CustomizableParameters
 from exasol_sagemaker_extension.deployment.sme_language_container_deployer import SmeLanguageContainerDeployer
 

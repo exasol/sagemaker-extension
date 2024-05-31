@@ -18,6 +18,7 @@ n/a
 
 - #116: Explanation of how to from the S3 bucket URI
 
+
 ### Refactoring
 
-n/a
+- #118: Refactor to use python-extension-common package
