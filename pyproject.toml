@@ -27,7 +27,6 @@ botocore = "1.29.163"
 protobuf = ">=3.1,<=3.20.0"
 sagemaker = "^2.59.1"
 pyexasol = "^0.25.0"
-exasol-bucketfs = ">=0.9.0,<1.0.0"
 importlib-resources = "^5.2.0"
 click = "^8.0.3"
 # TODO: replace with released version on release
