@@ -30,7 +30,7 @@ pyexasol = "^0.25.0"
 importlib-resources = "^5.2.0"
 click = "^8.0.3"
 # TODO: replace with released version on release
-python-extension-common = {git = "https://github.com/exasol/python-extension-common", branch = "main"}
+python-extension-common = {git = "https://github.com/exasol/python-extension-common.git", branch = "main"}
 
 [tool.poetry.dev-dependencies]
 pytest = "^7.1"
