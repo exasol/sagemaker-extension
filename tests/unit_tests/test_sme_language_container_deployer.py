@@ -1,6 +1,6 @@
 import pytest
 from pathlib import Path
-from unittest.mock import create_autospec, MagicMock
+from unittest.mock import create_autospec, MagicMock, call
 from pyexasol import ExaConnection
 import exasol.bucketfs as bfs
 
@@ -23,7 +23,11 @@ def test_sme_language_container_deployer(sme_container_deployer):
     sme_container_deployer.run(container_file=file_path,
                                bucket_file_path=file_name,
                                alter_system=True,
-                               allow_override=True)
+                               allow_override=True,
+                               wait_for_completion=False)
     sme_container_deployer.upload_container.assert_called_once_with(file_path, file_name)
-    sme_container_deployer.activate_container.assert_called_once_with(
-        file_name, LanguageActivationLevel.System, True)
+    expected_calls = [
+        call(file_name, LanguageActivationLevel.Session, True),
+        call(file_name, LanguageActivationLevel.System, True)
+    ]
+    sme_container_deployer.activate_container.assert_has_calls(expected_calls, any_order=True)
