@@ -85,7 +85,7 @@ def upload_language_container(language_container, db_conn):
     return alter_session
 
 
-@pytest.fixture
+@pytest.fixture(scope="session")
 def container_deployer(language_container, db_conn: pyexasol.ExaConnection) -> SmeLanguageContainerDeployer:
     deployer = SmeLanguageContainerDeployer(
         pyexasol_connection=db_conn,
