@@ -1,10 +1,10 @@
-# SageMaker Extension 0.10.0, released T.B.D.
+# SageMaker Extension 0.10.0, released 2024-06-20
 
-Code name: T.B.D.
+Code name: Python 3.10
 
 ## Summary
 
-T.B.D.
+Improving documentation, refactoring and moving to Python 3.10
 
 ### Features
 
@@ -22,3 +22,4 @@ n/a
 ### Refactoring
 
 - #118: Refactor to use python-extension-common package
+- #124: Moved to Python 3.10
