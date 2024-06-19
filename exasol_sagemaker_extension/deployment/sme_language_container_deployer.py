@@ -1,6 +1,7 @@
 from typing import Optional
 from pathlib import Path
 from exasol.python_extension_common.deployment.language_container_deployer import LanguageContainerDeployer
+import exasol.bucketfs as bfs
 
 
 class SmeLanguageContainerDeployer(LanguageContainerDeployer):
@@ -16,6 +17,10 @@ class SmeLanguageContainerDeployer(LanguageContainerDeployer):
         self.download_and_run(self.SLC_URL_FORMATTER.format(version=version), self.SLC_NAME,
                               alter_system=alter_system, allow_override=allow_override,
                               wait_for_completion=wait_for_completion)
+
+    @property
+    def bfs_path(self) -> bfs.path.PathLike:
+        return self._bucketfs_path
 
     def run(self, container_file: Optional[Path] = None,
             bucket_file_path: Optional[str] = None,

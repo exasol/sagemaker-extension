@@ -1,4 +1,6 @@
 from collections import namedtuple
+import exasol.bucketfs as bfs
+
 
 POLLING_INTERVAL = 5 * 60  # seconds
 TIMEOUT = 90 * 60  # seconds
@@ -41,3 +43,16 @@ def get_db_params():
 
 
 db_params = get_db_params()
+
+
+def get_bfs_root_path() -> bfs.path.PathLike:
+    root_path = bfs.path.build_path(
+        backend="onprem",
+        url=f"http://{db_params.host}:{db_params.port}",
+        username="w",
+        password="write",
+        bucket_name="bfsdefault",
+        verify=False,
+    )
+
+    return root_path
