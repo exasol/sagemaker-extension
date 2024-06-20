@@ -30,6 +30,7 @@ pyexasol = "^0.25.0"
 importlib-resources = "^5.2.0"
 click = "^8.0.3"
 exasol-python-extension-common = ">=0.2.0"
+exasol-script-languages-container-tool = "^0.19.0"
 
 [tool.poetry.dev-dependencies]
 pytest = "^7.1"
