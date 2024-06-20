@@ -4,7 +4,7 @@
 
 | Dependency                    | Purpose                                    | License            |
 |-------------------------------|--------------------------------------------|--------------------|
-| [Python 3][python]            | Python version 3.8 and above               | PSF                |
+| [Python 3][python]            | Python version 3.10 and above              | PSF                |
 | [AWS SageMaker][sagemaker]    | Allows to train ML models on AWS Sagemaker | Apache License 2.0 |
 | [AWS Boto] [boto]           | Makes use of AWS services for Python       | Apache License 2.0 |
 
