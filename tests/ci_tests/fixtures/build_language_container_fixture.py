@@ -2,14 +2,18 @@ import time
 
 import pytest
 import subprocess
+from typing import Tuple
 from pathlib import Path
+import pyexasol
 import exasol_bucketfs_utils_python.upload as bfsupload
 from exasol_bucketfs_utils_python.bucket_config import BucketConfig
 from exasol_bucketfs_utils_python.bucketfs_config import BucketFSConfig
 from exasol_bucketfs_utils_python.bucketfs_connection_config import \
     BucketFSConnectionConfig
 
-from tests.ci_tests.utils.parameters import db_params
+from exasol_sagemaker_extension.deployment.sme_language_container_deployer import SmeLanguageContainerDeployer
+
+from tests.ci_tests.utils.parameters import db_params, get_bfs_root_path
 
 
 def find_script(script_name: str):
@@ -27,7 +31,7 @@ def find_script(script_name: str):
 
 
 @pytest.fixture(scope="session")
-def language_container():
+def language_container() -> Tuple[Path, str]:
     script_dir = find_script("build_language_container.sh")
     completed_process = subprocess.run(
         [script_dir], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
@@ -46,11 +50,7 @@ def language_container():
     container_path = \
         [line for line in lines if line.startswith(container_path_selector)][0]
     container_path = container_path[len(container_path_selector):]
-
-    return {
-        "container_path": container_path,
-        "alter_session": alter_session
-    }
+    return Path(container_path), alter_session
 
 
 @pytest.fixture(scope="session")
@@ -86,6 +86,16 @@ def upload_language_container(language_container, db_conn):
 
 
 @pytest.fixture(scope="session")
-def register_language_container(upload_language_container, db_conn):
-    alter_session = upload_language_container
-    db_conn.execute(f"ALTER SYSTEM SET SCRIPT_LANGUAGES='{alter_session}'")
+def container_deployer(language_container, db_conn: pyexasol.ExaConnection) -> SmeLanguageContainerDeployer:
+    deployer = SmeLanguageContainerDeployer(
+        pyexasol_connection=db_conn,
+        language_alias='PYTHON3_TEST',
+        bucketfs_path=get_bfs_root_path(),
+    )
+    return deployer
+
+
+@pytest.fixture(scope="session")
+def register_language_container(language_container, container_deployer: SmeLanguageContainerDeployer, db_conn):
+    container_path, _ = language_container
+    container_deployer.run(container_path, alter_system=True)
