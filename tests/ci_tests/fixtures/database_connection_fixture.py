@@ -40,7 +40,8 @@ def db_conn_saas() -> pyexasol.ExaConnection | None:
     pat = os.environ.get("SAAS_PAT")
 
     if not all([host, account_id, pat]):
-        return None
+        yield None
+        return
 
     with ExitStack() as stack:
         # Create and configure the SaaS client.
