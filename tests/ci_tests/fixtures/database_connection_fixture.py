@@ -65,7 +65,9 @@ def db_conn_saas() -> pyexasol.ExaConnection | None:
 def db_conn(request,
             db_conn_onprem,
             db_conn_saas) -> pyexasol.ExaConnection:
-    if (request.param == bfs.path.StorageBackend.saas) and (db_conn_saas is not None):
+    if (hasattr(request, 'param') and
+            (request.param == bfs.path.StorageBackend.saas) and
+            (db_conn_saas is not None)):
         yield db_conn_saas
     else:
         yield db_conn_onprem
