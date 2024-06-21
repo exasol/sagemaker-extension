@@ -1,3 +1,4 @@
+from __future__ import annotations
 import os
 from datetime import timedelta
 from contextlib import ExitStack
@@ -16,13 +17,6 @@ from exasol.saas.client.api_access import (
 from tests.ci_tests.utils.parameters import db_params
 
 
-def _env(var: str) -> str:
-    result = os.environ.get(var)
-    if result:
-        return result
-    raise RuntimeError(f"Environment variable {var} is empty.")
-
-
 def _open_pyexasol_connection(**kwargs) -> pyexasol.ExaConnection:
 
     return pyexasol.connect(**kwargs,
@@ -39,11 +33,14 @@ def db_conn_onprem() -> pyexasol.ExaConnection:
 
 
 @pytest.fixture(scope="session")
-def db_conn_saas() -> pyexasol.ExaConnection:
+def db_conn_saas() -> pyexasol.ExaConnection | None:
 
-    host = _env("SAAS_HOST")
-    account_id = _env("SAAS_ACCOUNT_ID")
-    pat = _env("SAAS_PAT")
+    host = os.environ.get("SAAS_HOST")
+    account_id = os.environ.get("SAAS_ACCOUNT_ID")
+    pat = os.environ.get("SAAS_PAT")
+
+    if not all([host, account_id, pat]):
+        return None
 
     with ExitStack() as stack:
         # Create and configure the SaaS client.
@@ -67,10 +64,7 @@ def db_conn_saas() -> pyexasol.ExaConnection:
 def db_conn(request,
             db_conn_onprem,
             db_conn_saas) -> pyexasol.ExaConnection:
-    if request.param == bfs.path.StorageBackend.onprem:
-        yield db_conn_onprem
-    elif request.param == bfs.path.StorageBackend.saas:
+    if (request.param == bfs.path.StorageBackend.saas) and (db_conn_saas is not None):
         yield db_conn_saas
     else:
-        raise ValueError(('Unrecognised testing backend in the prepare_ci_test_environment. '
-                          'Should be either "onprem" or "saas"'))
+        yield db_conn_onprem
