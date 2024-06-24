@@ -4,7 +4,7 @@ from datetime import datetime
 import pytest
 import exasol.bucketfs as bfs
 
-from tests.ci_tests.fixtures.prepare_environment_fixture import CITestEnvironment
+from tests.fixtures.prepare_environment_fixture import CITestEnvironment
 from tests.ci_tests.utils import parameters
 from tests.ci_tests.utils.autopilot_deployment import AutopilotTestDeployment
 from tests.ci_tests.utils.autopilot_polling import AutopilotTestPolling
@@ -56,7 +56,6 @@ def _make_prediction(job_name, endpoint_name, model_setup_params, ci_test_env: C
     assert predictions
 
 
-@skip_if_aws_credentials_not_set
 @pytest.mark.parametrize("db_conn", [bfs.path.StorageBackend.onprem, bfs.path.StorageBackend.saas], indirect=True)
 def test_predict_autopilot_regression_job(db_conn, setup_ci_test_environment):
     curr_datetime = datetime.now().strftime("%y%m%d%H%M%S")
@@ -76,7 +75,6 @@ def test_predict_autopilot_regression_job(db_conn, setup_ci_test_environment):
         db_conn=setup_ci_test_environment)
 
 
-@skip_if_aws_credentials_not_set
 @pytest.mark.parametrize("db_conn", [bfs.path.StorageBackend.onprem, bfs.path.StorageBackend.saas], indirect=True)
 def test_predict_autopilot_classification_job(db_conn, setup_ci_test_environment):
     curr_datetime = datetime.now().strftime("%y%m%d%H%M%S")

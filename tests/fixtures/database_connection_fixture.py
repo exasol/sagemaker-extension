@@ -14,7 +14,7 @@ from exasol.saas.client.api_access import (
     get_connection_params
 )
 
-from tests.ci_tests.utils.parameters import db_params
+from tests.integration_tests.utils.parameters import db_params
 
 
 def _open_pyexasol_connection(**kwargs) -> pyexasol.ExaConnection:
@@ -39,10 +39,6 @@ def db_conn_saas() -> pyexasol.ExaConnection | None:
     account_id = os.environ.get("SAAS_ACCOUNT_ID")
     pat = os.environ.get("SAAS_PAT")
 
-    if not all([host, account_id, pat]):
-        yield None
-        return
-
     with ExitStack() as stack:
         # Create and configure the SaaS client.
         client = create_saas_client(host=host, pat=pat)
@@ -66,8 +62,7 @@ def db_conn(request,
             db_conn_onprem,
             db_conn_saas) -> pyexasol.ExaConnection:
     if (hasattr(request, 'param') and
-            (request.param == bfs.path.StorageBackend.saas) and
-            (db_conn_saas is not None)):
+            (request.param == bfs.path.StorageBackend.saas)):
         yield db_conn_saas
     else:
         yield db_conn_onprem

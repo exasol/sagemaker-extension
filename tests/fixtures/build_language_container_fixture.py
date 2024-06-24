@@ -9,11 +9,11 @@ from exasol_bucketfs_utils_python.bucketfs_config import BucketFSConfig
 from exasol_bucketfs_utils_python.bucketfs_connection_config import \
     BucketFSConnectionConfig
 
-from tests.ci_tests.utils.parameters import db_params
+from tests.integration_tests.utils.parameters import db_params
 
 
 def find_script(script_name: str):
-    current_path = Path("../..").absolute()
+    current_path = Path("..").absolute()
     script_path = None
     while current_path != current_path.root:
         script_path = Path(current_path, script_name)

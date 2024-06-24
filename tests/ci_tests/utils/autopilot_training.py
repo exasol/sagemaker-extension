@@ -1,6 +1,6 @@
 import json
 
-from tests.ci_tests.fixtures.prepare_environment_fixture import CITestEnvironment
+from tests.fixtures.prepare_environment_fixture import CITestEnvironment
 from tests.ci_tests.utils.parameters import reg_model_setup_params, \
     cls_model_setup_params
 

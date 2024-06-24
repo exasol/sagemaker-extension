@@ -1,6 +1,6 @@
 import pytest
 
-from tests.ci_tests.fixtures.prepare_environment_fixture import CITestEnvironment
+from tests.fixtures.prepare_environment_fixture import CITestEnvironment
 
 
 @pytest.fixture(scope="session")

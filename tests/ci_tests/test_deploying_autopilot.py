@@ -4,7 +4,7 @@ from datetime import datetime
 import pytest
 import exasol.bucketfs as bfs
 
-from tests.ci_tests.fixtures.prepare_environment_fixture import CITestEnvironment
+from tests.fixtures.prepare_environment_fixture import CITestEnvironment
 from tests.ci_tests.utils import parameters
 from tests.ci_tests.utils.autopilot_deployment import AutopilotTestDeployment
 from tests.ci_tests.utils.autopilot_polling import AutopilotTestPolling
@@ -55,7 +55,6 @@ def _deploy_endpoint(job_name, endpoint_name, model_setup_params, ci_test_env: C
     assert endpoint_name in list(map(lambda x: x[0], all_scripts))
 
 
-@skip_if_aws_credentials_not_set
 @pytest.mark.parametrize("db_conn", [bfs.path.StorageBackend.onprem, bfs.path.StorageBackend.saas], indirect=True)
 def test_deploy_autopilot_endpoint(db_conn, setup_ci_test_environment):
     curr_datetime = datetime.now().strftime("%y%m%d%H%M%S")

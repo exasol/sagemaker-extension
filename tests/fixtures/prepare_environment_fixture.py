@@ -9,8 +9,8 @@ import pytest
 from click.testing import CliRunner
 
 from exasol_sagemaker_extension.deployment import deploy_cli
-from tests.ci_tests.utils.parameters import db_params, \
-    reg_model_setup_params, cls_model_setup_params
+from tests.integration_tests.utils.parameters import db_params
+from tests.ci_tests.utils.parameters import reg_model_setup_params, cls_model_setup_params
 
 
 def __open_schema(db_conn, model_setup):

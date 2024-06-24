@@ -9,7 +9,6 @@ from tests.ci_tests.utils.checkers import skip_if_aws_credentials_not_set
 from tests.ci_tests.utils.parameters import cls_model_setup_params
 
 
-@skip_if_aws_credentials_not_set
 @pytest.mark.parametrize("db_conn", [bfs.path.StorageBackend.onprem, bfs.path.StorageBackend.saas], indirect=True)
 def test_poll_autopilot_job(db_conn, setup_ci_test_environment):
     curr_datetime = datetime.now().strftime("%y%m%d%H%M%S")

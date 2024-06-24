@@ -26,18 +26,3 @@ cls_model_setup_params = ModelSetupParams(
     aws_output_path="cls_path",
     batch_size=10
 )
-
-
-def get_db_params():
-    DBParams = namedtuple("DBParams", [
-        "host", "port", "user", "password"])
-
-    return DBParams(
-        host="127.0.0.1",
-        port="9563",
-        user="sys",
-        password="exasol"
-    )
-
-
-db_params = get_db_params()
