@@ -1,7 +1,10 @@
+from __future__ import annotations
 import logging
-import ssl
 
 import pyexasol
+from exasol.python_extension_common.deployment.language_container_deployer import get_websocket_sslopt
+from exasol.saas.client.api_access import get_connection_params
+
 from exasol_sagemaker_extension.deployment import constants
 from exasol_sagemaker_extension.deployment. \
     generate_create_statement_autopilot_endpoint_deletion \
@@ -120,39 +123,59 @@ class DeployCreateStatements:
 
     @classmethod
     def create_and_run(cls,
-               db_host: str,
-               db_port: str,
-               db_user: str,
-               db_pass: str,
-               schema: str,
-               to_print: bool,
-               develop: bool):
+                       schema: str,
+                       dsn: str | None = None,
+                       db_user: str | None = None,
+                       db_password: str | None = None,
+                       saas_url: str | None = None,
+                       saas_account_id: str | None = None,
+                       saas_database_id: str | None = None,
+                       saas_database_name: str | None = None,
+                       saas_token: str | None = None,
+                       use_ssl_cert_validation: bool = True,
+                       ssl_trusted_ca: str | None = None,
+                       ssl_client_certificate: str | None = None,
+                       ssl_private_key: str | None = None,
+                       to_print: bool = False,
+                       develop: bool = False):
         """
         Creates a database connection object based on the provided credentials
         Creates an instance of the DeployCreateStatements passing the connection
         object to it and calls its run method.
 
         Parameters:
-            db_host     - database host address
-            db_port     - database port
-            db_user     - database username
-            db_pass     - the user password
             schema      - schema where the scripts should be created
+            dsn         - database address including the port
+            db_user     - database username
+            db_password - the user password
             to_print    - if True the script creation SQL commands will be
                           printed rather than executed
             develop     - if True the scripts will be generated from scratch
         """
 
-        exasol_conn = pyexasol.connect(
-            dsn=f"{db_host}:{db_port}",
-            user=db_user,
-            password=db_pass,
-            compression=True,
-            encryption=True,
-            websocket_sslopt={
-                "cert_reqs": ssl.CERT_NONE,
-            }
-        )
+        # Infer where the database is - on-prem or SaaS.
+        if all((dsn, db_user, db_password)):
+            connection_params = {'dsn': dsn, 'user': db_user, 'password': db_password}
+        elif all((saas_url, saas_account_id, saas_token,
+                  any((saas_database_id, saas_database_name)))):
+            connection_params = get_connection_params(host=saas_url,
+                                                      account_id=saas_account_id,
+                                                      database_id=saas_database_id,
+                                                      database_name=saas_database_name,
+                                                      pat=saas_token)
+        else:
+            raise ValueError('Incomplete parameter list. '
+                             'Please either provide the parameters [dns, db_user, db_password] '
+                             'for an On-Prem database or [saas_url, saas_account_id, '
+                             'saas_database_id, saas_token] for a SaaS database.')
+
+        websocket_sslopt = get_websocket_sslopt(use_ssl_cert_validation, ssl_trusted_ca,
+                                                ssl_client_certificate, ssl_private_key)
+
+        exasol_conn = pyexasol.connect(**connection_params,
+                                       encryption=True,
+                                       websocket_sslopt=websocket_sslopt,
+                                       compression=True)
 
         deployer = cls(exasol_conn, schema, to_print, develop)
         deployer.run()

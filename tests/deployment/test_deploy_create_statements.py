@@ -1,6 +1,8 @@
+import pytest
+import exasol.bucketfs as bfs
+
 from exasol_sagemaker_extension.deployment.deploy_create_statements import \
     DeployCreateStatements
-from tests.integration_tests.utils.parameters import db_params
 
 DB_SCHEMA = "TEST_DEPLOY_SCHEMA"
 AUTOPILOT_TRAINING_LUA_SCRIPT_NAME = \
@@ -26,16 +28,13 @@ def get_all_scripts(db_conn):
     return list(map(lambda x: x[0], all_scripts))
 
 
-def test_deploy_create_statements(db_conn, register_language_container):
-    DeployCreateStatements.create_and_run(
-        db_host=db_params.host,
-        db_port=db_params.port,
-        db_user=db_params.user,
-        db_pass=db_params.password,
-        schema=DB_SCHEMA,
-        to_print=False,
-        develop=False
-    )
+@pytest.mark.parametrize("db_conn,deploy_params", [
+    (bfs.path.StorageBackend.onprem, bfs.path.StorageBackend.onprem),
+    (bfs.path.StorageBackend.saas, bfs.path.StorageBackend.saas)
+], indirect=True)
+def test_deploy_create_statements(db_conn, deploy_params):
+
+    DeployCreateStatements.create_and_run(**deploy_params)
 
     all_schemas = get_all_schemas(db_conn)
     all_scripts = get_all_scripts(db_conn)

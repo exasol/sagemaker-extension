@@ -1,6 +1,11 @@
+from __future__ import annotations
+from typing import Any
+
+import pytest
 from click.testing import CliRunner
+import exasol.bucketfs as bfs
+
 from exasol_sagemaker_extension.deployment import deploy_cli
-from tests.integration_tests.utils.parameters import db_params
 
 DB_SCHEMA = "TEST_CLI_SCHEMA"
 AUTOPILOT_TRAINING_LUA_SCRIPT_NAME = \
@@ -34,14 +39,17 @@ def get_all_scripts(db_conn):
     return list(map(lambda x: x[0], all_scripts))
 
 
-def test_deploy_cli_main(db_conn, register_language_container):
-    args_list = [
-        "--host", db_params.host,
-        "--port", db_params.port,
-        "--user", db_params.user,
-        "--pass", db_params.password,
-        "--schema", DB_SCHEMA
-    ]
+@pytest.mark.parametrize("db_conn,deploy_params", [
+    (bfs.path.StorageBackend.onprem, bfs.path.StorageBackend.onprem),
+    (bfs.path.StorageBackend.saas, bfs.path.StorageBackend.saas)
+], indirect=True)
+def test_deploy_cli_main(db_conn, deploy_params):
+
+    args_list: list[Any] = []
+    for param_name, param_value in deploy_params.items():
+        args_list.append(f'--{param_name}')
+        args_list.append(param_value)
+
     runner = CliRunner()
     result = runner.invoke(deploy_cli.main, args_list)
     assert result.exit_code == 0
