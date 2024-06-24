@@ -62,11 +62,12 @@ def upload_language_container(db_conn: pyexasol.ExaConnection,
     deployer.upload_container(container_file=container_path,
                               bucket_file_path=bucket_file_path)
     deployer.activate_container(bucket_file_path=bucket_file_path,
-                                alter_type=LanguageActivationLevel.Session, allow_override=True)
+                                alter_type=LanguageActivationLevel.Session)
 
     print('\n<<<<<\n', 'activation_command=',
           deployer.generate_activation_command(bucket_file_path=bucket_file_path,
-                                               alter_type=LanguageActivationLevel.Session),
+                                               alter_type=LanguageActivationLevel.Session,
+                                               allow_override=True),
           '\n>>>>>\n')
 
     with temp_schema(db_conn) as schema:
