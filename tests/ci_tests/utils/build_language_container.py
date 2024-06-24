@@ -50,6 +50,11 @@ def upload_language_container(db_conn: pyexasol.ExaConnection,
 
     container_path = build_language_container()
     bucket_file_path = container_path.name
+
+    # debugging
+    print('\n<<<<<\n', 'container_path=', container_path, 'bucket_file_path=', bucket_file_path,
+          'exists=', container_path.exists(), '\n>>>>>\n')
+
     deployer = LanguageContainerDeployer(pyexasol_connection=db_conn,
                                          language_alias=LANGUAGE_ALIAS,
                                          bucketfs_path=bucketfs_location)
@@ -58,6 +63,11 @@ def upload_language_container(db_conn: pyexasol.ExaConnection,
                               bucket_file_path=bucket_file_path)
     deployer.activate_container(bucket_file_path=bucket_file_path,
                                 alter_type=LanguageActivationLevel.Session)
+
+    print('\n<<<<<\n', 'activation_command=',
+          deployer.generate_activation_command(bucket_file_path=bucket_file_path,
+                                               alter_type=LanguageActivationLevel.Session),
+          '\n>>>>>\n')
 
     with temp_schema(db_conn) as schema:
         wait_language_container(db_conn, LANGUAGE_ALIAS, schema)
