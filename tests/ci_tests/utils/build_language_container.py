@@ -2,14 +2,12 @@ import pyexasol
 import subprocess
 from pathlib import Path
 import exasol.bucketfs as bfs
-from exasol.python_extension_common.deployment.language_container_deployer import (
-    LanguageContainerDeployer, LanguageActivationLevel)
-from exasol.python_extension_common.deployment.language_container_validator import (
-    wait_language_container, temp_schema)
+from exasol.python_extension_common.deployment.language_container_deployer import LanguageContainerDeployer
 
 from tests.integration_tests.utils.parameters import db_params
 
 LANGUAGE_ALIAS = "PYTHON3_SME"
+CONTAINER_FILE_NAME = "exasol_sagemaker_extension_container.tar.gz"
 
 
 def find_script(script_name: str):
@@ -49,29 +47,14 @@ def upload_language_container(db_conn: pyexasol.ExaConnection,
                               bucketfs_location: bfs.path.PathLike) -> None:
 
     container_path = build_language_container()
-    bucket_file_path = container_path.name
-
-    # debugging
-    print('\n<<<<<\n', 'container_path=', container_path, 'bucket_file_path=', bucket_file_path,
-          'exists=', container_path.exists(), '\n>>>>>\n')
 
     deployer = LanguageContainerDeployer(pyexasol_connection=db_conn,
                                          language_alias=LANGUAGE_ALIAS,
                                          bucketfs_path=bucketfs_location)
 
-    deployer.upload_container(container_file=container_path,
-                              bucket_file_path=bucket_file_path)
-    deployer.activate_container(bucket_file_path=bucket_file_path,
-                                alter_type=LanguageActivationLevel.Session)
-
-    print('\n<<<<<\n', 'activation_command=',
-          deployer.generate_activation_command(bucket_file_path=bucket_file_path,
-                                               alter_type=LanguageActivationLevel.Session,
-                                               allow_override=True),
-          '\n>>>>>\n')
-
-    with temp_schema(db_conn) as schema:
-        wait_language_container(db_conn, LANGUAGE_ALIAS, schema)
+    deployer.run(container_file=container_path,
+                 bucket_file_path=CONTAINER_FILE_NAME,
+                 wait_for_completion=True)
 
 
 def upload_language_container_onprem(db_conn: pyexasol.ExaConnection) -> None:
