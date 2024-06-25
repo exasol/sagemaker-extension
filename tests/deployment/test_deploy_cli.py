@@ -1,11 +1,9 @@
-from __future__ import annotations
-from typing import Any
-
 import pytest
 from click.testing import CliRunner
 import exasol.bucketfs as bfs
 
 from exasol_sagemaker_extension.deployment import deploy_cli
+from tests.ci_tests.utils.parameters import get_deploy_arg_list
 
 DB_SCHEMA = "TEST_CLI_SCHEMA"
 AUTOPILOT_TRAINING_LUA_SCRIPT_NAME = \
@@ -45,10 +43,8 @@ def get_all_scripts(db_conn):
 ], indirect=True)
 def test_deploy_cli_main(db_conn, deploy_params):
 
-    args_list: list[Any] = []
-    for param_name, param_value in deploy_params.items():
-        args_list.append(f'--{param_name}')
-        args_list.append(param_value)
+    args_list = get_deploy_arg_list(deploy_params)
+    args_list.extend(["--schema", DB_SCHEMA])
 
     runner = CliRunner()
     result = runner.invoke(deploy_cli.main, args_list)

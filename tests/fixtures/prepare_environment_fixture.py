@@ -1,3 +1,5 @@
+from __future__ import annotations
+from typing import Any
 import dataclasses
 import os
 from inspect import cleandoc
@@ -9,23 +11,20 @@ import pytest
 from click.testing import CliRunner
 
 from exasol_sagemaker_extension.deployment import deploy_cli
-from tests.integration_tests.utils.parameters import db_params
-from tests.ci_tests.utils.parameters import reg_model_setup_params, cls_model_setup_params
+from tests.ci_tests.utils.parameters import (
+    get_deploy_arg_list, reg_model_setup_params, cls_model_setup_params)
 
 
-def __open_schema(db_conn, model_setup):
+def __open_schema(db_conn: pyexasol.ExaConnection, model_setup):
     query = "CREATE SCHEMA IF NOT EXISTS {schema_name}"
     db_conn.execute(query.format(schema_name=model_setup.schema_name))
 
 
-def __deploy_scripts(model_setup):
-    args_list = [
-        "--host", db_params.host,
-        "--port", db_params.port,
-        "--user", db_params.user,
-        "--pass", db_params.password,
-        "--schema", model_setup.schema_name
-    ]
+def __deploy_scripts(deploy_params: dict[str, Any], schema_name: str):
+
+    args_list = get_deploy_arg_list(deploy_params)
+    args_list.extend(["--schema", schema_name])
+
     runner = CliRunner()
     runner.invoke(deploy_cli.main, args_list)
 
@@ -47,10 +46,10 @@ def __insert_into_tables(db_conn, model_setup):
     db_conn.execute(query)
 
 
-def _setup_database(db_conn):
+def _setup_database(db_conn: pyexasol.ExaConnection, deploy_params: dict[str, Any]):
     for model_setup in [reg_model_setup_params, cls_model_setup_params]:
         __open_schema(db_conn, model_setup)
-        __deploy_scripts(model_setup)
+        __deploy_scripts(deploy_params, model_setup.schema_name)
         __create_tables(db_conn, model_setup)
         __insert_into_tables(db_conn, model_setup)
 
@@ -198,10 +197,11 @@ class CITestEnvironment:
 
 @pytest.fixture(scope="session")
 def prepare_ci_test_environment(db_conn,
+                                deploy_params,
                                 aws_s3_bucket,
                                 connection_object_for_aws_credentials,
                                 aws_sagemaker_role) -> CITestEnvironment:
-    _setup_database(db_conn)
+    _setup_database(db_conn, deploy_params)
     yield CITestEnvironment(db_conn=db_conn,
                             aws_s3_bucket=aws_s3_bucket,
                             connection_object_for_aws_credentials=connection_object_for_aws_credentials,

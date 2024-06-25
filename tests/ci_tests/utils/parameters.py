@@ -1,3 +1,5 @@
+from __future__ import annotations
+from typing import Any
 from collections import namedtuple
 
 POLLING_INTERVAL = 5 * 60  # seconds
@@ -26,3 +28,11 @@ cls_model_setup_params = ModelSetupParams(
     aws_output_path="cls_path",
     batch_size=10
 )
+
+
+def get_deploy_arg_list(deploy_params: dict[str, Any]) -> list[Any]:
+    args_list: list[Any] = []
+    for param_name, param_value in deploy_params.items():
+        args_list.append(f'--{param_name}')
+        args_list.append(param_value)
+    return args_list

@@ -10,22 +10,28 @@ from tests.ci_tests.utils.parameters import reg_model_setup_params, \
 from tests.ci_tests.utils.queries import DatabaseQueries
 
 
-@pytest.mark.parametrize("db_conn", [bfs.path.StorageBackend.onprem, bfs.path.StorageBackend.saas], indirect=True)
-def test_train_autopilot_regression_job(db_conn, setup_ci_test_environment):
+@pytest.mark.parametrize("db_conn,deploy_params", [
+    (bfs.path.StorageBackend.onprem, bfs.path.StorageBackend.onprem),
+    (bfs.path.StorageBackend.saas, bfs.path.StorageBackend.saas)
+], indirect=True)
+def test_train_autopilot_regression_job(db_conn, deploy_params, prepare_ci_test_environment):
     curr_datetime = datetime.now().strftime("%y%m%d%H%M%S")
     model_name = ''.join((reg_model_setup_params.model_type, curr_datetime))
     job_name = ''.join((model_name, 'job'))
 
     # train
     AutopilotTestTraining.train_autopilot_regression_job(
-        job_name, setup_ci_test_environment)
+        job_name, prepare_ci_test_environment)
 
     _assert_training_job(
-        job_name, reg_model_setup_params, setup_ci_test_environment)
+        job_name, reg_model_setup_params, prepare_ci_test_environment)
 
 
-@pytest.mark.parametrize("db_conn", [bfs.path.StorageBackend.onprem, bfs.path.StorageBackend.saas], indirect=True)
-def test_train_autopilot_classification_job(db_conn, setup_ci_test_environment):
+@pytest.mark.parametrize("db_conn,deploy_params", [
+    (bfs.path.StorageBackend.onprem, bfs.path.StorageBackend.onprem),
+    (bfs.path.StorageBackend.saas, bfs.path.StorageBackend.saas)
+], indirect=True)
+def test_train_autopilot_classification_job(db_conn, deploy_params, prepare_ci_test_environment):
     curr_datetime = datetime.now().strftime("%y%m%d%H%M%S")
     model_name = ''.join((cls_model_setup_params.model_type, curr_datetime))
     job_name = ''.join((model_name, 'job'))
@@ -33,10 +39,10 @@ def test_train_autopilot_classification_job(db_conn, setup_ci_test_environment):
 
     # train
     AutopilotTestTraining.train_autopilot_classification_job(
-        job_name, setup_ci_test_environment, objective)
+        job_name, prepare_ci_test_environment, objective)
 
     _assert_training_job(
-        job_name, cls_model_setup_params, setup_ci_test_environment)
+        job_name, cls_model_setup_params, prepare_ci_test_environment)
 
 
 def _assert_training_job(job_name, model_setup_params, ci_test_env: CITestEnvironment):

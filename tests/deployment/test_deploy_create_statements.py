@@ -34,7 +34,7 @@ def get_all_scripts(db_conn):
 ], indirect=True)
 def test_deploy_create_statements(db_conn, deploy_params):
 
-    DeployCreateStatements.create_and_run(**deploy_params)
+    DeployCreateStatements.create_and_run(**deploy_params, schema=DB_SCHEMA)
 
     all_schemas = get_all_schemas(db_conn)
     all_scripts = get_all_scripts(db_conn)
