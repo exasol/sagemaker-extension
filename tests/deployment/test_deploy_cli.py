@@ -39,7 +39,7 @@ def get_all_scripts(db_conn):
 
 @pytest.mark.parametrize("db_conn,deploy_params", [
     (bfs.path.StorageBackend.onprem, bfs.path.StorageBackend.onprem),
-    # (bfs.path.StorageBackend.saas, bfs.path.StorageBackend.saas)
+    (bfs.path.StorageBackend.saas, bfs.path.StorageBackend.saas)
 ], indirect=True)
 def test_deploy_cli_main(db_conn, deploy_params):
 

@@ -31,11 +31,16 @@ cls_model_setup_params = ModelSetupParams(
 
 
 def get_deploy_arg_list(deploy_params: dict[str, Any], schema: str) -> list[Any]:
+    """
+    Creates a CLI parameter list to be used when calling the script deployment
+    command (see deployment/deploy_cli.py).
+    """
     args_list: list[Any] = []
     for param_name, param_value in deploy_params.items():
         args_list.append(f'--{param_name.replace("_", "-")}')
         args_list.append(param_value)
     args_list.extend(["--schema", schema])
+    # We validate the server certificate in SaaS, but not in the Docker DB
     if "saas_url" in deploy_params:
         args_list.append("--use-ssl-cert-validation")
     else:

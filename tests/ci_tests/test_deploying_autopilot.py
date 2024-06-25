@@ -54,7 +54,6 @@ def _deploy_endpoint(job_name, endpoint_name, model_setup_params, ci_test_env: C
     assert endpoint_name in list(map(lambda x: x[0], all_scripts))
 
 
-@pytest.mark.skip
 @pytest.mark.parametrize("db_conn,deploy_params", [
     (bfs.path.StorageBackend.onprem, bfs.path.StorageBackend.onprem),
     (bfs.path.StorageBackend.saas, bfs.path.StorageBackend.saas)

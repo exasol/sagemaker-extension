@@ -144,22 +144,22 @@ class DeployCreateStatements:
         passing the connection object to it and calls its run method.
 
         Parameters:
-            schema              - schema where the scripts should be created
-            dsn                 - On-Prem database address including the port
+            schema              - Schema where the scripts should be created
+            dsn                 - On-Prem database host address, including the port
             db_user             - On-Prem database username
-            db_password         - On-Prem database user password
+            db_pass             - On-Prem database user password
             saas_url            - SaaS service url
             saas_account_id     - SaaS account id
             saas_database_id    - SaaS database id
-            saas_database_name  - SaaS database name, to use in case the id is unknown
+            saas_database_name  - SaaS database name, to be used in case the id is unknown
             saas_token          - SaaS Personal Access Token (PAT)
             use_ssl_cert_validation - Use SSL server certificate validation
-            ssl_trusted_ca          - Path to a file or directory with a CA bundle
+            ssl_trusted_ca          - Path to a file or directory with a trusted CA bundle
             ssl_client_certificate  - Path to a file with the client SSL certificate
             ssl_private_key         - Path to a file with the client private key
-            to_print    - if True the script creation SQL commands will be
-                          printed rather than executed
-            develop     - if True the scripts will be generated from scratch
+            to_print            - If True the script creation SQL commands will be
+                                  printed rather than executed
+            develop             - If True the scripts will be generated from scratch
         """
 
         # Infer where the database is - on-prem or SaaS.
