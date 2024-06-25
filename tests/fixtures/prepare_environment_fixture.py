@@ -20,10 +20,9 @@ def __open_schema(db_conn: pyexasol.ExaConnection, model_setup):
     db_conn.execute(query.format(schema_name=model_setup.schema_name))
 
 
-def __deploy_scripts(deploy_params: dict[str, Any], schema_name: str):
+def __deploy_scripts(deploy_params: dict[str, Any], schema: str):
 
-    args_list = get_deploy_arg_list(deploy_params)
-    args_list.extend(["--schema", schema_name])
+    args_list = get_deploy_arg_list(deploy_params, schema)
 
     runner = CliRunner()
     runner.invoke(deploy_cli.main, args_list)

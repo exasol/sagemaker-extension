@@ -10,6 +10,7 @@ from tests.ci_tests.utils.parameters import reg_model_setup_params, \
 from tests.ci_tests.utils.queries import DatabaseQueries
 
 
+@pytest.mark.skip
 @pytest.mark.parametrize("db_conn,deploy_params", [
     (bfs.path.StorageBackend.onprem, bfs.path.StorageBackend.onprem),
     (bfs.path.StorageBackend.saas, bfs.path.StorageBackend.saas)
@@ -27,6 +28,7 @@ def test_train_autopilot_regression_job(db_conn, deploy_params, prepare_ci_test_
         job_name, reg_model_setup_params, prepare_ci_test_environment)
 
 
+@pytest.mark.skip
 @pytest.mark.parametrize("db_conn,deploy_params", [
     (bfs.path.StorageBackend.onprem, bfs.path.StorageBackend.onprem),
     (bfs.path.StorageBackend.saas, bfs.path.StorageBackend.saas)

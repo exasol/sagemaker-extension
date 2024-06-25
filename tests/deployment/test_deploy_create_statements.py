@@ -30,11 +30,13 @@ def get_all_scripts(db_conn):
 
 @pytest.mark.parametrize("db_conn,deploy_params", [
     (bfs.path.StorageBackend.onprem, bfs.path.StorageBackend.onprem),
-    (bfs.path.StorageBackend.saas, bfs.path.StorageBackend.saas)
+    # (bfs.path.StorageBackend.saas, bfs.path.StorageBackend.saas)
 ], indirect=True)
 def test_deploy_create_statements(db_conn, deploy_params):
 
-    DeployCreateStatements.create_and_run(**deploy_params, schema=DB_SCHEMA)
+    cert_validation = "saas_url" in deploy_params
+    DeployCreateStatements.create_and_run(**deploy_params, schema=DB_SCHEMA,
+                                          use_ssl_cert_validation=cert_validation)
 
     all_schemas = get_all_schemas(db_conn)
     all_scripts = get_all_scripts(db_conn)

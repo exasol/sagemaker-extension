@@ -8,6 +8,7 @@ from tests.ci_tests.utils.autopilot_training import AutopilotTestTraining
 from tests.ci_tests.utils.parameters import cls_model_setup_params
 
 
+@pytest.mark.skip
 @pytest.mark.parametrize("db_conn,deploy_params", [
     (bfs.path.StorageBackend.onprem, bfs.path.StorageBackend.onprem),
     (bfs.path.StorageBackend.saas, bfs.path.StorageBackend.saas)

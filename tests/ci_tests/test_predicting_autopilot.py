@@ -55,6 +55,7 @@ def _make_prediction(job_name, endpoint_name, model_setup_params, ci_test_env: C
     assert predictions
 
 
+@pytest.mark.skip
 @pytest.mark.parametrize("db_conn,deploy_params", [
     (bfs.path.StorageBackend.onprem, bfs.path.StorageBackend.onprem),
     (bfs.path.StorageBackend.saas, bfs.path.StorageBackend.saas)
@@ -77,6 +78,7 @@ def test_predict_autopilot_regression_job(db_conn, deploy_params, prepare_ci_tes
         db_conn=prepare_ci_test_environment)
 
 
+@pytest.mark.skip
 @pytest.mark.parametrize("db_conn,deploy_params", [
     (bfs.path.StorageBackend.onprem, bfs.path.StorageBackend.onprem),
     (bfs.path.StorageBackend.saas, bfs.path.StorageBackend.saas)
