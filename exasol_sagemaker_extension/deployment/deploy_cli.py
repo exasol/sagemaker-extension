@@ -39,7 +39,7 @@ from exasol_sagemaker_extension.deployment.deploy_create_statements \
 def main(
         dsn: str | None,
         db_user: str | None,
-        db_password: str | None,
+        db_pass: str | None,
         saas_url: str | None,
         saas_account_id: str | None,
         saas_database_id: str | None,
@@ -60,7 +60,7 @@ def main(
         schema=schema,
         dsn=dsn,
         db_user=db_user,
-        db_password=db_password,
+        db_pass=db_pass,
         saas_url=saas_url,
         saas_account_id=saas_account_id,
         saas_database_id=saas_database_id,

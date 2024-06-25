@@ -33,6 +33,6 @@ cls_model_setup_params = ModelSetupParams(
 def get_deploy_arg_list(deploy_params: dict[str, Any]) -> list[Any]:
     args_list: list[Any] = []
     for param_name, param_value in deploy_params.items():
-        args_list.append(f'--{param_name}')
+        args_list.append(f'--{param_name.replace("_", "-")}')
         args_list.append(param_value)
     return args_list

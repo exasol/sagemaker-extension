@@ -12,7 +12,7 @@ def deploy_params_onprem() -> dict[str, Any]:
     return {
         'dsn': f"{db_params.host}:{db_params.port}",
         'db_user': db_params.user,
-        'db_password': db_params.password
+        'db_pass': db_params.password
     }
 
 

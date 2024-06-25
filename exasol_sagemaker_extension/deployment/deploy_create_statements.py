@@ -126,7 +126,7 @@ class DeployCreateStatements:
                        schema: str,
                        dsn: str | None = None,
                        db_user: str | None = None,
-                       db_password: str | None = None,
+                       db_pass: str | None = None,
                        saas_url: str | None = None,
                        saas_account_id: str | None = None,
                        saas_database_id: str | None = None,
@@ -163,8 +163,8 @@ class DeployCreateStatements:
         """
 
         # Infer where the database is - on-prem or SaaS.
-        if all((dsn, db_user, db_password)):
-            connection_params = {'dsn': dsn, 'user': db_user, 'password': db_password}
+        if all((dsn, db_user, db_pass)):
+            connection_params = {'dsn': dsn, 'user': db_user, 'password': db_pass}
         elif all((saas_url, saas_account_id, saas_token,
                   any((saas_database_id, saas_database_name)))):
             connection_params = get_connection_params(host=saas_url,
@@ -174,7 +174,7 @@ class DeployCreateStatements:
                                                       pat=saas_token)
         else:
             raise ValueError('Incomplete parameter list. '
-                             'Please either provide the parameters [dns, db_user, db_password] '
+                             'Please either provide the parameters [dns, db_user, db_pass] '
                              'for an On-Prem database or [saas_url, saas_account_id, '
                              'saas_database_id, saas_token] for a SaaS database.')
 
