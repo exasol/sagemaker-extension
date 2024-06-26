@@ -27,11 +27,10 @@ def deploy_params_saas(saas_url, saas_account_id, saas_database_id, saas_token) 
 
 
 @pytest.fixture(scope="session")
-def deploy_params(request,
+def deploy_params(backend,
                   deploy_params_onprem,
                   deploy_params_saas) -> dict[str, Any]:
-    if (hasattr(request, 'param') and
-            (request.param == bfs.path.StorageBackend.saas)):
+    if backend == bfs.path.StorageBackend.saas:
         yield deploy_params_saas
     else:
         yield deploy_params_onprem

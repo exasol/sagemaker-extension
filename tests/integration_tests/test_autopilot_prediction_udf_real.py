@@ -1,5 +1,4 @@
 import json
-import pytest
 import pandas as pd
 from typing import Dict
 from exasol_sagemaker_extension.autopilot_prediction_udf import \
@@ -62,8 +61,6 @@ class Context:
         return return_df
 
 
-@pytest.mark.skipif(not aws_params.aws_secret_access_key,
-                    reason="AWS credentials are not set")
 def test_regression_autopilot_prediction_udf_real():
     connection_data = {
         "aws_s3_connection": aws_params.aws_conn_name,
@@ -101,8 +98,6 @@ def test_regression_autopilot_prediction_udf_real():
     assert ctx.get_emitted()[0][0].shape == (3, 3)
 
 
-@pytest.mark.skipif(not aws_params.aws_secret_access_key,
-                    reason="AWS credentials are not set")
 def test_classification_autopilot_prediction_udf_real():
     connection_data = {
         "aws_s3_connection": aws_params.aws_conn_name,

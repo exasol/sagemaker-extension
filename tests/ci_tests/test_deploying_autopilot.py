@@ -2,7 +2,6 @@ import time
 from datetime import datetime
 
 import pytest
-import exasol.bucketfs as bfs
 
 from tests.fixtures.prepare_environment_fixture import CITestEnvironment
 from tests.ci_tests.utils import parameters
@@ -54,11 +53,8 @@ def _deploy_endpoint(job_name, endpoint_name, model_setup_params, ci_test_env: C
     assert endpoint_name in list(map(lambda x: x[0], all_scripts))
 
 
-@pytest.mark.parametrize("db_conn,deploy_params", [
-    (bfs.path.StorageBackend.onprem, bfs.path.StorageBackend.onprem),
-    (bfs.path.StorageBackend.saas, bfs.path.StorageBackend.saas)
-], indirect=True)
-def test_deploy_autopilot_endpoint(db_conn, deploy_params, prepare_ci_test_environment):
+@pytest.mark.slow
+def test_deploy_autopilot_endpoint(prepare_ci_test_environment):
     curr_datetime = datetime.now().strftime("%y%m%d%H%M%S")
     model_name = ''.join((cls_model_setup_params.model_type, curr_datetime))
     job_name = ''.join((model_name, 'job'))

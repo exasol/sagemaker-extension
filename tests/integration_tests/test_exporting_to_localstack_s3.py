@@ -1,9 +1,12 @@
 import json
-import pytest
 import os.path
+
+import pytest
 import localstack_client.session
+import exasol.bucketfs as bfs
+
 from tests.integration_tests.utils.generate_create_statement_s3_exporting \
-    import  S3ExportingLuaScriptCreateStatementGenerator
+    import S3ExportingLuaScriptCreateStatementGenerator
 
 DB_CONNECTION_ADDR = "127.0.0.1:9563"
 DB_CONNECTION_USER = "sys"
@@ -134,7 +137,10 @@ def get_comparison_query(import_table_name):
                import_table_name=import_table_name)
 
 
-def test_export_table(get_database_conn, s3_client):
+def test_export_table(backend, get_database_conn, s3_client):
+    if backend != bfs.path.StorageBackend.onprem:
+        pytest.skip('The test can only run locally')
+
     db_conn = get_database_conn
     create_s3_bucket(s3_client)
 

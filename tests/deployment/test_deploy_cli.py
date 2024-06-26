@@ -1,6 +1,5 @@
 import pytest
 from click.testing import CliRunner
-import exasol.bucketfs as bfs
 
 from exasol_sagemaker_extension.deployment import deploy_cli
 from tests.ci_tests.utils.parameters import get_deploy_arg_list
@@ -37,10 +36,7 @@ def get_all_scripts(db_conn):
     return list(map(lambda x: x[0], all_scripts))
 
 
-@pytest.mark.parametrize("db_conn,deploy_params", [
-    (bfs.path.StorageBackend.onprem, bfs.path.StorageBackend.onprem),
-    (bfs.path.StorageBackend.saas, bfs.path.StorageBackend.saas)
-], indirect=True)
+@pytest.mark.slow
 def test_deploy_cli_main(db_conn, deploy_params):
 
     args_list = get_deploy_arg_list(deploy_params, DB_SCHEMA)
