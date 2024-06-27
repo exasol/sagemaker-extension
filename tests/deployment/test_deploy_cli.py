@@ -1,8 +1,9 @@
 import pytest
 from click.testing import CliRunner
+import exasol.bucketfs as bfs
 
 from exasol_sagemaker_extension.deployment import deploy_cli
-from tests.ci_tests.utils.parameters import get_deploy_arg_list
+from tests.ci_tests.utils.parameters import get_arg_list
 
 DB_SCHEMA = "TEST_CLI_SCHEMA"
 AUTOPILOT_TRAINING_LUA_SCRIPT_NAME = \
@@ -37,9 +38,13 @@ def get_all_scripts(db_conn):
 
 
 @pytest.mark.slow
-def test_deploy_cli_main(db_conn, deploy_params):
+def test_deploy_cli_main(backend, db_conn, deploy_params):
 
-    args_list = get_deploy_arg_list(deploy_params, DB_SCHEMA)
+    args_list = get_arg_list(**deploy_params, schema=DB_SCHEMA)
+    if backend == bfs.path.StorageBackend.saas:
+        args_list.append("--use-ssl-cert-validation")
+    else:
+        args_list.append("--no-use-ssl-cert-validation")
 
     runner = CliRunner()
     result = runner.invoke(deploy_cli.main, args_list)
