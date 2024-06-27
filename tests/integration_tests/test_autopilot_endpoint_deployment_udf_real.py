@@ -1,3 +1,4 @@
+import pytest
 from typing import Dict
 from exasol_sagemaker_extension.autopilot_endpoint_deployment_udf import \
     AutopilotEndpointDeploymentUDF
@@ -48,10 +49,14 @@ class Context:
         return self._emitted
 
 
+@pytest.mark.skipif(not aws_params.aws_secret_access_key,
+                    reason="AWS credentials are not set")
 def test_autopilot_regression_endpoint_deployment_udf_real():
     _run_test(reg_setup_params)
 
 
+@pytest.mark.skipif(not aws_params.aws_secret_access_key,
+                    reason="AWS credentials are not set")
 def test_autopilot_classification_endpoint_deployment_udf_real():
     _run_test(cls_setup_params)
 

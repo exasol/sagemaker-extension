@@ -1,3 +1,4 @@
+import pytest
 from typing import Dict
 from exasol_sagemaker_extension.autopilot_job_status_polling_udf import \
     AutopilotJobStatusPollingUDF
@@ -39,10 +40,14 @@ class Context:
         return self._emitted
 
 
+@pytest.mark.skipif(not aws_params.aws_secret_access_key,
+                    reason="AWS credentials are not set")
 def test_poll_autopilot_regression_training_status_udf_real():
     _run_test(reg_setup_params)
 
 
+@pytest.mark.skipif(not aws_params.aws_secret_access_key,
+                    reason="AWS credentials are not set")
 def test_poll_autopilot_classification_training_status_udf_real():
     _run_test(cls_setup_params)
 

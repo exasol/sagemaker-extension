@@ -1,3 +1,4 @@
+import pytest
 from typing import Dict
 from exasol_sagemaker_extension.autopilot_training_udf import \
     AutopilotTrainingUDF
@@ -59,6 +60,8 @@ class Context:
         return self._emitted
 
 
+@pytest.mark.skipif(not aws_params.aws_secret_access_key,
+                    reason="AWS credentials are not set")
 def test_autopilot_regression_training_udf_real():
     params_dict = {
         'setup_params': reg_setup_params,
@@ -71,6 +74,8 @@ def test_autopilot_regression_training_udf_real():
         params_dict['problem_params'])
 
 
+@pytest.mark.skipif(not aws_params.aws_secret_access_key,
+                    reason="AWS credentials are not set")
 def test_autopilot_classification_training_udf_real():
     params_dict = {
         'setup_params': cls_setup_params,
@@ -83,6 +88,8 @@ def test_autopilot_classification_training_udf_real():
         params_dict['problem_params'])
 
 
+@pytest.mark.skipif(not aws_params.aws_secret_access_key,
+                    reason="AWS credentials are not set")
 def test_autopilot_multi_classification_training_udf_real():
     params_dict = {
         'setup_params': cls_setup_params,

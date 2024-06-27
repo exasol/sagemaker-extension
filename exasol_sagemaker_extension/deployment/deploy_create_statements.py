@@ -127,6 +127,6 @@ class DeployCreateStatements:
                        develop: bool = False,
                        **kwargs):
 
-        exasol_conn = open_pyexasol_connection(schema=schema, **kwargs)
+        exasol_conn = open_pyexasol_connection(**kwargs)
         deployer = cls(exasol_conn, schema, to_print, develop)
         deployer.run()
