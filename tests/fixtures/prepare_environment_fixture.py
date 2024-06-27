@@ -23,7 +23,7 @@ def __open_schema(db_conn: pyexasol.ExaConnection, model_setup):
 
 def __deploy_scripts(backend: bfs.path.StorageBackend, deploy_params: dict[str, Any], schema: str):
 
-    args_list = get_arg_list(deploy_params, schema=schema)
+    args_list = get_arg_list(**deploy_params, schema=schema)
     if backend == bfs.path.StorageBackend.saas:
         args_list.append("--use-ssl-cert-validation")
     else:
