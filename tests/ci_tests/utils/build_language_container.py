@@ -1,3 +1,5 @@
+import time
+
 import pyexasol
 import subprocess
 from pathlib import Path
@@ -45,7 +47,6 @@ def build_language_container() -> Path:
 
 def upload_language_container(db_conn: pyexasol.ExaConnection,
                               bucketfs_location: bfs.path.PathLike) -> None:
-
     container_path = build_language_container()
 
     deployer = LanguageContainerDeployer(pyexasol_connection=db_conn,
@@ -84,3 +85,5 @@ def upload_language_container_saas(db_conn: pyexasol.ExaConnection,
                                             pat=saas_token)
 
     upload_language_container(db_conn, bucketfs_location)
+
+    time.sleep(180)
