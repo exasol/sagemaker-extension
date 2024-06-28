@@ -81,7 +81,7 @@ def saas_database_id(backend, saas_url, saas_account_id, saas_token) -> str:
             db = stack.enter_context(api_access.database(
                 name=timestamp_name('SME_CI'),
                 idle_time=timedelta(hours=12)))
-            api_access.wait_until_running(db.id)
+            api_access.wait_until_running(db.id, timedelta=timedelta(minutes=45))
             yield db.id
     else:
         yield ''
