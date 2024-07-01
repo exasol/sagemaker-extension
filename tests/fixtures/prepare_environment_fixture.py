@@ -9,11 +9,10 @@ import boto3
 import pyexasol
 import exasol.bucketfs as bfs
 import pytest
-from click.testing import CliRunner
 
-from exasol_sagemaker_extension.deployment import deploy_cli
+from exasol_sagemaker_extension.deployment.deploy_create_statements import DeployCreateStatements
 from tests.ci_tests.utils.parameters import (
-    get_arg_list, reg_model_setup_params, cls_model_setup_params)
+    reg_model_setup_params, cls_model_setup_params)
 
 
 def _open_schema(db_conn: pyexasol.ExaConnection, model_setup):
@@ -23,14 +22,9 @@ def _open_schema(db_conn: pyexasol.ExaConnection, model_setup):
 
 def _deploy_scripts(backend: bfs.path.StorageBackend, deploy_params: dict[str, Any], schema: str):
 
-    args_list = get_arg_list(**deploy_params, schema=schema)
-    if backend == bfs.path.StorageBackend.saas:
-        args_list.append("--use-ssl-cert-validation")
-    else:
-        args_list.append("--no-use-ssl-cert-validation")
-
-    runner = CliRunner()
-    runner.invoke(deploy_cli.main, args_list)
+    cert_validation = backend == bfs.path.StorageBackend.saas
+    DeployCreateStatements.create_and_run(**deploy_params, schema=schema,
+                                          use_ssl_cert_validation=cert_validation)
 
 
 def _create_tables(db_conn, model_setup):

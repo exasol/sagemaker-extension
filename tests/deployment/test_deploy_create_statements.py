@@ -1,4 +1,5 @@
 import pytest
+import exasol.bucketfs as bfs
 
 from exasol_sagemaker_extension.deployment.deploy_create_statements import \
     DeployCreateStatements
@@ -28,10 +29,10 @@ def get_all_scripts(db_conn):
 
 
 @pytest.mark.slow
-def test_deploy_create_statements(db_conn, deploy_params):
+def test_deploy_create_statements(backend, db_conn, deploy_params):
 
     # We validate the server certificate in SaaS, but not in the Docker DB
-    cert_validation = "saas_url" in deploy_params
+    cert_validation = backend == bfs.path.StorageBackend.saas
     DeployCreateStatements.create_and_run(**deploy_params, schema=DB_SCHEMA,
                                           use_ssl_cert_validation=cert_validation)
 

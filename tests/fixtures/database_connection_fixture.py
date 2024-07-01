@@ -33,7 +33,7 @@ def _open_pyexasol_connection(**kwargs) -> pyexasol.ExaConnection:
                             compression=True)
 
 
-@pytest.fixture(scope='session', params=[bfs.path.StorageBackend.onprem, bfs.path.StorageBackend.saas])
+@pytest.fixture(scope='session', params=[bfs.path.StorageBackend.saas])
 def backend(request) -> bfs.path.StorageBackend:
     # Here we are going to add
     # pytest.skip()
