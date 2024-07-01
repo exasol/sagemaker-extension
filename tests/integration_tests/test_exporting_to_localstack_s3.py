@@ -139,7 +139,8 @@ def get_comparison_query(import_table_name):
 
 def test_export_table(backend, get_database_conn, s3_client):
     if backend != bfs.path.StorageBackend.onprem:
-        pytest.skip('The test can only run locally')
+        pytest.skip(("The test can only run locally, because "
+                     "localstack is running locally and SaaS can't access it.'"))
 
     db_conn = get_database_conn
     create_s3_bucket(s3_client)
