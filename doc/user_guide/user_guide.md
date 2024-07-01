@@ -32,140 +32,71 @@ pip install exasol_sagemaker_extension.whl
 ```
 ### The Pre-built Language Container
 
-This extension requires the installation of the language container for this 
-extension to run. It can be installed in two ways: Quick and Customized 
-installations
+This extension requires the installation of a Language Container in the Exasol Database. 
+The Script Language Container is a way to install the required programming language and 
+necessary dependencies in the Exasol Database so the UDF scripts can be executed.
 
-#### Quick Installation
-The language container is downloaded and installed by executing the 
-deployment script below with the desired version. Make sure the version matches with your installed version of the 
-Sagemaker Extension Package. See [the latest release](https://github.com/exasol/sagemaker-extension/releases) on Github.
+The Language Container is downloaded and installed by executing the 
+deployment script below. Please make sure that the version of the Language Container matches the
+installed version of the Sagemaker Extension Package. See [the latest release](https://github.com/exasol/sagemaker-extension/releases) on Github.
 
   ```buildoutcfg
-  python -m exasol_sagemaker_extension.deploy language-container \
-      --dsn <DB_HOST:DB_PORT> \
-      --db-user <DB_USER> \
-      --db-pass <DB_PASSWORD> \
-      --bucketfs-name <BUCKETFS_NAME> \
-      --bucketfs-host <BUCKETFS_HOST> \
-      --bucketfs-port <BUCKETFS_PORT> \
-      --bucketfs-user <BUCKETFS_USER> \
-      --bucketfs-password <BUCKETFS_PASSWORD> \
-      --bucketfs-use-https <USE_HTTPS_BOOL> \
-      --bucket <BUCKETFS_NAME> \
-      --path-in-bucket <PATH_IN_BUCKET> \
-      --version <RELEASE_VERSION> \
-      --ssl-cert-path <ssl-cert-path> \
-      --use-ssl-cert-validation
+  python -m exasol_sagemaker_extension.deploy language-container <options>
   ```
-The `--ssl-cert-path` is optional if your certificate is not in the OS truststore. 
-The option `--use-ssl-cert-validation`is the default, you can disable it with `--no-use-ssl-cert-validation`.
-Use caution if you want to turn certificate validation off as it potentially lowers the security of your 
-Database connection.
 
-By default, the above command will upload and activate the language container at the System level.
-The latter requires you to have the System Privileges, as it will attempt to change DB system settings.
-If such privileges cannot be granted the activation can be skipped by using the `--no-alter-system` option.
-The command will then print two possible language activation SQL queries, which look like the following:
-```sql
-ALTER SESSION SET SCRIPT_LANGUAGES=...
-ALTER SYSTEM SET SCRIPT_LANGUAGES=...
-```
-These queries represent two alternative ways of activating a language container. The first one activates the
-container at the [Session level](https://docs.exasol.com/db/latest/sql/alter_session.htm). It doesn't require 
-System Privileges. However, it must be run every time a new session starts. The second one activates the container
-at the [System level](https://docs.exasol.com/db/latest/sql/alter_system.htm). It  needs to be run just once,
-but it does require System Privileges. It may be executed by a database administrator. Please note, that changes 
-made at the system level only become effective in new sessions, as described
-[here](https://docs.exasol.com/db/latest/sql/alter_system.htm#microcontent1).
-
-It is also possible to activate the language without repeatedly uploading the container. If the container
-has already been uploaded one can use the `--no-upload-container` option to skip this step.
-
-By default, overriding language activation is not permitted. If a language with the same alias has already 
-been activated the command will result in an error. To override the activation, you can use the
-`--allow-override` option.
-
-#### Customized Installation
-In this installation, you can install the desired or customized language 
-container. In the following steps,  it is explained how to install the 
-language container file released in GitHub Releases section.
-
-
-##### Download Language Container
-   - Please download the language container archive (*.tar.gz) from the Releases section. 
-(see [the latest release](https://github.com/exasol/sagemaker-extension/releases/latest)).
-
-##### Install Language Container
-There are two ways to install the language container: (1) using a python script and (2) manual installation. See the next paragraphs for details.
-
-  1. *Installation with Python Script*
-
-     To install the language container, it is necessary to load the container 
-     into the BucketFS and activate it in the database. The following command 
-     performs this setup using the python script provided with this library:
-
-      ```buildoutcfg
-      python -m exasol_sagemaker_extension.deploy language-container
-          --dsn <DB_HOST:DB_PORT> \
-          --db-user <DB_USER> \
-          --db-pass <DB_PASSWORD> \
-          --bucketfs-name <BUCKETFS_NAME> \
-          --bucketfs-host <BUCKETFS_HOST> \
-          --bucketfs-port <BUCKETFS_PORT> \
-          --bucketfs-user <BUCKETFS_USER> \
-          --bucketfs-password <BUCKETFS_PASSWORD> \
-          --bucket <BUCKETFS_NAME> \
-          --path-in-bucket <PATH_IN_BUCKET> \
-          --container-file <path/to/language_container_name.tar.gz>       
-      ```
-     Please note, that all considerations described in the Quick Installation 
-     section are still applicable.
-
-
-  2. *Manual Installation*
-
-     In the manual installation, the pre-built container should be firstly 
-     uploaded into BucketFS. In order to do that, you can use 
-     either a [http(s) client](https://docs.exasol.com/database_concepts/bucketfs/file_access.htm) 
-     or the [bucketfs-client](https://github.com/exasol/bucketfs-client). 
-     The following command uploads a given container into BucketFS through curl 
-     command, an http(s) client: 
-      ```shell
-      curl -vX PUT -T \ 
-          "<CONTAINER_FILE>" 
-          "http://w:<BUCKETFS_WRITE_PASSWORD>@<BUCKETFS_HOST>:<BUCKETFS_PORT>/<BUCKETFS_NAME>/<PATH_IN_BUCKET><CONTAINER_FILE>"
-      ```
-
-      Please note that specifying the password on command line will make your shell record the password in the history. To avoid leaking your password please consider to set an environment variable. The following examples sets environment variable `BUCKETFS_WRITE_PASSWORD`:
-      ```shell 
-        read -sp "password: " BUCKETFS_WRITE_PASSWORD
-      ```
-
-      Secondly, the uploaded container should be activated through adjusting 
-      the session parameter `SCRIPT_LANGUAGES`. As it was mentioned before, the activation can be scoped
-      either session-wide (`ALTER SESSION`) or system-wide (`ALTER SYSTEM`). 
-      The following example query activates the container session-wide:
-
-      ```sql
-      ALTER SESSION SET SCRIPT_LANGUAGES=\
-      PYTHON3_SME=localzmq+protobuf:///<BUCKETFS_NAME>/<BUCKET_NAME>/<PATH_IN_BUCKET><CONTAINER_NAME>/?\
-              lang=python#buckets/<BUCKETFS_NAME>/<BUCKET_NAME>/<PATH_IN_BUCKET><CONTAINER_NAME>/\
-              exaudf/exaudfclient_py3
-      ```
-     
+Please refer to the [Language Container Deployment Guide] for details about this command. 
 
 ### Scripts Deployment
-- Deploy all necessary scripts installed in the previous step to the specified  ```SCHEMA``` in Exasol using the following python cli command: 
+ 
+Deploy all necessary scripts to the specified  ```SCHEMA``` in Exasol using the following python cli command: 
+
 ```buildoutcfg
-python -m exasol_sagemaker_extension.deployment.deploy_cli \
-    --host <DB_HOST> \ 
-    --port <DB_PORT> \
-    --user <DB_USER> \
-    --pass <PASS> \
-    --schema <SCHEMA>
+python -m exasol_sagemaker_extension.deployment.deploy_cli <options>
 ```
 
+The choice of options is primarily determined by the storage backend being used - On-Prem or SaaS.
+
+### List of options
+
+The table below lists all available options. It shows which ones are applicable for On-Prem and for SaaS backends.
+Unless stated otherwise in the comments column, the option is required for either or both backends.
+
+Some of the values, like passwords, are considered confidential. For security reasons, it is recommended to store
+those values in environment variables instead of providing them in the command line. The names of the environment
+variables are given in the comments column, where applicable. Alternatively, it is possible to put just the name of
+an option in the command line, without providing its value. In this case, the command will prompt to enter the value
+interactively. For long values, such as the SaaS account id, it is more practical to copy/paste the value from
+another source.
+
+| Option name                  | On-Prem | SaaS | Comment                                                |
+|:-----------------------------|:-------:|:----:|:-------------------------------------------------------|
+| dsn                          |   [x]   |      | i.e. <db_host:db_port>                                 |
+| db-user                      |   [x]   |      |                                                        |
+| db-pass                      |   [x]   |      | Env. [DB_PASSWORD]                                     |
+| saas-url                     |         | [x]  | Optional, Env. [SAAS_HOST]                             |
+| saas-account-id              |         | [x]  | Env. [SAAS_ACCOUNT_ID]                                 |
+| saas-database-id             |         | [x]  | Optional, Env. [SAAS_DATABASE_ID]                      |
+| saas-database-name           |         | [x]  | Optional, provide if the database_id is unknown        |
+| saas-token                   |         | [x]  | Env. [SAAS_TOKEN]                                      |
+| schema                       |   [x]   | [x]  | DB schema to deploy the scripts in                     |
+| ssl-cert-path                |   [x]   | [x]  | Optional                                               |
+| [no_]use-ssl-cert-validation |   [x]   | [x]  | Optional boolean, defaults to True                     |
+| ssl-client-cert-path         |   [x]   |      | Optional                                               |
+| ssl-client-private-key       |   [x]   |      | Optional                                               |
+| develop                      |   [x]   | [x]  | Optional, if True, causes re-generation of the scripts |
+| verbose                      |   [x]   | [x]  | Optional, if True produces verbose output              |
+
+### TLS/SSL options
+
+The `--ssl-cert-path` is needed if the TLS/SSL certificate is not in the OS truststore.
+Generally speaking, this certificate is a list of trusted CA. It is needed for the server's certificate
+validation by the client.
+The option `--use-ssl-cert-validation`is the default, it can be disabled with `--no-use-ssl-cert-validation`.
+One needs to exercise caution when turning the certificate validation off as it potentially lowers the security of the
+Database connection.
+The "server" certificate described above shall not be confused with the client's own certificate.
+In some cases, this certificate may be requested by a server. The client certificate may or may not include
+the private key. In the latter case, the key may be provided as a separate file.
 
 ### AWS Connection Object
   - Create an Exasol connection object with AWS credentials that has 
