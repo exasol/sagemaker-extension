@@ -16,12 +16,12 @@ from tests.ci_tests.utils.parameters import (
     get_arg_list, reg_model_setup_params, cls_model_setup_params)
 
 
-def __open_schema(db_conn: pyexasol.ExaConnection, model_setup):
+def _open_schema(db_conn: pyexasol.ExaConnection, model_setup):
     query = "CREATE SCHEMA IF NOT EXISTS {schema_name}"
     db_conn.execute(query.format(schema_name=model_setup.schema_name))
 
 
-def __deploy_scripts(backend: bfs.path.StorageBackend, deploy_params: dict[str, Any], schema: str):
+def _deploy_scripts(backend: bfs.path.StorageBackend, deploy_params: dict[str, Any], schema: str):
 
     args_list = get_arg_list(**deploy_params, schema=schema)
     if backend == bfs.path.StorageBackend.saas:
@@ -33,7 +33,7 @@ def __deploy_scripts(backend: bfs.path.StorageBackend, deploy_params: dict[str, 
     runner.invoke(deploy_cli.main, args_list)
 
 
-def __create_tables(db_conn, model_setup):
+def _create_tables(db_conn, model_setup):
     query = "CREATE OR REPLACE TABLE {schema_name}.{table_name} " \
             "(col1 FLOAT, col2 FLOAT, output_col INTEGER)". \
         format(schema_name=model_setup.schema_name,
@@ -41,7 +41,7 @@ def __create_tables(db_conn, model_setup):
     db_conn.execute(query)
 
 
-def __insert_into_tables(db_conn, model_setup):
+def _insert_into_tables(db_conn, model_setup):
     values = ",".join(model_setup.data)
     query = "INSERT INTO {schema_name}.{table_name} VALUES {values}". \
         format(schema_name=model_setup.schema_name,
@@ -53,10 +53,10 @@ def __insert_into_tables(db_conn, model_setup):
 def _setup_database(backend: bfs.path.StorageBackend, db_conn: pyexasol.ExaConnection,
                     deploy_params: dict[str, Any]):
     for model_setup in [reg_model_setup_params, cls_model_setup_params]:
-        __open_schema(db_conn, model_setup)
-        __deploy_scripts(backend, deploy_params, model_setup.schema_name)
-        __create_tables(db_conn, model_setup)
-        __insert_into_tables(db_conn, model_setup)
+        _open_schema(db_conn, model_setup)
+        _deploy_scripts(backend, deploy_params, model_setup.schema_name)
+        _create_tables(db_conn, model_setup)
+        _insert_into_tables(db_conn, model_setup)
 
 
 @pytest.fixture(scope="session")
