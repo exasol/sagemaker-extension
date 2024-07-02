@@ -48,6 +48,10 @@ def test_deploy_cli_main(backend, db_conn, deploy_params):
 
     runner = CliRunner()
     result = runner.invoke(deploy_cli.main, args_list)
+
+    if result.exit_code != 0:
+        print(result.output)
+
     assert not result.exception
     assert result.exit_code == 0
 
