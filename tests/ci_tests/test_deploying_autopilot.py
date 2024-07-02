@@ -53,7 +53,7 @@ def _deploy_endpoint(job_name, endpoint_name, model_setup_params, ci_test_env: C
     assert endpoint_name in list(map(lambda x: x[0], all_scripts))
 
 
-@pytest.mark.skip('Debugging')
+@pytest.mark.slow
 def test_deploy_autopilot_endpoint(prepare_ci_test_environment):
     curr_datetime = datetime.now().strftime("%y%m%d%H%M%S")
     model_name = ''.join((cls_model_setup_params.model_type, curr_datetime))

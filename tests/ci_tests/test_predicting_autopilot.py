@@ -54,7 +54,7 @@ def _make_prediction(job_name, endpoint_name, model_setup_params, ci_test_env: C
     assert predictions
 
 
-@pytest.mark.skip('Debugging')
+@pytest.mark.slow
 def test_predict_autopilot_regression_job(prepare_ci_test_environment):
     curr_datetime = datetime.now().strftime("%y%m%d%H%M%S")
     model_name = ''.join((reg_model_setup_params.model_type, curr_datetime))
@@ -73,7 +73,7 @@ def test_predict_autopilot_regression_job(prepare_ci_test_environment):
         db_conn=prepare_ci_test_environment)
 
 
-@pytest.mark.skip('Debugging')
+@pytest.mark.slow
 def test_predict_autopilot_classification_job(prepare_ci_test_environment):
     curr_datetime = datetime.now().strftime("%y%m%d%H%M%S")
     model_name = ''.join((cls_model_setup_params.model_type, curr_datetime))
