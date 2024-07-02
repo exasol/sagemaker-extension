@@ -1,6 +1,8 @@
+import pytest
+import exasol.bucketfs as bfs
+
 from exasol_sagemaker_extension.deployment.deploy_create_statements import \
     DeployCreateStatements
-from tests.integration_tests.utils.parameters import db_params
 
 DB_SCHEMA = "TEST_DEPLOY_SCHEMA"
 AUTOPILOT_TRAINING_LUA_SCRIPT_NAME = \
@@ -26,16 +28,13 @@ def get_all_scripts(db_conn):
     return list(map(lambda x: x[0], all_scripts))
 
 
-def test_deploy_create_statements(db_conn, register_language_container):
-    DeployCreateStatements.create_and_run(
-        db_host=db_params.host,
-        db_port=db_params.port,
-        db_user=db_params.user,
-        db_pass=db_params.password,
-        schema=DB_SCHEMA,
-        to_print=False,
-        develop=False
-    )
+@pytest.mark.slow
+def test_deploy_create_statements(backend, db_conn, deploy_params):
+
+    # We validate the server certificate in SaaS, but not in the Docker DB
+    cert_validation = backend == bfs.path.StorageBackend.saas
+    DeployCreateStatements.create_and_run(**deploy_params, schema=DB_SCHEMA,
+                                          use_ssl_cert_validation=cert_validation)
 
     all_schemas = get_all_schemas(db_conn)
     all_scripts = get_all_scripts(db_conn)

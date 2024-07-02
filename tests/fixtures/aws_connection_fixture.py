@@ -15,4 +15,3 @@ def get_mock_aws_params():
         "AWS_OUTPUT_PATH": "train"
     }
     return mock_params
-

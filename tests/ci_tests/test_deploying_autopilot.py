@@ -1,12 +1,13 @@
 import time
 from datetime import datetime
 
-from tests.ci_tests.fixtures.prepare_environment_fixture import CITestEnvironment
+import pytest
+
+from tests.fixtures.prepare_environment_fixture import CITestEnvironment
 from tests.ci_tests.utils import parameters
 from tests.ci_tests.utils.autopilot_deployment import AutopilotTestDeployment
 from tests.ci_tests.utils.autopilot_polling import AutopilotTestPolling
 from tests.ci_tests.utils.autopilot_training import AutopilotTestTraining
-from tests.ci_tests.utils.checkers import skip_if_aws_credentials_not_set
 from tests.ci_tests.utils.cleanup import cleanup
 from tests.ci_tests.utils.parameters import cls_model_setup_params
 from tests.ci_tests.utils.queries import DatabaseQueries
@@ -52,8 +53,8 @@ def _deploy_endpoint(job_name, endpoint_name, model_setup_params, ci_test_env: C
     assert endpoint_name in list(map(lambda x: x[0], all_scripts))
 
 
-@skip_if_aws_credentials_not_set
-def test_deploy_autopilot_endpoint(setup_ci_test_environment):
+@pytest.mark.slow
+def test_deploy_autopilot_endpoint(prepare_ci_test_environment):
     curr_datetime = datetime.now().strftime("%y%m%d%H%M%S")
     model_name = ''.join((cls_model_setup_params.model_type, curr_datetime))
     job_name = ''.join((model_name, 'job'))
@@ -61,11 +62,11 @@ def test_deploy_autopilot_endpoint(setup_ci_test_environment):
 
     # train
     AutopilotTestTraining.train_autopilot_classification_job(
-        job_name, setup_ci_test_environment)
+        job_name, prepare_ci_test_environment)
 
     # deploy
     _deploy_endpoint(
         job_name=job_name,
         endpoint_name=endpoint_name,
         model_setup_params=cls_model_setup_params,
-        db_conn=setup_ci_test_environment)
+        db_conn=prepare_ci_test_environment)

@@ -1,6 +1,6 @@
 import os
 
-from tests.ci_tests.fixtures.prepare_environment_fixture import CITestEnvironment
+from tests.fixtures.prepare_environment_fixture import CITestEnvironment
 
 INSTANCE_TYPE = "ml.c5.large"
 INSTANCE_COUNT = 1

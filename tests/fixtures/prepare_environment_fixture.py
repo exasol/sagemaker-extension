@@ -1,3 +1,5 @@
+from __future__ import annotations
+from typing import Any
 import dataclasses
 import os
 from inspect import cleandoc
@@ -5,32 +7,27 @@ from typing import Optional
 
 import boto3
 import pyexasol
+import exasol.bucketfs as bfs
 import pytest
-from click.testing import CliRunner
 
-from exasol_sagemaker_extension.deployment import deploy_cli
-from tests.ci_tests.utils.parameters import db_params, \
-    reg_model_setup_params, cls_model_setup_params
+from exasol_sagemaker_extension.deployment.deploy_create_statements import DeployCreateStatements
+from tests.ci_tests.utils.parameters import (
+    reg_model_setup_params, cls_model_setup_params)
 
 
-def __open_schema(db_conn, model_setup):
+def _open_schema(db_conn: pyexasol.ExaConnection, model_setup):
     query = "CREATE SCHEMA IF NOT EXISTS {schema_name}"
     db_conn.execute(query.format(schema_name=model_setup.schema_name))
 
 
-def __deploy_scripts(model_setup):
-    args_list = [
-        "--host", db_params.host,
-        "--port", db_params.port,
-        "--user", db_params.user,
-        "--pass", db_params.password,
-        "--schema", model_setup.schema_name
-    ]
-    runner = CliRunner()
-    runner.invoke(deploy_cli.main, args_list)
+def _deploy_scripts(backend: bfs.path.StorageBackend, deploy_params: dict[str, Any], schema: str):
+
+    cert_validation = backend == bfs.path.StorageBackend.saas
+    DeployCreateStatements.create_and_run(**deploy_params, schema=schema,
+                                          use_ssl_cert_validation=cert_validation)
 
 
-def __create_tables(db_conn, model_setup):
+def _create_tables(db_conn, model_setup):
     query = "CREATE OR REPLACE TABLE {schema_name}.{table_name} " \
             "(col1 FLOAT, col2 FLOAT, output_col INTEGER)". \
         format(schema_name=model_setup.schema_name,
@@ -38,7 +35,7 @@ def __create_tables(db_conn, model_setup):
     db_conn.execute(query)
 
 
-def __insert_into_tables(db_conn, model_setup):
+def _insert_into_tables(db_conn, model_setup):
     values = ",".join(model_setup.data)
     query = "INSERT INTO {schema_name}.{table_name} VALUES {values}". \
         format(schema_name=model_setup.schema_name,
@@ -47,12 +44,13 @@ def __insert_into_tables(db_conn, model_setup):
     db_conn.execute(query)
 
 
-def _setup_database(db_conn):
+def _setup_database(backend: bfs.path.StorageBackend, db_conn: pyexasol.ExaConnection,
+                    deploy_params: dict[str, Any]):
     for model_setup in [reg_model_setup_params, cls_model_setup_params]:
-        __open_schema(db_conn, model_setup)
-        __deploy_scripts(model_setup)
-        __create_tables(db_conn, model_setup)
-        __insert_into_tables(db_conn, model_setup)
+        _open_schema(db_conn, model_setup)
+        _deploy_scripts(backend, deploy_params, model_setup.schema_name)
+        _create_tables(db_conn, model_setup)
+        _insert_into_tables(db_conn, model_setup)
 
 
 @pytest.fixture(scope="session")
@@ -197,11 +195,13 @@ class CITestEnvironment:
 
 
 @pytest.fixture(scope="session")
-def prepare_ci_test_environment(db_conn,
+def prepare_ci_test_environment(backend,
+                                db_conn,
+                                deploy_params,
                                 aws_s3_bucket,
                                 connection_object_for_aws_credentials,
                                 aws_sagemaker_role) -> CITestEnvironment:
-    _setup_database(db_conn)
+    _setup_database(backend, db_conn, deploy_params)
     yield CITestEnvironment(db_conn=db_conn,
                             aws_s3_bucket=aws_s3_bucket,
                             connection_object_for_aws_credentials=connection_object_for_aws_credentials,

@@ -35,18 +35,12 @@ jobs:
         run: ./scripts/setup_integration_test.sh
 
       - name: Poetry run pytest integration tests
-        run: poetry run pytest tests
-
-      - name: Fail, if AWS-tests are not activated
-        if: "!contains(github.event.head_commit.message, '[run aws tests]')"
-        run: |
-          echo "Failed, because AWS-tests are not activated"
-          exit 1
-      - name: Run AWS-tests if it is activated
-        if: "contains(github.event.head_commit.message, '[run aws tests]')"
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_ROLE: ${{ secrets.AWS_ROLE }}
           AWS_DEFAULT_REGION: "eu-central-1"
-        run: poetry run pytest tests/ci_tests -s
+          SAAS_HOST: ${{ secrets.INTEGRATION_TEAM_SAAS_STAGING_HOST }}
+          SAAS_ACCOUNT_ID: ${{ secrets.INTEGRATION_TEAM_SAAS_STAGING_ACCOUNT_ID }}
+          SAAS_PAT: ${{ secrets.INTEGRATION_TEAM_SAAS_STAGING_PAT }}
+        run: poetry run pytest tests
