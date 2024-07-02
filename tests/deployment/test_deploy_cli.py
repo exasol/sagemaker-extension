@@ -46,8 +46,11 @@ def test_deploy_cli_main(backend, db_conn, deploy_params):
     else:
         args_list.append("--no-use-ssl-cert-validation")
 
+    print('\n************\n', args_list, '\n******************\n')
+
     runner = CliRunner()
-    result = runner.invoke(deploy_cli.main, args_list, catch_exceptions=False)
+    result = runner.invoke(deploy_cli.main, args_list)
+    assert not result.exception
     assert result.exit_code == 0
 
     all_schemas = get_all_schemas(db_conn)

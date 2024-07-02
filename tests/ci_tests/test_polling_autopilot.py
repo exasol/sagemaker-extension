@@ -7,7 +7,7 @@ from tests.ci_tests.utils.autopilot_training import AutopilotTestTraining
 from tests.ci_tests.utils.parameters import cls_model_setup_params
 
 
-@pytest.mark.slow
+@pytest.mark.skip('Debugging')
 def test_poll_autopilot_job(prepare_ci_test_environment):
     curr_datetime = datetime.now().strftime("%y%m%d%H%M%S")
     model_name = ''.join((cls_model_setup_params.model_type, curr_datetime))

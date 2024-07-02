@@ -56,22 +56,26 @@ def main(
     logging.basicConfig(format='%(asctime)s - %(module)s  - %(message)s',
                         level=logging.DEBUG)
 
-    DeployCreateStatements.create_and_run(
-        schema=schema,
-        dsn=dsn,
-        db_user=db_user,
-        db_pass=db_pass,
-        saas_url=saas_url,
-        saas_account_id=saas_account_id,
-        saas_database_id=saas_database_id,
-        saas_database_name=saas_database_name,
-        saas_token=saas_token,
-        use_ssl_cert_validation=use_ssl_cert_validation,
-        ssl_trusted_ca=ssl_cert_path,
-        ssl_client_certificate=ssl_client_cert_path,
-        ssl_private_key=ssl_client_private_key,
-        to_print=verbose,
-        develop=develop)
+    try:
+        DeployCreateStatements.create_and_run(
+            schema=schema,
+            dsn=dsn,
+            db_user=db_user,
+            db_pass=db_pass,
+            saas_url=saas_url,
+            saas_account_id=saas_account_id,
+            saas_database_id=saas_database_id,
+            saas_database_name=saas_database_name,
+            saas_token=saas_token,
+            use_ssl_cert_validation=use_ssl_cert_validation,
+            ssl_trusted_ca=ssl_cert_path,
+            ssl_client_certificate=ssl_client_cert_path,
+            ssl_private_key=ssl_client_private_key,
+            to_print=verbose,
+            develop=develop)
+    except Exception as ex:
+        print(ex)
+        raise ex
 
 
 if __name__ == "__main__":
