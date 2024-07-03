@@ -611,20 +611,20 @@ simplejson = ">=3.16.0"
 
 [[package]]
 name = "exasol-python-extension-common"
-version = "0.2.0"
+version = "0.3.0"
 description = "A collection of common utilities for Exasol extensions."
 optional = false
-python-versions = "<4.0,>=3.8.0"
+python-versions = "<4.0.0,>=3.10.0"
 files = [
-    {file = "exasol_python_extension_common-0.2.0-py3-none-any.whl", hash = "sha256:c3bb039556491bd4494582c42a8cb9499cfc567c2cc19f960e444fbae56d6163"},
-    {file = "exasol_python_extension_common-0.2.0.tar.gz", hash = "sha256:9e120b984866c2252617f84e448f8cf009193e4d7d8b9e01855b60a46ad5e892"},
+    {file = "exasol_python_extension_common-0.3.0-py3-none-any.whl", hash = "sha256:1f9fb756ce20a079e17408d290443e345b5787a5c304a347b39e755e59b3b865"},
+    {file = "exasol_python_extension_common-0.3.0.tar.gz", hash = "sha256:c36e6551bc2ff9db2236cbe1425f896ad203f010453e446d274df3bfc702cbf2"},
 ]
 
 [package.dependencies]
 click = ">=8.1.7,<9.0.0"
 exasol-bucketfs = ">=0.10.0"
 exasol-saas-api = ">=0.7.0,<1.0.0"
-pyexasol = ">=0.25.0,<0.26.0"
+pyexasol = ">=0.25.0,<1.0.0"
 requests = "<2.32.0"
 tenacity = ">=8.3.0,<9.0.0"
 
@@ -1388,13 +1388,13 @@ poetry-plugin = ["poetry (>=1.0,<2.0)"]
 
 [[package]]
 name = "portalocker"
-version = "2.8.2"
+version = "2.10.0"
 description = "Wraps the portalocker recipe for easy usage"
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "portalocker-2.8.2-py3-none-any.whl", hash = "sha256:cfb86acc09b9aa7c3b43594e19be1345b9d16af3feb08bf92f23d4dce513a28e"},
-    {file = "portalocker-2.8.2.tar.gz", hash = "sha256:2b035aa7828e46c58e9b31390ee1f169b98e1066ab10b9a6a861fe7e25ee4f33"},
+    {file = "portalocker-2.10.0-py3-none-any.whl", hash = "sha256:48944147b2cd42520549bc1bb8fe44e220296e56f7c3d551bc6ecce69d9b0de1"},
+    {file = "portalocker-2.10.0.tar.gz", hash = "sha256:49de8bc0a2f68ca98bf9e219c81a3e6b27097c7bf505a87c5a112ce1aaeb9b81"},
 ]
 
 [package.dependencies]
@@ -2002,13 +2002,13 @@ files = [
 
 [[package]]
 name = "setuptools"
-version = "70.1.0"
+version = "70.1.1"
 description = "Easily download, build, install, upgrade, and uninstall Python packages"
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "setuptools-70.1.0-py3-none-any.whl", hash = "sha256:d9b8b771455a97c8a9f3ab3448ebe0b29b5e105f1228bba41028be116985a267"},
-    {file = "setuptools-70.1.0.tar.gz", hash = "sha256:01a1e793faa5bd89abc851fa15d0a0db26f160890c7102cd8dce643e886b47f5"},
+    {file = "setuptools-70.1.1-py3-none-any.whl", hash = "sha256:a58a8fde0541dab0419750bcc521fbdf8585f6e5cb41909df3a472ef7b81ca95"},
+    {file = "setuptools-70.1.1.tar.gz", hash = "sha256:937a48c7cdb7a21eb53cd7f9b59e525503aa8abaf3584c730dc5f7a5bec3a650"},
 ]
 
 [package.extras]
@@ -2329,13 +2329,13 @@ files = [
 
 [[package]]
 name = "tenacity"
-version = "8.4.1"
+version = "8.4.2"
 description = "Retry code until it succeeds"
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "tenacity-8.4.1-py3-none-any.whl", hash = "sha256:28522e692eda3e1b8f5e99c51464efcc0b9fc86933da92415168bc1c4e2308fa"},
-    {file = "tenacity-8.4.1.tar.gz", hash = "sha256:54b1412b878ddf7e1f1577cd49527bad8cdef32421bd599beac0c6c3f10582fd"},
+    {file = "tenacity-8.4.2-py3-none-any.whl", hash = "sha256:9e6f7cf7da729125c7437222f8a522279751cdfbe6b67bfe64f75d3a348661b2"},
+    {file = "tenacity-8.4.2.tar.gz", hash = "sha256:cd80a53a79336edba8489e767f729e4f391c896956b57140b5d7511a64bbd3ef"},
 ]
 
 [package.extras]
@@ -2567,4 +2567,4 @@ test = ["big-O", "importlib-resources", "jaraco.functools", "jaraco.itertools", 
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.10,<4.0"
-content-hash = "9be2bb349969b364ca5b6b2dae3cf2c60316b5fec12347f962f5a1c3f255bc32"
+content-hash = "3133668f1094c0a8c7f2efedf1925083348206a6b59f5f7bb778d3b437bf2890"

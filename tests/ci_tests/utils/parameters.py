@@ -1,3 +1,5 @@
+from __future__ import annotations
+from typing import Any
 from collections import namedtuple
 
 POLLING_INTERVAL = 5 * 60  # seconds
@@ -28,16 +30,9 @@ cls_model_setup_params = ModelSetupParams(
 )
 
 
-def get_db_params():
-    DBParams = namedtuple("DBParams", [
-        "host", "port", "user", "password"])
-
-    return DBParams(
-        host="127.0.0.1",
-        port="9563",
-        user="sys",
-        password="exasol"
-    )
-
-
-db_params = get_db_params()
+def get_arg_list(**kwargs) -> list[str]:
+    args_list: list[str] = []
+    for k, v in kwargs.items():
+        args_list.append(f'--{k.replace("_", "-")}')
+        args_list.append(str(v))
+    return args_list

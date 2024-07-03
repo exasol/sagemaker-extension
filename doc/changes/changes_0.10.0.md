@@ -1,4 +1,4 @@
-# SageMaker Extension 0.10.0, released 2024-06-20
+# SageMaker Extension 0.10.0, T.B.D.
 
 Code name: Python 3.10
 
@@ -8,7 +8,7 @@ Improving documentation, refactoring and moving to Python 3.10
 
 ### Features
 
-n/a
+- #120: Running CI tests in the SaaS as well as the Docker DB.
   
 ### Bug Fixes
 
