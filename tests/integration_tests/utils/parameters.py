@@ -27,13 +27,16 @@ def get_aws_params():
 
 def get_db_params():
     DBParams = namedtuple("DBParams", [
-        "host", "port", "user", "password"])
+        "host", "port", "bfs_port", "user", "bfs_user", "password", "bfs_password"])
 
     return DBParams(
         host="127.0.0.1",
         port="9563",
+        bfs_port="6666",
         user="sys",
-        password="exasol"
+        bfs_user="w",
+        password="exasol",
+        bfs_password="write"
     )
 
 

@@ -1,6 +1,9 @@
+import pytest
 from click.testing import CliRunner
+import exasol.bucketfs as bfs
+
 from exasol_sagemaker_extension.deployment import deploy_cli
-from tests.integration_tests.utils.parameters import db_params
+from tests.ci_tests.utils.parameters import get_arg_list
 
 DB_SCHEMA = "TEST_CLI_SCHEMA"
 AUTOPILOT_TRAINING_LUA_SCRIPT_NAME = \
@@ -34,16 +37,22 @@ def get_all_scripts(db_conn):
     return list(map(lambda x: x[0], all_scripts))
 
 
-def test_deploy_cli_main(db_conn, register_language_container):
-    args_list = [
-        "--host", db_params.host,
-        "--port", db_params.port,
-        "--user", db_params.user,
-        "--pass", db_params.password,
-        "--schema", DB_SCHEMA
-    ]
+@pytest.mark.slow
+def test_deploy_cli_main(backend, db_conn, deploy_params):
+
+    args_list = get_arg_list(**deploy_params, schema=DB_SCHEMA)
+    if backend == bfs.path.StorageBackend.saas:
+        args_list.append("--use-ssl-cert-validation")
+    else:
+        args_list.append("--no-use-ssl-cert-validation")
+
     runner = CliRunner()
     result = runner.invoke(deploy_cli.main, args_list)
+
+    if result.exit_code != 0:
+        print(result.output)
+
+    assert not result.exception
     assert result.exit_code == 0
 
     all_schemas = get_all_schemas(db_conn)
