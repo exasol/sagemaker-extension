@@ -44,7 +44,7 @@ installed version of the Sagemaker Extension Package. See [the latest release](h
   python -m exasol_sagemaker_extension.deploy language-container <options>
   ```
 
-Please refer to the [Language Container Deployment Guide] for details about this command. 
+Please refer to the [Language Container Deployment Guide](https://github.com/exasol/python-extension-common/blob/main/doc/user_guide/user-guide.md#language-container-deployer) for details about this command. 
 
 ### Scripts Deployment
  
