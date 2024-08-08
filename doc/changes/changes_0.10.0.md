@@ -1,4 +1,4 @@
-# SageMaker Extension 0.10.0, T.B.D.
+# SageMaker Extension 0.10.0, released 2024-08-08
 
 Code name: Python 3.10
 
@@ -13,6 +13,7 @@ Improving documentation, refactoring and moving to Python 3.10
 ### Documentation
 
 * #116: Explanation of how to from the S3 bucket URI
+- #133: Updated documentation including the deployment options in SaaS.
 
 ### Refactoring
 
