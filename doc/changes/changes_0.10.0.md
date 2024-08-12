@@ -1,4 +1,4 @@
-# SageMaker Extension 0.10.0, released 2024-08-08
+# SageMaker Extension 0.10.0, released 2024-08-09
 
 Code name: Python 3.10
 
