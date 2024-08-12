@@ -30,22 +30,8 @@ jobs:
       - name: Install project whl
         run: pip install dist/*.whl
 
-      - name:  Install Lua dependencies
-        run: |
-          sudo apt-get install luarocks
-          sudo luarocks install --only-deps *.rockspec
-
-      - name: Run Lua unit tests and static code analyzer
-        run: poetry run poe lua-tests
-
       - name: Release language container
         run: ./release_language_container.sh "$RELEASE_DIR"
-
-      - name: Setup integration test environment
-        run: ./scripts/setup_integration_test.sh
-
-      - name: Poetry run pytest integration tests
-        run: poetry run pytest tests
 
       - name: Upload assets to the GitHub release draft
         uses: shogo82148/actions-upload-release-asset@v1
