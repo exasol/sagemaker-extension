@@ -10,6 +10,7 @@ def run_localstack(backend_aware_onprem_database) -> tuple[str, str] | None:
         db_info = backend_aware_onprem_database.database_info
         container_info = db_info.container_info
         network_name = container_info.network_info.network_name
+        assert network_name
         with ContextDockerClient() as docker_client:
             s3_port = 4566
             container = docker_client.containers.run(
@@ -18,8 +19,9 @@ def run_localstack(backend_aware_onprem_database) -> tuple[str, str] | None:
                 environment={'SERVICES': 's3'},
                 network=network_name,
                 detach=True)
-            network_settings = container.attrs['NetworkSettings']
-            ip_address = network_settings['Networks'][network_name]['IPAddress']
+            network_settings = container.attrs['NetworkSettings']['Networks'][network_name]
+            ip_address = network_settings['IPAddress']
+            assert ip_address, f"Unable to get the IP address from the network settings {network_settings}"
             s3_uri = f"https://{ip_address}:{s3_port}"
             return ip_address, s3_uri
     return None
