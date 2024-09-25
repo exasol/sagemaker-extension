@@ -3,7 +3,6 @@ import os.path
 
 import pytest
 import localstack_client.session
-import exasol.bucketfs as bfs
 
 from tests.integration_tests.utils.generate_create_statement_s3_exporting \
     import S3ExportingLuaScriptCreateStatementGenerator
@@ -96,13 +95,13 @@ def s3_client():
 
 
 @pytest.fixture(scope="session")
-def get_database_conn(db_conn, s3_client):
-    open_schema(db_conn)
-    create_aws_connection(db_conn)
-    create_scripts(db_conn)
-    create_table(db_conn, table_name=INPUT_DICT["input_table_or_view_name"])
-    insert_into_table(db_conn, table_name=INPUT_DICT["input_table_or_view_name"])
-    return db_conn
+def get_database_conn(pyexasol_connection, s3_client):
+    open_schema(pyexasol_connection)
+    create_aws_connection(pyexasol_connection)
+    create_scripts(pyexasol_connection)
+    create_table(pyexasol_connection, table_name=INPUT_DICT["input_table_or_view_name"])
+    insert_into_table(pyexasol_connection, table_name=INPUT_DICT["input_table_or_view_name"])
+    return pyexasol_connection
 
 
 def get_export_to_s3_query():
@@ -138,7 +137,7 @@ def get_comparison_query(import_table_name):
 
 
 def test_export_table(backend, get_database_conn, s3_client):
-    if backend != bfs.path.StorageBackend.onprem:
+    if backend != 'onprem':
         pytest.skip(("The test can only run locally, because "
                      "localstack is running locally and SaaS can't access it.'"))
 

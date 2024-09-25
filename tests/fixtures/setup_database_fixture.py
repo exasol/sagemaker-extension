@@ -4,12 +4,12 @@ from tests.integration_tests.utils.parameters import reg_setup_params, \
 
 
 @pytest.fixture(scope="session")
-def setup_database(db_conn):
-    create_aws_connection(db_conn)
+def setup_database(pyexasol_connection):
+    create_aws_connection(pyexasol_connection)
     for setup_params in [reg_setup_params, cls_setup_params]:
-        create_table(db_conn, setup_params)
-        insert_into_table(db_conn, setup_params)
-    return db_conn
+        create_table(pyexasol_connection, setup_params)
+        insert_into_table(pyexasol_connection, setup_params)
+    return pyexasol_connection
 
 
 def create_aws_connection(conn):

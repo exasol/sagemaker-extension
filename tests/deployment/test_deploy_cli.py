@@ -38,13 +38,9 @@ def get_all_scripts(db_conn):
 
 
 @pytest.mark.slow
-def test_deploy_cli_main(backend, db_conn, deploy_params):
+def test_deploy_cli_main(pyexasol_connection, deploy_params):
 
     args_list = get_arg_list(**deploy_params, schema=DB_SCHEMA)
-    if backend == bfs.path.StorageBackend.saas:
-        args_list.append("--use-ssl-cert-validation")
-    else:
-        args_list.append("--no-use-ssl-cert-validation")
 
     runner = CliRunner()
     result = runner.invoke(deploy_cli.main, args_list)
@@ -55,8 +51,8 @@ def test_deploy_cli_main(backend, db_conn, deploy_params):
     assert not result.exception
     assert result.exit_code == 0
 
-    all_schemas = get_all_schemas(db_conn)
-    all_scripts = get_all_scripts(db_conn)
+    all_schemas = get_all_schemas(pyexasol_connection)
+    all_scripts = get_all_scripts(pyexasol_connection)
 
     assert DB_SCHEMA.upper() in all_schemas
     assert AUTOPILOT_TRAINING_LUA_SCRIPT_NAME.upper() in all_scripts

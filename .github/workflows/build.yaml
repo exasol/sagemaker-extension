@@ -75,4 +75,4 @@ jobs:
           PYTEST_ADDOPTS: '${{ steps.pytest-markers.outputs.slow-tests }}'
         run: |
           echo "PYTEST_ADDOPTS = $PYTEST_ADDOPTS"
-          poetry run pytest tests
+          poetry run pytest --backend=all --itde-db-version=external tests

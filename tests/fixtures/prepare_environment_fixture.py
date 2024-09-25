@@ -7,7 +7,6 @@ from typing import Optional
 
 import boto3
 import pyexasol
-import exasol.bucketfs as bfs
 import pytest
 
 from exasol_sagemaker_extension.deployment.deploy_create_statements import DeployCreateStatements
@@ -18,13 +17,6 @@ from tests.ci_tests.utils.parameters import (
 def _open_schema(db_conn: pyexasol.ExaConnection, model_setup):
     query = "CREATE SCHEMA IF NOT EXISTS {schema_name}"
     db_conn.execute(query.format(schema_name=model_setup.schema_name))
-
-
-def _deploy_scripts(backend: bfs.path.StorageBackend, deploy_params: dict[str, Any], schema: str):
-
-    cert_validation = backend == bfs.path.StorageBackend.saas
-    DeployCreateStatements.create_and_run(**deploy_params, schema=schema,
-                                          use_ssl_cert_validation=cert_validation)
 
 
 def _create_tables(db_conn, model_setup):
@@ -44,17 +36,16 @@ def _insert_into_tables(db_conn, model_setup):
     db_conn.execute(query)
 
 
-def _setup_database(backend: bfs.path.StorageBackend, db_conn: pyexasol.ExaConnection,
-                    deploy_params: dict[str, Any]):
+def _setup_database(db_conn: pyexasol.ExaConnection, deploy_params: dict[str, Any]):
     for model_setup in [reg_model_setup_params, cls_model_setup_params]:
         _open_schema(db_conn, model_setup)
-        _deploy_scripts(backend, deploy_params, model_setup.schema_name)
+        DeployCreateStatements.create_and_run(**deploy_params, schema=model_setup.schema_name)
         _create_tables(db_conn, model_setup)
         _insert_into_tables(db_conn, model_setup)
 
 
 @pytest.fixture(scope="session")
-def connection_object_for_aws_credentials(db_conn, aws_s3_bucket):
+def connection_object_for_aws_credentials(pyexasol_connection, aws_s3_bucket):
     aws_conn_name = "test_aws_credentials_connection_name"
     aws_region = os.environ["AWS_DEFAULT_REGION"]
     aws_s3_uri = f"https://{aws_s3_bucket}.s3.{aws_region}.amazonaws.com"
@@ -65,9 +56,9 @@ def connection_object_for_aws_credentials(db_conn, aws_s3_bucket):
                 aws_access_key_id=os.environ["AWS_ACCESS_KEY_ID"],
                 aws_secret_access_key=os.environ["AWS_SECRET_ACCESS_KEY"],
                 aws_s3_uri=aws_s3_uri)
-    db_conn.execute(query)
+    pyexasol_connection.execute(query)
     yield aws_conn_name
-    db_conn.execute(f"DROP CONNECTION {aws_conn_name};")
+    pyexasol_connection.execute(f"DROP CONNECTION {aws_conn_name};")
 
 
 def _create_aws_s3_bucket():
@@ -195,14 +186,14 @@ class CITestEnvironment:
 
 
 @pytest.fixture(scope="session")
-def prepare_ci_test_environment(backend,
-                                db_conn,
-                                deploy_params,
+def prepare_ci_test_environment(pyexasol_connection,
+                                backend_aware_database_params,
                                 aws_s3_bucket,
                                 connection_object_for_aws_credentials,
-                                aws_sagemaker_role) -> CITestEnvironment:
-    _setup_database(backend, db_conn, deploy_params)
-    yield CITestEnvironment(db_conn=db_conn,
+                                aws_sagemaker_role,
+                                deployed_slc) -> CITestEnvironment:
+    _setup_database(pyexasol_connection, backend_aware_database_params)
+    yield CITestEnvironment(db_conn=pyexasol_connection,
                             aws_s3_bucket=aws_s3_bucket,
                             connection_object_for_aws_credentials=connection_object_for_aws_credentials,
                             aws_sagemaker_role=aws_sagemaker_role)

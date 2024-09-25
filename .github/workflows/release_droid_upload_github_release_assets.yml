@@ -31,7 +31,7 @@ jobs:
         run: pip install dist/*.whl
 
       - name: Release language container
-        run: ./release_language_container.sh "$RELEASE_DIR"
+        run: ./scripts/release_language_container.sh "$RELEASE_DIR"
 
       - name: Upload assets to the GitHub release draft
         uses: shogo82148/actions-upload-release-asset@v1

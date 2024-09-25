@@ -29,15 +29,12 @@ def get_all_scripts(db_conn):
 
 
 @pytest.mark.slow
-def test_deploy_create_statements(backend, db_conn, deploy_params):
+def test_deploy_create_statements(pyexasol_connection, deploy_params):
 
-    # We validate the server certificate in SaaS, but not in the Docker DB
-    cert_validation = backend == bfs.path.StorageBackend.saas
-    DeployCreateStatements.create_and_run(**deploy_params, schema=DB_SCHEMA,
-                                          use_ssl_cert_validation=cert_validation)
+    DeployCreateStatements.create_and_run(**deploy_params, schema=DB_SCHEMA)
 
-    all_schemas = get_all_schemas(db_conn)
-    all_scripts = get_all_scripts(db_conn)
+    all_schemas = get_all_schemas(pyexasol_connection)
+    all_scripts = get_all_scripts(pyexasol_connection)
 
     assert DB_SCHEMA.upper() in all_schemas
     assert AUTOPILOT_TRAINING_LUA_SCRIPT_NAME.upper() in all_scripts
