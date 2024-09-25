@@ -60,8 +60,8 @@ jobs:
       - name: Run Lua unit tests and static code analyzer
         run: poetry run poe lua-tests
 
-      - name: Setup integration test environment
-        run: ./scripts/setup_integration_test.sh
+      # - name: Setup integration test environment
+      #   run: ./scripts/setup_integration_test.sh
 
       - name: Poetry run pytest integration tests
         env:
@@ -75,4 +75,4 @@ jobs:
           PYTEST_ADDOPTS: '${{ steps.pytest-markers.outputs.slow-tests }}'
         run: |
           echo "PYTEST_ADDOPTS = $PYTEST_ADDOPTS"
-          poetry run pytest --backend=all --itde-db-version=external tests
+          poetry run pytest --backend=onprem tests

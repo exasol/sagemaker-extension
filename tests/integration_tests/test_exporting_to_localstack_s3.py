@@ -136,7 +136,7 @@ def get_comparison_query(import_table_name):
                import_table_name=import_table_name)
 
 
-def test_export_table(backend, get_database_conn, s3_client):
+def test_export_table(backend, get_database_conn, s3_client, run_localstack):
     if backend != 'onprem':
         pytest.skip(("The test can only run locally, because "
                      "localstack is running locally and SaaS can't access it.'"))
