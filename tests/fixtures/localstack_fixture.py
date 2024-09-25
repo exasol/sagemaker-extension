@@ -5,15 +5,21 @@ from exasol_integration_test_docker_environment.lib.docker import (  # type: ign
 
 
 @pytest.fixture(scope='session')
-def run_localstack(backend_aware_onprem_database):
+def run_localstack(backend_aware_onprem_database) -> tuple[str, str] | None:
     if backend_aware_onprem_database is not None:
         db_info = backend_aware_onprem_database.database_info
         container_info = db_info.container_info
         network_name = container_info.network_info.network_name
         with ContextDockerClient() as docker_client:
-            docker_client.containers.run(
+            s3_port = 4566
+            container = docker_client.containers.run(
                 image="localstack/localstack",
-                ports={4566: 4566, 4571: 4571},
+                ports={s3_port: s3_port},
                 environment={'SERVICES': 's3'},
                 network=network_name,
                 detach=True)
+            network_settings = container.attrs['NetworkSettings']
+            ip_address = network_settings['Networks'][network_name]['IPAddress']
+            s3_uri = f"https://{ip_address}:{s3_port}"
+            return ip_address, s3_uri
+    return None
