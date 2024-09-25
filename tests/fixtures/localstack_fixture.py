@@ -7,8 +7,7 @@ from exasol_integration_test_docker_environment.lib.docker import (  # type: ign
 @pytest.fixture(scope='session')
 def run_localstack(backend_aware_onprem_database) -> tuple[str, str] | None:
     if backend_aware_onprem_database is not None:
-        db_info = backend_aware_onprem_database.database_info
-        container_info = db_info.container_info
+        container_info = backend_aware_onprem_database.database_info.container_info
         network_name = container_info.network_info.network_name
         assert network_name
         with ContextDockerClient() as docker_client:
@@ -17,9 +16,9 @@ def run_localstack(backend_aware_onprem_database) -> tuple[str, str] | None:
                 image="localstack/localstack",
                 ports={s3_port: s3_port},
                 environment={'SERVICES': 's3'},
-                network=network_name,
+                network=f'container:{container_info.container_name}',
                 detach=True)
-            network_settings = container.attrs['NetworkSettings']['Networks'][network_name]
+            network_settings = container.attrs['NetworkSettings']
             ip_address = network_settings['IPAddress']
             assert ip_address, f"Unable to get the IP address from the network settings {network_settings}"
             s3_uri = f"https://{ip_address}:{s3_port}"
