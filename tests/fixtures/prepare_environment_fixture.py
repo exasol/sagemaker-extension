@@ -187,12 +187,12 @@ class CITestEnvironment:
 
 @pytest.fixture(scope="session")
 def prepare_ci_test_environment(pyexasol_connection,
-                                backend_aware_database_params,
+                                deploy_params,
                                 aws_s3_bucket,
                                 connection_object_for_aws_credentials,
                                 aws_sagemaker_role,
                                 deployed_slc) -> CITestEnvironment:
-    _setup_database(pyexasol_connection, backend_aware_database_params)
+    _setup_database(pyexasol_connection, deploy_params)
     yield CITestEnvironment(db_conn=pyexasol_connection,
                             aws_s3_bucket=aws_s3_bucket,
                             connection_object_for_aws_credentials=connection_object_for_aws_credentials,

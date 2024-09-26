@@ -29,4 +29,6 @@ def _translate_params(source: dict[str, Any], param_map: dict[str, str]) -> dict
 
 @pytest.fixture(scope="session")
 def deploy_params(backend_aware_database_params, deployed_slc) -> dict[str, Any]:
-    return _translate_params(backend_aware_database_params, _deploy_param_map)
+    d_params = _translate_params(backend_aware_database_params, _deploy_param_map)
+    d_params['use_ssl_cert_validation'] = False
+    return d_params
