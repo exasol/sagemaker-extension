@@ -32,6 +32,7 @@ def localstack_s3_uri(backend_aware_onprem_database) -> str | None:
             assert ls_container in network.containers
 
             # Get the IP address of the localstack container.
+            ls_container.reload()
             network_settings = ls_container.attrs['NetworkSettings']
             assert network_name in network_settings['Networks']
             ip_address = network_settings['Networks'][network_name]['IPAddress']
