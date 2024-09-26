@@ -39,7 +39,7 @@ jobs:
     needs: [ slow-test-detection ]
     secrets: inherit
     with:
-      python-version: ${{ matrix.python-version }}
+      python-version: "3.10"
 
   gate-2:
     name: Gate 2 - Allow Merge
