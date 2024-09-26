@@ -31,7 +31,9 @@ def get_all_scripts(db_conn):
 @pytest.mark.slow
 def test_deploy_create_statements(pyexasol_connection, deploy_params):
 
-    DeployCreateStatements.create_and_run(**deploy_params, schema=DB_SCHEMA)
+    DeployCreateStatements.create_and_run(**deploy_params,
+                                          use_ssl_cert_validation=False,
+                                          schema=DB_SCHEMA)
 
     all_schemas = get_all_schemas(pyexasol_connection)
     all_scripts = get_all_scripts(pyexasol_connection)

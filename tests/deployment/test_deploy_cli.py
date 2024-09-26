@@ -1,6 +1,5 @@
 import pytest
 from click.testing import CliRunner
-import exasol.bucketfs as bfs
 
 from exasol_sagemaker_extension.deployment import deploy_cli
 from tests.ci_tests.utils.parameters import get_arg_list
@@ -41,6 +40,7 @@ def get_all_scripts(db_conn):
 def test_deploy_cli_main(pyexasol_connection, deploy_params):
 
     args_list = get_arg_list(**deploy_params, schema=DB_SCHEMA)
+    args_list.append("--no-use-ssl-cert-validation")
 
     runner = CliRunner()
     result = runner.invoke(deploy_cli.main, args_list)

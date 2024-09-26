@@ -39,7 +39,9 @@ def _insert_into_tables(db_conn, model_setup):
 def _setup_database(db_conn: pyexasol.ExaConnection, deploy_params: dict[str, Any]):
     for model_setup in [reg_model_setup_params, cls_model_setup_params]:
         _open_schema(db_conn, model_setup)
-        DeployCreateStatements.create_and_run(**deploy_params, schema=model_setup.schema_name)
+        DeployCreateStatements.create_and_run(**deploy_params,
+                                              use_ssl_cert_validation=False,
+                                              schema=model_setup.schema_name)
         _create_tables(db_conn, model_setup)
         _insert_into_tables(db_conn, model_setup)
 

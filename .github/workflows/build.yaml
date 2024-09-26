@@ -75,4 +75,4 @@ jobs:
           PYTEST_ADDOPTS: '${{ steps.pytest-markers.outputs.slow-tests }}'
         run: |
           echo "PYTEST_ADDOPTS = $PYTEST_ADDOPTS"
-          poetry run pytest --backend=onprem tests
+          poetry run pytest --backend=onprem --itde-nameserver="8.8.8.8" tests
