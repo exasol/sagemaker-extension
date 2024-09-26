@@ -1,4 +1,3 @@
-import pytest
 from click.testing import CliRunner
 
 from exasol_sagemaker_extension.deployment import deploy_cli
@@ -36,7 +35,6 @@ def get_all_scripts(db_conn):
     return list(map(lambda x: x[0], all_scripts))
 
 
-@pytest.mark.slow
 def test_deploy_cli_main(pyexasol_connection, deploy_params):
 
     args_list = get_arg_list(**deploy_params, schema=DB_SCHEMA)

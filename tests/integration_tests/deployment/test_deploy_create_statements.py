@@ -1,6 +1,3 @@
-import pytest
-import exasol.bucketfs as bfs
-
 from exasol_sagemaker_extension.deployment.deploy_create_statements import \
     DeployCreateStatements
 
@@ -28,7 +25,6 @@ def get_all_scripts(db_conn):
     return list(map(lambda x: x[0], all_scripts))
 
 
-@pytest.mark.slow
 def test_deploy_create_statements(pyexasol_connection, deploy_params):
 
     DeployCreateStatements.create_and_run(**deploy_params,
