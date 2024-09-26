@@ -1,4 +1,5 @@
 import sys
+import os
 from contextlib import contextmanager
 
 from exasol.python_extension_common.deployment.language_container_builder import (
@@ -16,5 +17,12 @@ def language_container_factory():
 
 
 def export_slc():
+    export_dir = sys.argv[1]
+    if not os.path.isdir(export_dir):
+        os.makedirs(export_dir)
     with language_container_factory() as container_builder:
-        container_builder.export(sys.argv[1])
+        container_builder.export(export_dir)
+
+
+if __name__ == '__main__':
+    export_slc()

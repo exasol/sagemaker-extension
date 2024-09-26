@@ -18,28 +18,8 @@ jobs:
     environment: aws
 
     steps:
-      - name: Set pytest markers
-        id: pytest-markers
-        if: ${{ ! inputs.slow-tests }}
-        run: echo slow-tests='-m "not slow"' >> "$GITHUB_OUTPUT"
-
       - name: SCM Checkout
         uses: actions/checkout@v4
-
-      # - name: Free disk space
-      #   uses: jlumbroso/free-disk-space@main
-      #   with:
-      #     tool-cache: true
-      #     large-packages: false
-
-      # - name: Free disk space by removing large directories
-      #   run: |
-      #     sudo rm -rf /usr/local/graalvm/
-      #     sudo rm -rf /usr/local/.ghcup/
-      #     sudo rm -rf /usr/local/share/powershell
-      #     sudo rm -rf /usr/local/share/chromium
-      #     sudo rm -rf /usr/local/lib/node_modules
-      #     sudo rm -rf /opt/ghc
 
       - name: Setup Python & Poetry Environment
         uses: ./.github/actions/prepare_poetry_env
@@ -53,17 +33,25 @@ jobs:
         run: pip install dist/*.whl
 
       - name:  Install Lua dependencies
+        if: ${{ ! inputs.slow-tests }}
         run: |
           sudo apt-get install luarocks
           sudo luarocks install --only-deps *.rockspec
 
       - name: Run Lua unit tests and static code analyzer
+        if: ${{ ! inputs.slow-tests }}
         run: poetry run poe lua-tests
 
-      # - name: Setup integration test environment
-      #   run: ./scripts/setup_integration_test.sh
+      - name: Run unit tests
+        if: ${{ ! inputs.slow-tests }}
+        run: poetry run pytest tests/unit_tests
 
-      - name: Poetry run pytest integration tests
+      - name: Run integration tests
+        if: ${{ ! inputs.slow-tests }}
+        run: poetry run pytest --backend=all tests/integration_tests
+
+      - name: Run ci tests
+        if: ${{ inputs.slow-tests }}
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -72,7 +60,4 @@ jobs:
           SAAS_HOST: ${{ secrets.INTEGRATION_TEAM_SAAS_STAGING_HOST }}
           SAAS_ACCOUNT_ID: ${{ secrets.INTEGRATION_TEAM_SAAS_STAGING_ACCOUNT_ID }}
           SAAS_PAT: ${{ secrets.INTEGRATION_TEAM_SAAS_STAGING_PAT }}
-          PYTEST_ADDOPTS: '${{ steps.pytest-markers.outputs.slow-tests }}'
-        run: |
-          echo "PYTEST_ADDOPTS = $PYTEST_ADDOPTS"
-          poetry run pytest --backend=onprem --itde-nameserver="8.8.8.8" tests
+        run: poetry run pytest --backend=all --itde-nameserver="8.8.8.8" tests/ci_tests

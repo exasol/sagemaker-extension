@@ -19,9 +19,6 @@ keywords = ['exasol', 'sagemaker']
 
 include = ["lua", "resources", "deployment"]
 
-[tool.poetry.scripts]
-export_slc = "exasol_sagemaker_extension.deployment.language_container:export_slc"
-
 [tool.poetry.dependencies]
 python = ">=3.10,<4.0"
 pandas = ">=1.4.2,<2.0.0"
