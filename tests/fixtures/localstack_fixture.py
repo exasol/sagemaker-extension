@@ -14,7 +14,7 @@ def run_localstack(backend_aware_onprem_database) -> tuple[str, str] | None:
             s3_port = 4566
             container = docker_client.containers.run(
                 image="localstack/localstack",
-                ports={s3_port: s3_port},
+                # ports={s3_port: s3_port},
                 environment={'SERVICES': 's3'},
                 network=f'container:{container_info.container_name}',
                 detach=True)
