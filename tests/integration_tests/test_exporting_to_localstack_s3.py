@@ -83,21 +83,16 @@ def get_s3_bucket_files(s3_client):
 
 
 @pytest.fixture(scope="session")
-def s3_client(run_localstack):
-    assert run_localstack is not None
-    aws_ip_address, _ = run_localstack
-    session = localstack_client.session.Session(
-        localstack_host='{ip_addr}'.format(ip_addr=aws_ip_address))
+def s3_client():
+    session = localstack_client.session.Session(localstack_host='localhost')
     s3_client = session.client('s3')
     return s3_client
 
 
 @pytest.fixture(scope="session")
-def get_database_conn(pyexasol_connection, s3_client, run_localstack):
-    assert run_localstack is not None
-    _, aws_s3_uri = run_localstack
+def get_database_conn(pyexasol_connection, localstack_s3_uri):
     open_schema(pyexasol_connection)
-    create_aws_connection(pyexasol_connection, aws_s3_uri)
+    create_aws_connection(pyexasol_connection, localstack_s3_uri)
     create_scripts(pyexasol_connection)
     create_table(pyexasol_connection, table_name=INPUT_DICT["input_table_or_view_name"])
     insert_into_table(pyexasol_connection, table_name=INPUT_DICT["input_table_or_view_name"])
