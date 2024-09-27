@@ -11,8 +11,11 @@ jobs:
   build:
     strategy:
       fail-fast: false
+      matrix:
+        backend: ["onprem", "saas"]
     runs-on: ubuntu-20.04
     environment: aws
+    name: Running ci tests on ${{ matrix.backend }}
 
     steps:
       - name: SCM Checkout
@@ -29,20 +32,13 @@ jobs:
       - name: Install project whl
         run: pip install dist/*.whl
 
-      - name:  Install Lua dependencies
-        run: |
-          sudo apt-get install luarocks
-          sudo luarocks install --only-deps *.rockspec
-
-      - name: Run Lua unit tests and static code analyzer
-        run: poetry run poe lua-tests
-
-      - name: Run unit tests
-        run: poetry run pytest tests/unit_tests
-
-      - name: Run integration tests
+      - name: Run tests
         env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_ROLE: ${{ secrets.AWS_ROLE }}
+          AWS_DEFAULT_REGION: "eu-central-1"
           SAAS_HOST: ${{ secrets.INTEGRATION_TEAM_SAAS_STAGING_HOST }}
           SAAS_ACCOUNT_ID: ${{ secrets.INTEGRATION_TEAM_SAAS_STAGING_ACCOUNT_ID }}
           SAAS_PAT: ${{ secrets.INTEGRATION_TEAM_SAAS_STAGING_PAT }}
-        run: poetry run pytest --backend=all tests/integration_tests
+        run: poetry run pytest --backend=${{ matrix.backend }} --itde-nameserver="8.8.8.8" tests/ci_tests

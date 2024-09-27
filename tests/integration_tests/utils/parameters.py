@@ -25,21 +25,6 @@ def get_aws_params():
     )
 
 
-def get_db_params():
-    DBParams = namedtuple("DBParams", [
-        "host", "port", "bfs_port", "user", "bfs_user", "password", "bfs_password"])
-
-    return DBParams(
-        host="127.0.0.1",
-        port="9563",
-        bfs_port="6666",
-        user="sys",
-        bfs_user="w",
-        password="exasol",
-        bfs_password="write"
-    )
-
-
 def get_regression_setup_params():
     RegressionSetupParams = namedtuple("RegressionSetupParams", [
         "schema_name", "table_name", "target_col", "data", "aws_output_path",
@@ -75,6 +60,5 @@ def get_classification_setup_params():
 
 
 aws_params = get_aws_params()
-db_params = get_db_params()
 reg_setup_params = get_regression_setup_params()
 cls_setup_params = get_classification_setup_params()

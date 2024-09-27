@@ -1,20 +1,15 @@
 import json
 import os.path
 
+import pyexasol
 import pytest
 import localstack_client.session
-import exasol.bucketfs as bfs
 
 from tests.integration_tests.utils.generate_create_statement_s3_exporting \
     import S3ExportingLuaScriptCreateStatementGenerator
 
-DB_CONNECTION_ADDR = "127.0.0.1:9563"
-DB_CONNECTION_USER = "sys"
-DB_CONNECTION_PASS = "exasol"
-AWS_IP_ADDR = "192.168.0.2"
 AWS_KEY_ID = ""
 AWS_ACCESS_KEY = ""
-AWS_S3_URI = f"https://{AWS_IP_ADDR}:4566"
 
 
 INPUT_DICT = {
@@ -44,11 +39,11 @@ def open_schema(conn):
         conn.execute(query.format(schema_name=INPUT_DICT["input_schema_name"]))
 
 
-def create_aws_connection(conn):
+def create_aws_connection(conn: pyexasol.ExaConnection, aws_s3_uri: str):
     query = "CREATE OR REPLACE  CONNECTION {aws_conn_name} TO '{aws_s3_uri}' " \
             "USER '{aws_key_id}' IDENTIFIED BY '{aws_access_key}'"\
         .format(aws_conn_name=INPUT_DICT["aws_credentials_connection_name"],
-                aws_s3_uri=AWS_S3_URI,
+                aws_s3_uri=aws_s3_uri,
                 aws_key_id=AWS_KEY_ID,
                 aws_access_key=AWS_ACCESS_KEY)
 
@@ -89,20 +84,19 @@ def get_s3_bucket_files(s3_client):
 
 @pytest.fixture(scope="session")
 def s3_client():
-    session = localstack_client.session.Session(
-        localstack_host='{ip_addr}'.format(ip_addr=AWS_IP_ADDR))
+    session = localstack_client.session.Session(localstack_host='localhost')
     s3_client = session.client('s3')
     return s3_client
 
 
 @pytest.fixture(scope="session")
-def get_database_conn(db_conn, s3_client):
-    open_schema(db_conn)
-    create_aws_connection(db_conn)
-    create_scripts(db_conn)
-    create_table(db_conn, table_name=INPUT_DICT["input_table_or_view_name"])
-    insert_into_table(db_conn, table_name=INPUT_DICT["input_table_or_view_name"])
-    return db_conn
+def get_database_conn(pyexasol_connection, localstack_s3_uri):
+    open_schema(pyexasol_connection)
+    create_aws_connection(pyexasol_connection, localstack_s3_uri)
+    create_scripts(pyexasol_connection)
+    create_table(pyexasol_connection, table_name=INPUT_DICT["input_table_or_view_name"])
+    insert_into_table(pyexasol_connection, table_name=INPUT_DICT["input_table_or_view_name"])
+    return pyexasol_connection
 
 
 def get_export_to_s3_query():
@@ -138,10 +132,9 @@ def get_comparison_query(import_table_name):
 
 
 def test_export_table(backend, get_database_conn, s3_client):
-    if backend != bfs.path.StorageBackend.onprem:
+    if backend != 'onprem':
         pytest.skip(("The test can only run locally, because "
                      "localstack is running locally and SaaS can't access it.'"))
-
     db_conn = get_database_conn
     create_s3_bucket(s3_client)
 

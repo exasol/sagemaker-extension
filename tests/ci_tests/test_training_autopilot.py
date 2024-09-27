@@ -1,7 +1,5 @@
 from datetime import datetime
 
-import pytest
-
 from tests.fixtures.prepare_environment_fixture import CITestEnvironment
 from tests.ci_tests.utils.autopilot_training import AutopilotTestTraining
 from tests.ci_tests.utils.parameters import reg_model_setup_params, \
@@ -9,7 +7,6 @@ from tests.ci_tests.utils.parameters import reg_model_setup_params, \
 from tests.ci_tests.utils.queries import DatabaseQueries
 
 
-@pytest.mark.slow
 def test_train_autopilot_regression_job(prepare_ci_test_environment):
     curr_datetime = datetime.now().strftime("%y%m%d%H%M%S")
     model_name = ''.join((reg_model_setup_params.model_type, curr_datetime))
@@ -23,7 +20,6 @@ def test_train_autopilot_regression_job(prepare_ci_test_environment):
         job_name, reg_model_setup_params, prepare_ci_test_environment)
 
 
-@pytest.mark.slow
 def test_train_autopilot_classification_job(prepare_ci_test_environment):
     curr_datetime = datetime.now().strftime("%y%m%d%H%M%S")
     model_name = ''.join((cls_model_setup_params.model_type, curr_datetime))

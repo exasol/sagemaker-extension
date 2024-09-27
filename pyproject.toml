@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "exasol-sagemaker-extension"
-version = "0.10.0"
+version = "0.11.0"
 description = "Exasol SageMaker Integration"
 
 license = "MIT"
@@ -26,11 +26,10 @@ boto3 = "1.26.163"
 botocore = "1.29.163"
 protobuf = ">=3.1,<=3.20.0"
 sagemaker = "^2.59.1"
-pyexasol = "^0.25.0"
-importlib-resources = "^5.2.0"
+pyexasol = ">=0.26.0,<1"
+importlib-resources = "^6.4.0"
 click = "^8.0.3"
-exasol-python-extension-common = ">=0.3.0"
-exasol-script-languages-container-tool = "^0.19.0"
+exasol-python-extension-common = ">=0.6.0,<1"
 
 [tool.poetry.dev-dependencies]
 pytest = "^7.1"
@@ -39,10 +38,12 @@ Sphinx = "^4.1.2"
 coverage = "^6.3"
 exasol-udf-mock-python = "^0.1.0"
 poethepoet = "^0.13.1"
-localstack-client = "^1.25"
+localstack = "^3.7.2"
+localstack-client = "^2.6"
 boto3 = "^1.20.40"
 toml = "^0.10.2"
 gitpython = "^3.1.41"
+pytest-exasol-slc = ">=0.3.0"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

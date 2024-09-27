@@ -15,7 +15,6 @@ jobs:
     secrets: inherit
     with:
       python-version: ${{ matrix.python-version }}
-      slow-tests: false
 
   gate-1:
     name: Gate 1 - Regular CI
@@ -36,11 +35,10 @@ jobs:
 
   run-slow-tests:
     name: Run Slow or Expensive Tests if Requested
-    uses: ./.github/workflows/build.yaml
+    uses: ./.github/workflows/build_slow.yaml
     needs: [ slow-test-detection ]
     secrets: inherit
     with:
-      slow-tests: true
       python-version: "3.10"
 
   gate-2:
