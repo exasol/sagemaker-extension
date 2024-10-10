@@ -17,8 +17,8 @@ def language_container_factory():
 
 
 @contextmanager
-def export_slc(export_dir: str):
-    if not os.path.isdir(export_dir):
+def export_slc(export_dir: str | None):
+    if export_dir and (not os.path.isdir(export_dir)):
         os.makedirs(export_dir)
     with language_container_factory() as container_builder:
         export_result = container_builder.export(export_dir)
@@ -27,4 +27,5 @@ def export_slc(export_dir: str):
 
 
 if __name__ == '__main__':
-    export_slc(sys.argv[1])
+    with export_slc(sys.argv[1]):
+        pass

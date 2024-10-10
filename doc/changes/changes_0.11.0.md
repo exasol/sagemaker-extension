@@ -8,4 +8,5 @@ T.B.D.
 
 ### Refactoring
 
-* #140: Using the pytest plugins for testing.
+* #140: Used the pytest plugins for testing.
+* #142: Made a unified deployment CLI command.

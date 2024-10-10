@@ -1992,13 +1992,13 @@ pytest = ">=7,<9"
 
 [[package]]
 name = "pytest-exasol-extension"
-version = "0.2.0"
+version = "0.2.1"
 description = ""
 optional = false
 python-versions = "<4,>=3.10"
 files = [
-    {file = "pytest_exasol_extension-0.2.0-py3-none-any.whl", hash = "sha256:41a358d83a4fece2035c9304253fb4c73da5ec0d25c9ff5312cb728f6fb65c7c"},
-    {file = "pytest_exasol_extension-0.2.0.tar.gz", hash = "sha256:1f4bb12e5ad6a05056b1a34cdd728671a9f29abdbaa33a289ae78123c57b1fce"},
+    {file = "pytest_exasol_extension-0.2.1-py3-none-any.whl", hash = "sha256:9ec0611872c865a1f97e2cbaedbd194919bc7a38cf91d228ab2c94d120abb6d0"},
+    {file = "pytest_exasol_extension-0.2.1.tar.gz", hash = "sha256:b628cb8f5505a20ca39e9828afa2a7f50bfbbfc55b9203b12c453527e9718ab3"},
 ]
 
 [package.dependencies]
@@ -3085,4 +3085,4 @@ type = ["pytest-mypy"]
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.10,<4.0"
-content-hash = "9ab3209533e419ab2c188fdba104f822ed304e235e0ecb8f6f7b952165dc5f39"
+content-hash = "d83dd23af51005bcf6ee050ba211bec8793fec21b498b054d7de57ca307a70be"

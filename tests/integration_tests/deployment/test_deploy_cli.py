@@ -1,4 +1,3 @@
-from pathlib import Path
 from click.testing import CliRunner
 from exasol.python_extension_common.cli.std_options import StdParams
 
@@ -37,46 +36,21 @@ def get_all_scripts(db_conn):
     return list(map(lambda x: x[0], all_scripts))
 
 
-def _cli_params_to_args(cli_params) -> str:
-    from typing import Any
-
-    def arg_string(k: str, v: Any):
-        k = k.replace("_", "-")
-        if isinstance(v, bool):
-            return f'--{k}' if v else f'--no-{k}'
-        return f'--{k} "{v}"'
-
-    return ' '.join(arg_string(k, v) for k, v in cli_params.items())
-
-
-def test_deploy_cli(pyexasol_connection, database_std_params, bucketfs_std_params, tmp_path):
-
-    # Bug in pytest-extension
-    std_params = dict(database_std_params)
-    std_params.update(bucketfs_std_params)
-    cli_args = _cli_params_to_args(std_params)
+def test_deploy_cli(pyexasol_connection, cli_args):
 
     pyexasol_connection.execute(f'CREATE SCHEMA IF NOT EXISTS "{DB_SCHEMA}"')
 
     def std_param_to_opt(std_param: StdParams) -> str:
-        # This method should be implemented in the StdParams
+        # This function should have been implemented in the StdParams
         return f'--{std_param.name.replace("_", "-")}'
 
-    with export_slc(str(tmp_path)) as container_file:
-        print('\nContainer file:', container_file, ', Size: ', Path(container_file).stat().st_size)
-
+    with export_slc() as container_file:
         args_string = (f'{cli_args} '
                        f'{std_param_to_opt(StdParams.schema)} "{DB_SCHEMA}" '
                        f'{std_param_to_opt(StdParams.container_file)} "{container_file}"')
-
-        print('Args:', args_string)
-
         runner = CliRunner()
         result = runner.invoke(deploy_command, args=args_string, catch_exceptions=False)
-
-    print('\nCliRunner completed.')
-    print('Exit code:', result.exit_code)
-    print('Output:', result.output)
+        assert result.exit_code == 0
 
     all_schemas = get_all_schemas(pyexasol_connection)
     all_scripts = get_all_scripts(pyexasol_connection)

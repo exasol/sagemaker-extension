@@ -28,9 +28,6 @@ opts.append(click.Option(['--deploy-scripts/--no-deploy-scripts'], type=bool, de
 
 def deploy(deploy_slc: bool, deploy_scripts: bool,  **kwargs):
 
-    print('*** DEPLOY ***')
-    print(kwargs)
-
     if deploy_slc:
         # Workaround for the issue#78 in PEC
         if StdParams.path_in_bucket.name in kwargs and kwargs[StdParams.path_in_bucket.name] is None:
@@ -43,11 +40,8 @@ def deploy(deploy_slc: bool, deploy_scripts: bool,  **kwargs):
         extra_params = {StdParams.language_alias.name: 'PYTHON3_SME'}
         slc_deployer(**kwargs, **extra_params)
 
-        print ('*** SLC DEPLOYED ***')
-
     if deploy_scripts:
         DeployCreateStatements.create_and_run(**kwargs)
-        print('*** SCRIPTS DEPLOYED ***')
 
 
 deploy_command = click.Command(None, params=opts, callback=deploy)
