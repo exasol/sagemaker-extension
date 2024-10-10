@@ -16,8 +16,7 @@ def language_container_factory():
         yield container_builder
 
 
-def export_slc():
-    export_dir = sys.argv[1]
+def export_slc(export_dir: str):
     if not os.path.isdir(export_dir):
         os.makedirs(export_dir)
     with language_container_factory() as container_builder:
@@ -25,4 +24,4 @@ def export_slc():
 
 
 if __name__ == '__main__':
-    export_slc()
+    export_slc(sys.argv[1])
