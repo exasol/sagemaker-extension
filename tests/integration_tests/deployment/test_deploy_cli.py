@@ -36,7 +36,24 @@ def get_all_scripts(db_conn):
     return list(map(lambda x: x[0], all_scripts))
 
 
-def test_deploy_cli_main(pyexasol_connection, cli_args, tmp_path):
+def _cli_params_to_args(cli_params) -> str:
+    from typing import Any
+
+    def arg_string(k: str, v: Any):
+        k = k.replace("_", "-")
+        if isinstance(v, bool):
+            return f'--{k}' if v else f'--no-{k}'
+        return f'--{k} "{v}"'
+
+    return ' '.join(arg_string(k, v) for k, v in cli_params.items())
+
+
+def test_deploy_cli_main(pyexasol_connection, database_std_params, bucketfs_std_params, tmp_path):
+
+    # Bug in pytest-extension
+    std_params = dict(database_std_params)
+    std_params.update(bucketfs_std_params)
+    cli_args = _cli_params_to_args(std_params)
 
     pyexasol_connection.execute(f'CREATE SCHEMA IF NOT EXISTS "{DB_SCHEMA}"')
 
