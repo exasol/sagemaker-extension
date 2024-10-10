@@ -62,17 +62,17 @@ def test_deploy_cli(pyexasol_connection, database_std_params, bucketfs_std_param
         # This method should be implemented in the StdParams
         return f'--{std_param.name.replace("_", "-")}'
 
-    container_file = export_slc(str(tmp_path))
-    print('Container file:', container_file, ', Size: ', Path(container_file).stat().st_size)
+    with export_slc(str(tmp_path)) as container_file:
+        print('\nContainer file:', container_file, ', Size: ', Path(container_file).stat().st_size)
 
-    args_string = (f'{cli_args} '
-                   f'{std_param_to_opt(StdParams.schema)} "{DB_SCHEMA}" '
-                   f'{std_param_to_opt(StdParams.container_file)} "{container_file}"')
+        args_string = (f'{cli_args} '
+                       f'{std_param_to_opt(StdParams.schema)} "{DB_SCHEMA}" '
+                       f'{std_param_to_opt(StdParams.container_file)} "{container_file}"')
 
-    print('\nArgs:', args_string)
+        print('Args:', args_string)
 
-    runner = CliRunner()
-    result = runner.invoke(deploy_command, args=args_string, catch_exceptions=False)
+        runner = CliRunner()
+        result = runner.invoke(deploy_command, args=args_string, catch_exceptions=False)
 
     print('\nCliRunner completed.')
     print('Exit code:', result.exit_code)
