@@ -20,10 +20,10 @@ formatters = {StdParams.version: ver_formatter}
 
 opts = select_std_options([StdTags.DB, StdTags.BFS, StdTags.SLC],
                           exclude=StdParams.language_alias, formatters=formatters)
-opts.append(click.Option('--to-print/--no-to-print', type=bool, default=False))
-opts.append(click.Option('--develop/--no-develop', type=bool, default=False))
-opts.append(click.Option('--deploy-slc/--no-deploy-slc', type=bool, default=True))
-opts.append(click.Option('--deploy-scripts/--no-deploy-scripts', type=bool, default=True))
+opts.append(click.Option(['--to-print/--no-to-print'], type=bool, default=False))
+opts.append(click.Option(['--develop/--no-develop'], type=bool, default=False))
+opts.append(click.Option(['--deploy-slc/--no-deploy-slc'], type=bool, default=True))
+opts.append(click.Option(['--deploy-scripts/--no-deploy-scripts'], type=bool, default=True))
 
 
 def deploy(deploy_slc: bool, deploy_scripts: bool,  **kwargs):
