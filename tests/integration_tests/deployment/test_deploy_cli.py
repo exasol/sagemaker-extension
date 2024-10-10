@@ -38,6 +38,8 @@ def get_all_scripts(db_conn):
 
 def test_deploy_cli_main(pyexasol_connection, cli_args, tmp_path):
 
+    pyexasol_connection.execute(f'CREATE SCHEMA IF NOT EXISTS "{DB_SCHEMA}"')
+
     def std_param_to_opt(std_param: StdParams) -> str:
         # This method should be implemented in the StdParams
         return f'--{std_param.name.replace("_", "-")}'
