@@ -33,7 +33,8 @@ def deploy(deploy_slc: bool, deploy_scripts: bool,  **kwargs):
             container_url_arg=CONTAINER_URL_ARG,
             container_name_arg=CONTAINER_NAME_ARG)
 
-        slc_deployer(**kwargs)
+        extra_params = {StdParams.language_alias.name: 'PYTHON3_SME'}
+        slc_deployer(**kwargs, **extra_params)
 
     if deploy_scripts:
         DeployCreateStatements.create_and_run(**kwargs)
