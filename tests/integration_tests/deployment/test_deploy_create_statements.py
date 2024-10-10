@@ -25,7 +25,7 @@ def get_all_scripts(db_conn):
     return list(map(lambda x: x[0], all_scripts))
 
 
-def test_deploy_create_statements(pyexasol_connection, database_std_params):
+def test_deploy_create_statements(pyexasol_connection, database_std_params, deployed_slc):
 
     DeployCreateStatements.create_and_run(**database_std_params,
                                           schema=DB_SCHEMA)

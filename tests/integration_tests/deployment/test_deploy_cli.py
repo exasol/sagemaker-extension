@@ -36,17 +36,17 @@ def get_all_scripts(db_conn):
     return list(map(lambda x: x[0], all_scripts))
 
 
-def test_deploy_cli_main(pyexasol_connection, cli_args, tempdir):
+def test_deploy_cli_main(pyexasol_connection, cli_args, tmp_path):
 
     def std_param_to_opt(std_param: StdParams) -> str:
         # This method should be implemented in the StdParams
         return f'--{std_param.name.replace("_", "-")}'
 
-    export_slc(tempdir)
+    export_slc(str(tmp_path))
 
     args_string = (f'{cli_args} '
                    f'{std_param_to_opt(StdParams.schema)} "{DB_SCHEMA}" '
-                   f'{std_param_to_opt(StdParams.container_file)} "{tempdir}"')
+                   f'{std_param_to_opt(StdParams.container_file)} "{tmp_path}"')
 
     runner = CliRunner()
     result = runner.invoke(deploy_command, args=args_string, catch_exceptions=False)
