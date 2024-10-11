@@ -16,13 +16,16 @@ def language_container_factory():
         yield container_builder
 
 
-def export_slc():
-    export_dir = sys.argv[1]
-    if not os.path.isdir(export_dir):
+@contextmanager
+def export_slc(export_dir: str | None = None):
+    if export_dir and (not os.path.isdir(export_dir)):
         os.makedirs(export_dir)
     with language_container_factory() as container_builder:
-        container_builder.export(export_dir)
+        export_result = container_builder.export(export_dir)
+        export_info = export_result.export_infos[str(container_builder.flavor_path)]["release"]
+        yield export_info.cache_file
 
 
 if __name__ == '__main__':
-    export_slc()
+    with export_slc(sys.argv[1]):
+        pass

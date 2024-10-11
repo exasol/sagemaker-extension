@@ -40,7 +40,6 @@ def _setup_database(db_conn: pyexasol.ExaConnection, deploy_params: dict[str, An
     for model_setup in [reg_model_setup_params, cls_model_setup_params]:
         _open_schema(db_conn, model_setup)
         DeployCreateStatements.create_and_run(**deploy_params,
-                                              use_ssl_cert_validation=False,
                                               schema=model_setup.schema_name)
         _create_tables(db_conn, model_setup)
         _insert_into_tables(db_conn, model_setup)
@@ -189,12 +188,12 @@ class CITestEnvironment:
 
 @pytest.fixture(scope="session")
 def prepare_ci_test_environment(pyexasol_connection,
-                                deploy_params,
+                                database_std_params,
                                 aws_s3_bucket,
                                 connection_object_for_aws_credentials,
                                 aws_sagemaker_role,
                                 deployed_slc) -> CITestEnvironment:
-    _setup_database(pyexasol_connection, deploy_params)
+    _setup_database(pyexasol_connection, database_std_params)
     yield CITestEnvironment(db_conn=pyexasol_connection,
                             aws_s3_bucket=aws_s3_bucket,
                             connection_object_for_aws_credentials=connection_object_for_aws_credentials,

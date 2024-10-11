@@ -1,7 +1,8 @@
 from click.testing import CliRunner
+from exasol.python_extension_common.cli.std_options import StdParams
 
-from exasol_sagemaker_extension.deployment import deploy_cli
-from tests.ci_tests.utils.parameters import get_arg_list
+from exasol_sagemaker_extension.deploy import deploy_command
+from exasol_sagemaker_extension.deployment.language_container import export_slc
 
 DB_SCHEMA = "TEST_CLI_SCHEMA"
 AUTOPILOT_TRAINING_LUA_SCRIPT_NAME = \
@@ -35,19 +36,21 @@ def get_all_scripts(db_conn):
     return list(map(lambda x: x[0], all_scripts))
 
 
-def test_deploy_cli_main(pyexasol_connection, deploy_params):
+def test_deploy_cli(pyexasol_connection, cli_args):
 
-    args_list = get_arg_list(**deploy_params, schema=DB_SCHEMA)
-    args_list.append("--no-use-ssl-cert-validation")
+    pyexasol_connection.execute(f'CREATE SCHEMA IF NOT EXISTS "{DB_SCHEMA}"')
 
-    runner = CliRunner()
-    result = runner.invoke(deploy_cli.main, args_list)
+    def std_param_to_opt(std_param: StdParams) -> str:
+        # This function should have been implemented in the StdParams
+        return f'--{std_param.name.replace("_", "-")}'
 
-    if result.exit_code != 0:
-        print(result.output)
-
-    assert not result.exception
-    assert result.exit_code == 0
+    with export_slc() as container_file:
+        args_string = (f'{cli_args} '
+                       f'{std_param_to_opt(StdParams.schema)} "{DB_SCHEMA}" '
+                       f'{std_param_to_opt(StdParams.container_file)} "{container_file}"')
+        runner = CliRunner()
+        result = runner.invoke(deploy_command, args=args_string, catch_exceptions=False)
+        assert result.exit_code == 0
 
     all_schemas = get_all_schemas(pyexasol_connection)
     all_scripts = get_all_scripts(pyexasol_connection)
