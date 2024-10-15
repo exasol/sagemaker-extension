@@ -1,6 +1,6 @@
-# SageMaker Extension 0.11.0, released T.B.D.
+# SageMaker Extension 0.11.0, released 2024-10-15
 
-Simplified installation.
+Code name: Simplified installation.
 
 ## Summary
 
