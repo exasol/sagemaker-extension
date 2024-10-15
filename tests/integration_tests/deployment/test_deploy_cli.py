@@ -1,5 +1,5 @@
 from click.testing import CliRunner
-from exasol.python_extension_common.cli.std_options import StdParams
+from exasol.python_extension_common.cli.std_options import StdParams, get_cli_arg
 
 from exasol_sagemaker_extension.deploy import deploy_command
 from exasol_sagemaker_extension.deployment.language_container import export_slc
@@ -40,14 +40,9 @@ def test_deploy_cli(pyexasol_connection, cli_args):
 
     pyexasol_connection.execute(f'CREATE SCHEMA IF NOT EXISTS "{DB_SCHEMA}"')
 
-    def std_param_to_opt(std_param: StdParams) -> str:
-        # This function should have been implemented in the StdParams
-        return f'--{std_param.name.replace("_", "-")}'
-
     with export_slc() as container_file:
-        args_string = (f'{cli_args} '
-                       f'{std_param_to_opt(StdParams.schema)} "{DB_SCHEMA}" '
-                       f'{std_param_to_opt(StdParams.container_file)} "{container_file}"')
+        args_string = ' '.join([cli_args, get_cli_arg(StdParams.schema, DB_SCHEMA),
+                                get_cli_arg(StdParams.container_file, container_file)])
         runner = CliRunner()
         result = runner.invoke(deploy_command, args=args_string, catch_exceptions=False)
         assert result.exit_code == 0

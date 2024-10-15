@@ -4,10 +4,9 @@ Exasol Sagemaker Extension provides a Python library together with Exasol Script
 and UDFs that train Machine Learning Models on data stored in Exasol using AWS SageMaker 
 Autopilot service.
 
-The extension basically exports a given Exasol table into AWS S3, and then triggers 
-Machine Learning training using the AWS Autopilot service with the specified parameters. 
-In addition, the training status can be polled using the auxiliary scripts provided 
-within the scope of the project.
+The extension exports a given Exasol table into AWS S3, and then triggers  Machine Learning training
+using the AWS Autopilot service with the specified parameters. The training status can be polled using
+the auxiliary scripts provided within the scope of the project.
 
 ## Table of Contents
 
@@ -25,82 +24,39 @@ within the scope of the project.
 
 
 ## Installation
-### Install The Built Archive
-- Install the packaged sagemaker-extension project as follows (Please check [the latest release](https://github.com/exasol/sagemaker-extension/releases/latest)):
-```buildoutcfg
-pip install exasol_sagemaker_extension.whl
-```
-### The Pre-built Language Container
 
-This extension requires the installation of a Language Container in the Exasol Database. 
-The Script Language Container is a way to install the required programming language and 
-necessary dependencies in the Exasol Database so the UDF scripts can be executed.
-
-The Language Container is downloaded and installed by executing the 
-deployment script below. Please make sure that the version of the Language Container matches the
-installed version of the Sagemaker Extension Package. See [the latest release](https://github.com/exasol/sagemaker-extension/releases) on Github.
-
-  ```buildoutcfg
-  python -m exasol_sagemaker_extension.deploy language-container <options>
-  ```
-
-Please refer to the [Language Container Deployment Guide](https://github.com/exasol/python-extension-common/blob/main/doc/user_guide/user-guide.md#language-container-deployer) for details about this command. 
-
-### Scripts Deployment
- 
-Deploy all necessary scripts to the specified  ```SCHEMA``` in Exasol using the following python cli command: 
-
-```buildoutcfg
-python -m exasol_sagemaker_extension.deployment.deploy_cli <options>
+### Install the Python Package
+The Sagemaker Extension package can be installed using pip:
+```shell
+pip install exasol-sagemaker-extension
 ```
 
-The choice of options is primarily determined by the storage backend being used - On-Prem or SaaS.
+### Deploy the Extension to the Database
+The Sagemaker Extension must be deployed to the database using the following command:
+```shell
+python -m exasol_sagemaker_extension.deploy <options>
+```
 
-### List of options
+The deployment includes the installation of the Script Language Container (SLC) and several
+scripts. The SLC is a way to install the required programming language and necessary dependencies
+in the Exasol Database so that UDF scripts can be executed. The version of the installed SLC must
+match the version of the Sagemaker Extension Package. See [the latest release](https://github.com/exasol/sagemaker-extension/releases) on Github.
 
-The table below lists all available options. It shows which ones are applicable for On-Prem and for SaaS backends.
-Unless stated otherwise in the comments column, the option is required for either or both backends.
+For information about the available options common to all Exasol extensions please refer to the
+[documentation](https://github.com/exasol/python-extension-common/blob/0.8.0/doc/user_guide/user-guide.md) 
+in the Exasol Python Extension Common package. 
+In addition, this extension provides the following installation options:
 
-Some of the values, like passwords, are considered confidential. For security reasons, it is recommended to store
-those values in environment variables instead of providing them in the command line. The names of the environment
-variables are given in the comments column, where applicable. Alternatively, it is possible to put just the name of
-an option in the command line, without providing its value. In this case, the command will prompt to enter the value
-interactively. For long values, such as the SaaS account id, it is more practical to copy/paste the value from
-another source.
+| Option name         | Default | Comment                                        |
+|:--------------------|:-------:|:-----------------------------------------------|
+| [no-]deploy-slc     |  True   | Install SLC as part of the deployment          |
+| [no-]deploy-scripts |  True   | Install scripts as part of the deployment      |
+| [no-]to-print       |  False  | Print SQL statements instead of executing them |
+| [no-]develop        |  False  | Re-generate the scripts                        | 
 
-| Option name                  | On-Prem | SaaS | Comment                                                |
-|:-----------------------------|:-------:|:----:|:-------------------------------------------------------|
-| dsn                          |   [x]   |      | i.e. <db_host:db_port>                                 |
-| db-user                      |   [x]   |      |                                                        |
-| db-pass                      |   [x]   |      | Env. [DB_PASSWORD]                                     |
-| saas-url                     |         | [x]  | Optional, Env. [SAAS_HOST]                             |
-| saas-account-id              |         | [x]  | Env. [SAAS_ACCOUNT_ID]                                 |
-| saas-database-id             |         | [x]  | Optional, Env. [SAAS_DATABASE_ID]                      |
-| saas-database-name           |         | [x]  | Optional, provide if the database_id is unknown        |
-| saas-token                   |         | [x]  | Env. [SAAS_TOKEN]                                      |
-| schema                       |   [x]   | [x]  | DB schema to deploy the scripts in                     |
-| ssl-cert-path                |   [x]   | [x]  | Optional                                               |
-| [no_]use-ssl-cert-validation |   [x]   | [x]  | Optional boolean, defaults to True                     |
-| ssl-client-cert-path         |   [x]   |      | Optional                                               |
-| ssl-client-private-key       |   [x]   |      | Optional                                               |
-| develop                      |   [x]   | [x]  | Optional, if True, causes re-generation of the scripts |
-| verbose                      |   [x]   | [x]  | Optional, if True produces verbose output              |
-
-### TLS/SSL options
-
-The `--ssl-cert-path` is needed if the TLS/SSL certificate is not in the OS truststore.
-Generally speaking, this certificate is a list of trusted CA. It is needed for the server's certificate
-validation by the client.
-The option `--use-ssl-cert-validation`is the default, it can be disabled with `--no-use-ssl-cert-validation`.
-One needs to exercise caution when turning the certificate validation off as it potentially lowers the security of the
-Database connection.
-The "server" certificate described above shall not be confused with the client's own certificate.
-In some cases, this certificate may be requested by a server. The client certificate may or may not include
-the private key. In the latter case, the key may be provided as a separate file.
-
-### AWS Connection Object
-  - Create an Exasol connection object with AWS credentials that has 
-AWS Sagemaker Execution permission. The connection will encapsulate the address of the AWS S3 bucket where the exported data will be stored. 
+### Create AWS Connection Object
+Create an Exasol connection object with AWS credentials that has  AWS Sagemaker Execution permission.
+The connection will encapsulate the address of the AWS S3 bucket where the exported data will be stored. 
 For more information please check the [Create Connection in Exasol](https://docs.exasol.com/sql/create_connection.htm?Highlight=connection) document.
 Below is a template of the query that will create the required connection object. 
   ```buildoutcfg
@@ -109,8 +65,6 @@ Below is a template of the query that will create the required connection object
       USER '<AWS_ACCESS_KEY_ID>'
       IDENTIFIED BY '<AWS_SECRET_ACCESS_KEY>'
   ```  
-
-
 
 ## Execution of Training
 ### Execute Autopilot Training
