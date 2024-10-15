@@ -4,7 +4,7 @@ Exasol Sagemaker Extension provides a Python library together with Exasol Script
 and UDFs that train Machine Learning Models on data stored in Exasol using AWS SageMaker 
 Autopilot service.
 
-The extension exports a given Exasol table into AWS S3, and then triggers  Machine Learning training
+The extension exports a given Exasol table into AWS S3, and then triggers Machine Learning training
 using the AWS Autopilot service with the specified parameters. The training status can be polled using
 the auxiliary scripts provided within the scope of the project.
 
@@ -52,10 +52,9 @@ In addition, this extension provides the following installation options:
 | [no-]deploy-slc     |  True   | Install SLC as part of the deployment          |
 | [no-]deploy-scripts |  True   | Install scripts as part of the deployment      |
 | [no-]to-print       |  False  | Print SQL statements instead of executing them |
-| [no-]develop        |  False  | Re-generate the scripts                        | 
 
 ### Create AWS Connection Object
-Create an Exasol connection object with AWS credentials that has  AWS Sagemaker Execution permission.
+Create an Exasol connection object with AWS credentials that have AWS Sagemaker Execution permission.
 The connection will encapsulate the address of the AWS S3 bucket where the exported data will be stored. 
 For more information please check the [Create Connection in Exasol](https://docs.exasol.com/sql/create_connection.htm?Highlight=connection) document.
 Below is a template of the query that will create the required connection object. 
