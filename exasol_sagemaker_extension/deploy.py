@@ -29,10 +29,6 @@ opts.append(click.Option(['--deploy-scripts/--no-deploy-scripts'], type=bool, de
 def deploy(deploy_slc: bool, deploy_scripts: bool,  **kwargs):
 
     if deploy_slc:
-        # Workaround for the issue#78 in PEC
-        if StdParams.path_in_bucket.name in kwargs and kwargs[StdParams.path_in_bucket.name] is None:
-            kwargs[StdParams.path_in_bucket.name] = ''
-
         slc_deployer = LanguageContainerDeployerCli(
             container_url_arg=CONTAINER_URL_ARG,
             container_name_arg=CONTAINER_NAME_ARG)
