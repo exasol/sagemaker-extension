@@ -1,4 +1,4 @@
-# SageMaker Extension 0.11.2, released 2025-01-15
+# SageMaker Extension 0.11.2, released 2025-01-16
 
 Code name: Fixed security vulnerabilities.
 
