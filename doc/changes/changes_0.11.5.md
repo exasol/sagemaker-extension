@@ -1,4 +1,4 @@
-# SageMaker Extension 0.11.4, released T.B.D
+# SageMaker Extension 0.11.5, released T.B.D
 
 Code name: Dependency update on top of 0.11.4
 
