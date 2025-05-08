@@ -16,4 +16,4 @@ jobs:
           poetry-version: '2.1.2'
 
       - name: Check Release
-        run: poetry run python3 -u "./scripts/check_release_version.py"
+        run: poetry run -- python3 -u "./scripts/check_release_version.py"

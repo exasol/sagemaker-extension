@@ -51,14 +51,14 @@ jobs:
           sudo luarocks install --only-deps *.rockspec
 
       - name: Run Lua unit tests and static code analyzer
-        run: poetry run poe lua-tests
+        run: poetry run -- poe lua-tests
 
       - name: Run unit tests
-        run: poetry run pytest tests/unit_tests
+        run: poetry run -- pytest tests/unit_tests
 
       - name: Run integration tests
         env:
           SAAS_HOST: ${{ secrets.INTEGRATION_TEAM_SAAS_STAGING_HOST }}
           SAAS_ACCOUNT_ID: ${{ secrets.INTEGRATION_TEAM_SAAS_STAGING_ACCOUNT_ID }}
           SAAS_PAT: ${{ secrets.INTEGRATION_TEAM_SAAS_STAGING_PAT }}
-        run: poetry run pytest --backend=all tests/integration_tests
+        run: poetry run -- pytest --backend=all tests/integration_tests

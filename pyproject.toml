@@ -20,7 +20,7 @@ homepage = "https://github.com/exasol/sagemaker-extension"
 [tool.poetry]
 requires-poetry = ">=2.1.0"
 packages = [
-    { include = "exasol" },
+    { include = "exasol_sagemaker_extension" },
 ]
 include = ["lua", "resources", "deployment"]
 
