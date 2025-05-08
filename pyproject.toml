@@ -1,26 +1,30 @@
-[tool.poetry]
+[project]
 name = "exasol-sagemaker-extension"
 version = "0.11.4"
+requires-python = ">=3.10,<4.0"
 description = "Exasol SageMaker Integration"
-
-license = "MIT"
-
 authors = [
-	"Umit Buyuksahin <umit.buyuksahin@exasol.com>",
-	"Torsten Kilias <torsten.kilias@exasol.com>"
+	{name="Umit Buyuksahin", email="umit.buyuksahin@exasol.com"},
+	{name="Torsten Kilias", email="torsten.kilias@exasol.com"},
 ]
-
+license = "MIT"
 readme = 'README.md'
+keywords = ['exasol', 'sagemaker']
+dynamic = ["dependencies"]
 
+[poetry.urls]
 repository = "https://github.com/exasol/sagemaker-extension"
 homepage = "https://github.com/exasol/sagemaker-extension"
 
-keywords = ['exasol', 'sagemaker']
 
+[tool.poetry]
+requires-poetry = ">=2.1.0"
+packages = [
+    { include = "exasol" },
+]
 include = ["lua", "resources", "deployment"]
 
 [tool.poetry.dependencies]
-python = ">=3.10,<4.0"
 pandas = ">=2.2.3,<3.0.0"
 boto3 = "^1.26.163"
 botocore = "^1.29.163"
@@ -31,7 +35,7 @@ importlib-resources = "^6.4.0"
 click = "^8.0.3"
 exasol-python-extension-common = ">=0.8.0,<1"
 
-[tool.poetry.dev-dependencies]
+[tool.poetry.group.dev.dependencies]
 pytest = "^7.1"
 pytest-cov = "^3.0.0"
 Sphinx = "^4.1.2"
@@ -47,7 +51,7 @@ pytest-exasol-slc = ">=0.3.0,<1"
 pytest-exasol-extension = ">=0.2.1,<1"
 
 [build-system]
-requires = ["poetry-core>=1.0.0"]
+requires = ["poetry-core>=2.0.0"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.poe.tasks]

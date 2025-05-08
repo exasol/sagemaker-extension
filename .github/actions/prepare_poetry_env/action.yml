@@ -13,7 +13,7 @@ runs:
         python-version: ${{ inputs.python-version }}
     - uses: abatilo/actions-poetry@v2
       with:
-        poetry-version: 1.8.0
+        poetry-version: 2.1.2
     - name: Poetry install
       run: poetry install
       shell: bash
