@@ -34,9 +34,10 @@ jobs:
           sudo rm -rf /opt/ghc
 
       - name: Setup Python & Poetry Environment
-        uses: ./.github/actions/prepare_poetry_env
+        uses: exasol/python-toolbox/.github/actions/python-environment@1.1.0
         with:
           python-version: ${{ inputs.python-version }}
+          poetry-version: '2.1.2'
 
       - name: Build Poetry
         run: poetry build
