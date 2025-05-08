@@ -49,9 +49,10 @@ toml = "^0.10.2"
 gitpython = "^3.1.41"
 pytest-exasol-slc = ">=0.3.0,<1"
 pytest-exasol-extension = ">=0.2.1,<1"
+setuptools = "^80.3.1"
 
 [build-system]
-requires = ["poetry-core>=2.0.0"]
+requires = ["setuptools", "poetry-core>=2.0.0"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.poe.tasks]
