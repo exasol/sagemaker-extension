@@ -65,7 +65,7 @@ development environment.
 ### 1. Lua Tests
 In order to run all Lua tests you can execute the following command in the project:
 ```bash
-poetry run poe lua-tests
+poetry run -- poe lua-tests
 ```
 This command runs the script `./scripts/lua_tests.sh` and not only tests all Lua 
 scripts but also performs static code analysis.
@@ -82,7 +82,7 @@ is created with the following script:
 
 To run all the tests in the project use:
 ```bash
-poetry run pytest tests
+poetry run -- pytest tests
 ```
 
 ### 3. AWS Tests
@@ -97,7 +97,7 @@ export AWS_ROLE=<AWS_ROLE>
 ```
 After that, you can run them as follows:
 ```bash
-poetry run pytest tests/ci_tests
+poetry run -- pytest tests/ci_tests
 ```
 
 In order for these tests to run in the Github Workflow, the commit 

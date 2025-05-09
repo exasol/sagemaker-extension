@@ -19,14 +19,14 @@ jobs:
   gate-1:
     name: Gate 1 - Regular CI
     needs: [ ci-job ]
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - name: Branch Protection
         run: true
 
   slow-test-detection:
     name: Run Slow or Expensive Tests?
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - name: Detect Slow Tests
         run: true
@@ -43,7 +43,7 @@ jobs:
 
   gate-2:
     name: Gate 2 - Allow Merge
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     needs: [ run-slow-tests ]
     steps:
       - name: Branch Protection

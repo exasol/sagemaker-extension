@@ -4,11 +4,16 @@ on: pull_request
 
 jobs:
   check-version-numbers:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
-      - uses: ./.github/actions/prepare_poetry_env
+
+      - name: Setup Python & Poetry Environment
+        uses: exasol/python-toolbox/.github/actions/python-environment@1.1.0
+        with:
+          poetry-version: '2.1.2'
+
       - name: Check Release
-        run: poetry run python3 -u "./scripts/check_release_version.py"
+        run: poetry run -- python3 -u "./scripts/check_release_version.py"

@@ -11,7 +11,7 @@ jobs:
   build:
     strategy:
       fail-fast: false
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     environment: aws
 
     steps:
@@ -34,9 +34,10 @@ jobs:
           sudo rm -rf /opt/ghc
 
       - name: Setup Python & Poetry Environment
-        uses: ./.github/actions/prepare_poetry_env
+        uses: exasol/python-toolbox/.github/actions/python-environment@1.1.0
         with:
           python-version: ${{ inputs.python-version }}
+          poetry-version: '2.1.2'
 
       - name: Build Poetry
         run: poetry build
@@ -50,14 +51,14 @@ jobs:
           sudo luarocks install --only-deps *.rockspec
 
       - name: Run Lua unit tests and static code analyzer
-        run: poetry run poe lua-tests
+        run: poetry run -- poe lua-tests
 
       - name: Run unit tests
-        run: poetry run pytest tests/unit_tests
+        run: poetry run -- pytest tests/unit_tests
 
       - name: Run integration tests
         env:
           SAAS_HOST: ${{ secrets.INTEGRATION_TEAM_SAAS_STAGING_HOST }}
           SAAS_ACCOUNT_ID: ${{ secrets.INTEGRATION_TEAM_SAAS_STAGING_ACCOUNT_ID }}
           SAAS_PAT: ${{ secrets.INTEGRATION_TEAM_SAAS_STAGING_PAT }}
-        run: poetry run pytest --backend=all tests/integration_tests
+        run: poetry run -- pytest --backend=all tests/integration_tests
