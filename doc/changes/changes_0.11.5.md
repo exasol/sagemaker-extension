@@ -9,4 +9,4 @@ Code name: Dependency update on top of 0.11.4, fixed SLC name.
 
 ## Bug fixing
 
-* #158 Fixed the released SLC name.
+* #157 Fixed the released SLC name.
