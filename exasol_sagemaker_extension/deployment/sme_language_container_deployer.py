@@ -5,7 +5,7 @@ from exasol.python_extension_common.deployment.language_container_deployer impor
 
 class SmeLanguageContainerDeployer(LanguageContainerDeployer):
 
-    SLC_NAME = "exasol_sagemaker_extension_container.tar.gz"
+    SLC_NAME = "exasol_sagemaker_extension_container_release.tar.gz"
     SLC_URL_FORMATTER = "https://github.com/exasol/sagemaker-extension/releases/download/{version}/" + SLC_NAME
 
     def download_from_github_and_run(self, version: str,
