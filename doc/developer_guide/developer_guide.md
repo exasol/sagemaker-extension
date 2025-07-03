@@ -100,7 +100,7 @@ After that, you can run them as follows:
 poetry run -- pytest tests/ci_tests
 ```
 
-In order for these tests to run in the Github Workflow, the commit 
+In order for these tests to run in the GitHub Workflow, the commit 
 message must contain the following statement `[run aws tests]`. For example:
 ```bash
 git commit -m "[run aws tests]"
