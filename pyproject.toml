@@ -25,6 +25,7 @@ packages = [
 include = ["lua", "resources", "deployment"]
 
 [tool.poetry.dependencies]
+numpy = ">=1.26,<2"
 pandas = ">=2.2.3,<3.0.0"
 boto3 = "^1.26.163"
 botocore = "^1.29.163"
