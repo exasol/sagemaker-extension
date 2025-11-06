@@ -2,10 +2,10 @@
 
 Code name: Dependency update on top of 0.11.5.
 
-# Security
+## Security
 
 * #154: Updated protobuf from `^3.1` to  `^4.25.8` to resolve CVE-2025-4565
 
-# Refactoring
+## Refactoring
 
 Bumped up pytes-plugins dependencies
