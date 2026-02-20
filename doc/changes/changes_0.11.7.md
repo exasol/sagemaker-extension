@@ -1,4 +1,4 @@
-# SageMaker Extension 0.11.7, released 2026-02-19
+# SageMaker Extension 0.11.7, released 2026-02-20
 
 Code name: Dependency update on top of 0.11.6.
 
