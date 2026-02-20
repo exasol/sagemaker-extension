@@ -158,18 +158,18 @@ typecheck = ["mypy"]
 
 [[package]]
 name = "boto3"
-version = "1.42.52"
+version = "1.42.53"
 description = "The AWS SDK for Python"
 optional = false
 python-versions = ">=3.9"
 groups = ["main", "dev"]
 files = [
-    {file = "boto3-1.42.52-py3-none-any.whl", hash = "sha256:7b3e0c4bfd8815a3df64fbe98fc9f87dfb12bd7a783cf63dfc2f166c66798c9d"},
-    {file = "boto3-1.42.52.tar.gz", hash = "sha256:ff4a4afb832f63a1358e11fe6eb321da0f4767979c6721dd32fb02e6eabcebf5"},
+    {file = "boto3-1.42.53-py3-none-any.whl", hash = "sha256:3bd32f3508a6e9851671d0ef3b1f9e8ee7e8c095aa0488bcd9e86074aef5b7eb"},
+    {file = "boto3-1.42.53.tar.gz", hash = "sha256:56bc79388763995852b6d3fe48023e661e63fc2e60a921273c422d0171b9fbfb"},
 ]
 
 [package.dependencies]
-botocore = ">=1.42.52,<1.43.0"
+botocore = ">=1.42.53,<1.43.0"
 jmespath = ">=0.7.1,<2.0.0"
 s3transfer = ">=0.16.0,<0.17.0"
 
@@ -178,14 +178,14 @@ crt = ["botocore[crt] (>=1.21.0,<2.0a0)"]
 
 [[package]]
 name = "botocore"
-version = "1.42.52"
+version = "1.42.53"
 description = "Low-level, data-driven core of boto 3."
 optional = false
 python-versions = ">=3.9"
 groups = ["main", "dev"]
 files = [
-    {file = "botocore-1.42.52-py3-none-any.whl", hash = "sha256:c3a0b7138a4c5a534da0eb2444c19763b4d03ba2190c0602c49315e54efd7252"},
-    {file = "botocore-1.42.52.tar.gz", hash = "sha256:3bdef10aee4cee13ff019b6a1423a2ce3ca17352328d9918157a1829e5cc9be1"},
+    {file = "botocore-1.42.53-py3-none-any.whl", hash = "sha256:1255db56bc0a284a8caa182c20966277e6c8871b6881cf816d40e993fa5da503"},
+    {file = "botocore-1.42.53.tar.gz", hash = "sha256:0bc1a2e1b6ae4c8397c9bede3bb9007b4f16e159ef2ca7f24837e31d5860caac"},
 ]
 
 [package.dependencies]
@@ -871,14 +871,14 @@ tenacity = ">=8.3.0,<9.0.0"
 
 [[package]]
 name = "exasol-saas-api"
-version = "2.7.0"
+version = "2.8.0"
 description = "API enabling Python applications connecting to Exasol database SaaS instances and using their SaaS services"
 optional = false
 python-versions = "<4.0,>=3.10.0"
 groups = ["main", "dev"]
 files = [
-    {file = "exasol_saas_api-2.7.0-py3-none-any.whl", hash = "sha256:242193a17d9bd5277838b6f1fb837a390d4d5dea5fb017bcdd6c856149154a76"},
-    {file = "exasol_saas_api-2.7.0.tar.gz", hash = "sha256:0a0398f66b45d823c821fa8b4293f8c8b1209633eadd43b5b985b21c6bffc031"},
+    {file = "exasol_saas_api-2.8.0-py3-none-any.whl", hash = "sha256:fa2628e7d058f0a378d880c55ec36155507c326daa013ee33ec2d75773290998"},
+    {file = "exasol_saas_api-2.8.0.tar.gz", hash = "sha256:7cc31f01737749f464b9032d14631a5e4189f006021197a201b1786740ead238"},
 ]
 
 [package.dependencies]
@@ -2934,14 +2934,14 @@ use-chardet-on-py3 = ["chardet (>=3.0.2,<6)"]
 
 [[package]]
 name = "rich"
-version = "14.3.2"
+version = "14.3.3"
 description = "Render rich text, tables, progress bars, syntax highlighting, markdown and more to the terminal"
 optional = false
 python-versions = ">=3.8.0"
 groups = ["main", "dev"]
 files = [
-    {file = "rich-14.3.2-py3-none-any.whl", hash = "sha256:08e67c3e90884651da3239ea668222d19bea7b589149d8014a21c633420dbb69"},
-    {file = "rich-14.3.2.tar.gz", hash = "sha256:e712f11c1a562a11843306f5ed999475f09ac31ffb64281f73ab29ffdda8b3b8"},
+    {file = "rich-14.3.3-py3-none-any.whl", hash = "sha256:793431c1f8619afa7d3b52b2cdec859562b950ea0d4b6b505397612db8d5362d"},
+    {file = "rich-14.3.3.tar.gz", hash = "sha256:b8daa0b9e4eef54dd8cf7c86c03713f53241884e814f4e2f5fb342fe520f639b"},
 ]
 
 [package.dependencies]
