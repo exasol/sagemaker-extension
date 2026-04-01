@@ -19,10 +19,10 @@ jobs:
       RELEASE_DIR: ".build_output/exported_container"
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v6
 
       - name: Setup Python & Poetry Environment
-        uses: exasol/python-toolbox/.github/actions/python-environment@1.6.0
+        uses: exasol/python-toolbox/.github/actions/python-environment@v6
         with:
           poetry-version: '2.1.2'
 
