@@ -1,5 +1,6 @@
 # Changelog
 
+* [0.11.8](changes_0.11.8.md)
 * [0.11.7](changes_0.11.7.md)
 * [0.11.6](changes_0.11.6.md)
 * [0.11.5](changes_0.11.5.md)
