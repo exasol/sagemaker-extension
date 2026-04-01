@@ -1,4 +1,4 @@
-from sagemaker import AutoML
+import boto3
 
 
 class AutopilotEndpointDeployment():
@@ -7,30 +7,56 @@ class AutopilotEndpointDeployment():
     """
 
     def __init__(self, job_name: str):
-        self._automl = AutoML.attach(auto_ml_job_name=job_name)
-        self._automl_desc = self._automl.describe_auto_ml_job(job_name)
+        self._sm_client = boto3.client("sagemaker")
+        self._job_desc = self._sm_client.describe_auto_ml_job(
+            AutoMLJobName=job_name)
 
     def deploy(self,
                endpoint_name: str,
                instance_type: str,
                instance_count: int):
 
-        # arguments of the autopilot deployment method
-        kwargs = {
-            "initial_instance_count": instance_count,
-            "instance_type": instance_type,
-            "candidate": self._automl.best_candidate(),
-            "wait": True,
-            "endpoint_name": endpoint_name
-        }
+        best_candidate = self._job_desc['BestCandidate']
+
+        # deep-enough copy so we can mutate Environment without side effects
+        containers = []
+        for c in best_candidate['InferenceContainers']:
+            container = dict(c)
+            container['Environment'] = dict(c.get('Environment', {}))
+            containers.append(container)
 
         # add probabilities for classification problem types
         if self.get_endpoint_problem_type() != "Regression":
-            kwargs["inference_response_keys"] = \
-                ["predicted_label", "probability"]
+            containers[-1]['Environment']['SAGEMAKER_INFERENCE_OUTPUT'] = \
+                'predicted_label,probability'
 
-        self._automl.deploy(**kwargs)
+        model_name = best_candidate['CandidateName']
+        self._sm_client.create_model(
+            ModelName=model_name,
+            Containers=containers,
+            ExecutionRoleArn=self._job_desc['RoleArn']
+        )
+
+        config_name = endpoint_name + '-config'
+        self._sm_client.create_endpoint_config(
+            EndpointConfigName=config_name,
+            ProductionVariants=[{
+                'VariantName': 'AllTraffic',
+                'ModelName': model_name,
+                'InitialInstanceCount': instance_count,
+                'InstanceType': instance_type,
+            }]
+        )
+
+        self._sm_client.create_endpoint(
+            EndpointName=endpoint_name,
+            EndpointConfigName=config_name
+        )
+
+        waiter = self._sm_client.get_waiter('endpoint_in_service')
+        waiter.wait(EndpointName=endpoint_name)
+
         return endpoint_name
 
     def get_endpoint_problem_type(self):
-        return self._automl_desc['ResolvedAttributes']['ProblemType']
+        return self._job_desc['ResolvedAttributes']['ProblemType']

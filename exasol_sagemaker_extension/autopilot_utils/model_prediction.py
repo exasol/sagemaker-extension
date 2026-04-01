@@ -1,7 +1,5 @@
+import boto3
 import pandas as pd
-from sagemaker.deserializers import CSVDeserializer
-from sagemaker.predictor import Predictor
-from sagemaker.serializers import CSVSerializer
 
 
 class AutopilotPrediction:
@@ -9,14 +7,23 @@ class AutopilotPrediction:
     This class is responsible for making prediction from a given Autopilot job
     """
     def __init__(self, endpoint_name: str):
-        self._predictor = Predictor(endpoint_name)
-        self._predictor.serializer = CSVSerializer()
-        self._predictor.deserializer = CSVDeserializer()
+        self._endpoint_name = endpoint_name
+        self._sm_runtime = boto3.client("sagemaker-runtime")
 
     def predict(self, df: pd.DataFrame) -> pd.DataFrame:
+        csv_data = df.to_csv(sep=",", header=False, index=False)
+
         # make prediction
-        predictions = self._predictor.predict(
-            df.to_csv(sep=",", header=False, index=False))
+        response = self._sm_runtime.invoke_endpoint(
+            EndpointName=self._endpoint_name,
+            ContentType="text/csv",
+            Accept="text/csv",
+            Body=csv_data
+        )
+        predictions = [
+            row.split(",")
+            for row in response["Body"].read().decode("utf-8").strip().splitlines()
+        ]
 
         # create dataframe from predictions
         prediction_df = pd.DataFrame(

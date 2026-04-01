@@ -1,4 +1,4 @@
-from sagemaker import AutoML
+import boto3
 
 
 class AutopilotPolling:
@@ -7,9 +7,10 @@ class AutopilotPolling:
     """
     @staticmethod
     def check_status(job_name: str):
-        automl = AutoML.attach(auto_ml_job_name=job_name)
+        sm_client = boto3.client("sagemaker")
 
-        describe_response = automl.describe_auto_ml_job()
+        describe_response = sm_client.describe_auto_ml_job(
+            AutoMLJobName=job_name)
         return \
             describe_response["AutoMLJobStatus"], \
             describe_response["AutoMLJobSecondaryStatus"]

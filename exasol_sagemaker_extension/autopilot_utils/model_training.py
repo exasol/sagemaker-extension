@@ -1,5 +1,5 @@
 import os.path
-from sagemaker.automl.automl import AutoML, AutoMLInput
+import boto3
 
 
 class AutopilotTraining:
@@ -22,22 +22,46 @@ class AutopilotTraining:
         unique_model_name = job_name  # model_name = job_name
 
         s3_train_path = os.path.join(s3_bucket_uri, s3_output_path)
-        automl_job = AutoML(
-            role=role,
-            target_attribute_name=target_attribute_name,
-            problem_type=problem_type,
-            job_objective=objective,
-            total_job_runtime_in_seconds=max_runtime_for_automl_job_in_seconds,
-            max_candidates=max_candidates,
-            max_runtime_per_training_job_in_seconds= \
+
+        automl_config = {
+            "AutoMLJobName": unique_model_name,
+            "InputDataConfig": [{
+                "DataSource": {
+                    "S3DataSource": {
+                        "S3DataType": "S3Prefix",
+                        "S3Uri": s3_train_path,
+                    }
+                },
+                "TargetAttributeName": target_attribute_name,
+            }],
+            "OutputDataConfig": {
+                "S3OutputPath": s3_train_path,
+            },
+            "RoleArn": role,
+        }
+
+        auto_ml_job_config = {}
+        if max_runtime_for_automl_job_in_seconds is not None:
+            auto_ml_job_config["CompletionCriteria"] = {
+                "MaxAutoMLJobRuntimeInSeconds":
+                    max_runtime_for_automl_job_in_seconds,
+            }
+        if max_candidates is not None:
+            auto_ml_job_config.setdefault("CompletionCriteria", {})[
+                "MaxCandidates"] = max_candidates
+        if max_runtime_per_training_job_in_seconds is not None:
+            auto_ml_job_config.setdefault("CompletionCriteria", {})[
+                "MaxRuntimePerTrainingJobInSeconds"] = \
                 max_runtime_per_training_job_in_seconds
-        )
+        if auto_ml_job_config:
+            automl_config["AutoMLJobConfig"] = auto_ml_job_config
 
-        s3_input_train = AutoMLInput(
-            inputs=s3_train_path,
-            target_attribute_name=target_attribute_name
-        )
+        if problem_type is not None:
+            automl_config["ProblemType"] = problem_type
+        if objective is not None:
+            automl_config["AutoMLJobObjective"] = {"MetricName": objective}
 
-        automl_job.fit(
-            inputs=s3_input_train, job_name=unique_model_name, wait=False)
+        sm_client = boto3.client("sagemaker")
+        sm_client.create_auto_ml_job(**automl_config)
+
         return unique_model_name

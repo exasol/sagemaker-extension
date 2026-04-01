@@ -1,4 +1,4 @@
-from sagemaker import Predictor
+import boto3
 
 
 class AutopilotEndpointDeletion:
@@ -12,6 +12,16 @@ class AutopilotEndpointDeletion:
     """
     @staticmethod
     def delete(endpoint_name: str):
-        predictor = Predictor(endpoint_name)
-        predictor.delete_model()
-        predictor.delete_endpoint()
+        sm_client = boto3.client("sagemaker")
+
+        endpoint_desc = sm_client.describe_endpoint(EndpointName=endpoint_name)
+        config_name = endpoint_desc["EndpointConfigName"]
+        config_desc = sm_client.describe_endpoint_config(
+            EndpointConfigName=config_name)
+        model_names = [
+            v["ModelName"] for v in config_desc["ProductionVariants"]]
+
+        sm_client.delete_endpoint(EndpointName=endpoint_name)
+        sm_client.delete_endpoint_config(EndpointConfigName=config_name)
+        for model_name in model_names:
+            sm_client.delete_model(ModelName=model_name)
