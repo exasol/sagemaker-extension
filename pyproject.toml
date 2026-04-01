@@ -35,6 +35,7 @@ pyexasol = ">=0.26.0,<2"
 importlib-resources = "^6.4.0"
 click = "^8.0.3"
 exasol-python-extension-common = ">=0.9.0,<1"
+onnxruntime = "<1.24"	# 1.24.* dropped the support for Python 3.10
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.1"
