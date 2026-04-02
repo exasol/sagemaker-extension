@@ -15,7 +15,7 @@ class AutopilotTraining:
             s3_output_path: str,
             target_attribute_name: str,
             problem_type: str = None,
-            objective: str = None,
+            objective: dict | None = None,
             max_runtime_for_automl_job_in_seconds: int = None,
             max_candidates: int = None,
             max_runtime_per_training_job_in_seconds: int = None):
@@ -59,7 +59,7 @@ class AutopilotTraining:
         if problem_type is not None:
             automl_config["ProblemType"] = problem_type
         if objective is not None:
-            automl_config["AutoMLJobObjective"] = {"MetricName": objective}
+            automl_config["AutoMLJobObjective"] = objective
 
         sm_client = boto3.client("sagemaker")
         sm_client.create_auto_ml_job(**automl_config)
