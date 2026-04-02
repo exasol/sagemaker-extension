@@ -23,6 +23,9 @@ class AutopilotTraining:
 
         s3_train_path = os.path.join(s3_bucket_uri, s3_output_path)
 
+        iam_client = boto3.client("iam")
+        role_arn = iam_client.get_role(RoleName=role)["Role"]["Arn"]
+
         automl_config = {
             "AutoMLJobName": unique_model_name,
             "InputDataConfig": [{
@@ -37,7 +40,7 @@ class AutopilotTraining:
             "OutputDataConfig": {
                 "S3OutputPath": s3_train_path,
             },
-            "RoleArn": role,
+            "RoleArn": role_arn,
         }
 
         auto_ml_job_config = {}
