@@ -3,7 +3,7 @@ import os
 from contextlib import contextmanager
 
 from exasol.python_extension_common.deployment.language_container_builder import (
-    LanguageContainerBuilder, find_path_backwards)
+    LanguageContainerBuilder, find_path_backwards, exclude_cuda)
 
 CONTAINER_NAME = "exasol_sagemaker_extension_container"
 
@@ -12,7 +12,7 @@ CONTAINER_NAME = "exasol_sagemaker_extension_container"
 def language_container_factory():
     with LanguageContainerBuilder(CONTAINER_NAME) as container_builder:
         project_directory = find_path_backwards("pyproject.toml", __file__).parent
-        container_builder.prepare_flavor(project_directory)
+        container_builder.prepare_flavor(project_directory, requirement_filter=exclude_cuda)
         yield container_builder
 
 
