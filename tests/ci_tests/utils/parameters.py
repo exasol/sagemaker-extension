@@ -3,7 +3,7 @@ from typing import Any
 from collections import namedtuple
 
 POLLING_INTERVAL = 5 * 60  # seconds
-TIMEOUT = 90 * 60  # seconds
+TIMEOUT = 120 * 60  # seconds
 
 ModelSetupParams = namedtuple("ModelSetupParams", [
     "model_type", "schema_name", "table_name", "target_col",
