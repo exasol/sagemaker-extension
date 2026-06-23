@@ -1,3 +1,7 @@
+> [!IMPORTANT]
+This project has been archived as of June 23rd, 2026 and is no longer supported. Please, feel free to fork this project or let us know if you are interested in this project.
+
+
 # SageMaker Extension
 
 This project provides a Python library that trains data stored in Exasol using AWS SageMaker.
