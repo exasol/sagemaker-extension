@@ -1,5 +1,9 @@
 # SageMaker Extension
 
+# ⚠ Deprecation Warning ⚠
+
+This project is deprecated and not maintained any more.
+
 This project provides a Python library that trains data stored in Exasol using AWS SageMaker.
 
 
